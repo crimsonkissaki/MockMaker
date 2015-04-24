@@ -28,11 +28,11 @@ class MockMakerConfig
 	private $overwriteExistingFiles = true;
 
 	/**
-	 * Directory to scan for files that need mocks generated.
+	 * Directories to scan for files that need mocks generated.
 	 *
-	 * @var	string
+	 * @var	array
 	 */
-	private $readDirectory;
+	private $readDirectories = [ ];
 
 	/**
 	 * Directory to write generated mock files.
@@ -71,6 +71,13 @@ class MockMakerConfig
 	private $preserveDirectoryStructure = true;
 
 	/**
+	 * The root directory path for your project.
+	 *
+	 * @var	string
+	 */
+	private $rootDirectory;
+
+	/**
 	 * Get whether to read the directory recursively.
 	 *
 	 * @return	bool
@@ -97,7 +104,7 @@ class MockMakerConfig
 	 */
 	public function getReadDirectory()
 	{
-		return $this->readDirectory;
+		return $this->readDirectories;
 	}
 
 	/**
@@ -152,6 +159,16 @@ class MockMakerConfig
 	}
 
 	/**
+	 * Get the project's root directory path.
+	 *
+	 * @return	string
+	 */
+	public function getRootDirectory()
+	{
+		return $this->rootDirectory;
+	}
+
+	/**
 	 * Set whether to read the directory recursively.
 	 *
 	 * @param	$recursiveRead	bool
@@ -174,11 +191,26 @@ class MockMakerConfig
 	/**
 	 * Set directory name to scan for files to mock.
 	 *
-	 * @param	$readDirectory	string
+	 * @param	$readDirectories	mixed
 	 */
-	public function setReadDirectory($readDirectory)
+	public function setReadDirectories($readDirectories)
 	{
-		$this->readDirectory = $readDirectory;
+		$dirs = is_array($readDirectories) ? : array( $readDirectories );
+		$this->readDirectories = $dirs;
+	}
+
+	/**
+	 * Add a single or array of directories to parse for files.
+	 *
+	 * @param	$readDirectories	mixed	Single or array of directories.
+	 */
+	public function addReadDirectories($readDirectories)
+	{
+		if (is_array($readDirectories)) {
+			$this->setReadDirectories(array_merge($this->readDirectories, $readDirectories));
+		} else {
+			array_push($this->readDirectories, $readDirectories);
+		}
 	}
 
 	/**
@@ -194,13 +226,11 @@ class MockMakerConfig
 	/**
 	 * Set an array of individual files to generate mocks for.
 	 *
-	 * @param	$files	array
+	 * @param	$filesToMock	mixed
 	 */
-	public function setFilesToMock($files)
+	public function setFilesToMock($filesToMock)
 	{
-		if (!is_array($files)) {
-			$files = array( $files );
-		}
+		$files = is_array($filesToMock) ? : array( $filesToMock );
 		$this->filesToMock = $files;
 	}
 
@@ -248,6 +278,16 @@ class MockMakerConfig
 	public function setPreserveDirectoryStructure($preserveDirectoryStructure)
 	{
 		$this->preserveDirectoryStructure = $preserveDirectoryStructure;
+	}
+
+	/**
+	 * Set the project's root directory path.
+	 *
+	 * @param	$rootDirectory	string	Path to your project's root directory.
+	 */
+	public function setRootDirectory($rootDirectory)
+	{
+		$this->rootDirectory = $rootDirectory;
 	}
 
 }

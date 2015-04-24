@@ -16,7 +16,7 @@ class MockMaker
 {
 
 	/**
-	 * MockMaker configuration class
+	 * MockMaker configuration class.
 	 *
 	 * @var MockMakerConfig
 	 */
@@ -33,8 +33,26 @@ class MockMaker
 	}
 
 	/**
-	 * Add a single or array of files to the list of files
-	 * to be generated.
+	 * Set your project's root directory path.
+	 *
+	 * MockMaker will do its best to guess this based on class namespaces,
+	 * but you can set it manually if it's having problems.
+	 *
+	 * @param	$rootDir	string	Project root directory.
+	 * @return	MockMaker
+	 */
+	public function setRootDirectory($rootDir)
+	{
+		$this->config->setRootDirectory($rootDir);
+
+		return $this;
+	}
+
+	/**
+	 * Add one or an array of files to the list of files to be generated.
+	 *
+	 * Any files specified here will be merged with files found in the
+	 * read directory specified in the getFilesFrom() method.
 	 *
 	 * @param	$files	mixed	Single or array of file names to parse.
 	 * @return	MockMaker
@@ -47,35 +65,25 @@ class MockMaker
 	}
 
 	/**
-	 * Set directory name to scan for files to mock.
+	 * Set a single or array of directories to scan for files to mock.
 	 *
-	 * @param	$readDirectory	string	Directory to scan for files.
+	 * Any files returned from these directories will be merged with files
+	 * specified through the mockFiles() method.
+	 *
+	 * @param	$readDirectory	mixed	Single or array of directories to scan.
 	 * @return	MockMaker
 	 */
 	public function getFilesFrom($readDirectory)
 	{
-		$this->config->setReadDirectory($readDirectory);
+		$this->config->addReadDirectory($readDirectory);
 
 		return $this;
 	}
 
 	/**
-	 * Set directory name to save generated mock files in.
+	 * Parse the read directory recursively.
 	 *
-	 * @param	$writeDirectory	string	Directory to save output files in.
-	 * @return	MockMaker
-	 */
-	public function saveFilesTo($writeDirectory)
-	{
-		$this->config->setWriteDirectory($writeDirectory);
-
-		return $this;
-	}
-
-	/**
-	 * Parse the read directory recursively
-	 *
-	 * Default MockMaker setting is to NOT recursively parse the read directory
+	 * Default MockMaker setting is FALSE.
 	 *
 	 * @param	$recursively	bool	Default true.
 	 * @return	MockMaker
@@ -88,21 +96,40 @@ class MockMaker
 	}
 
 	/**
-	 * Set whether to mimick the read directory file structure
-	 * in the write directory.
+	 * Set a directory to save generated mock files in.
 	 *
-	 * @param	$preserveStructure	bool	Default true.
+	 * If you do not specify a write directory, MockMaker will return
+	 * the generated code as a string.
+	 *
+	 * @param	$writeDirectory	string	Directory to save output files in.
 	 * @return	MockMaker
 	 */
-	public function preserveDirectoryStructure($preserveStructure = true)
+	public function saveFilesTo($writeDirectory)
 	{
-		$this->config->setPreserveDirectoryStructure($preserveStructure);
+		$this->config->setWriteDirectory($writeDirectory);
+
+		return $this;
+	}
+
+	/**
+	 * Tell MockMaker to ignore the read directory's file structure and
+	 * save all generated files into the same directory.
+	 *
+	 * Default MockMaker setting is TRUE.
+	 *
+	 * @return	MockMaker
+	 */
+	public function ignoreDirectoryStructure()
+	{
+		$this->config->setPreserveDirectoryStructure(false);
 
 		return $this;
 	}
 
 	/**
 	 * Set whether or not to overwrite existing files.
+	 *
+	 * Default MockMaker setting is FALSE.
 	 *
 	 * @param	$overwriteExistingFiles		bool
 	 * @return	MockMaker
@@ -142,6 +169,28 @@ class MockMaker
 		$this->config->setIncludeFileRegex($includeRegex);
 
 		return $this;
+	}
+
+	/**
+	 * Test (in|ex)clude regex patterns against a specified read directory.
+	 *
+	 * TODO: finish this
+	 *
+	 * @return	array
+	 */
+	public function testRegexPatterns()
+	{
+		return array( 'undefined' );
+	}
+
+	/**
+	 * Use to verify MockMaker's settings before you kick things off for real.
+	 *
+	 * @return	MockMakerConfig
+	 */
+	public function verifySettings()
+	{
+		return $this->config;
 	}
 
 }
