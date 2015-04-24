@@ -12,4 +12,4 @@
 /nbproject
 /web
 .DS_Store
-/src/Minion/MockMakerBundle/Tests/Resources/*
+/src/Minion/MockMakerBundle/Tests/Resources/Private/*
