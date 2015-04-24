@@ -1,16 +1,16 @@
 <?php
 
 /**
- *	FileGeneratorOptions
+ * 	MockMakerConfig
  *
- *	@author		Evan Johnson <evan.johnson@rapp.com>
- *	@created	Apr 22, 2015
- *	@version	1.0
+ * 	@author		Evan Johnson <evan.johnson@rapp.com>
+ * 	@created	Apr 22, 2015
+ * 	@version	1.0
  */
 
-namespace Minion\MockMakerBundle\Library\MockMaker\Model;
+namespace MockMaker\Model;
 
-class FileGeneratorOptions
+class MockMakerConfig
 {
 
 	/**
@@ -18,14 +18,14 @@ class FileGeneratorOptions
 	 *
 	 * @var	bool
 	 */
-	private $recursiveRead = FALSE;
+	private $recursiveRead = false;
 
 	/**
 	 * Overwrite existing files or not?
 	 *
 	 * @var	bool
 	 */
-	private $overwriteExistingFiles = TRUE;
+	private $overwriteExistingFiles = true;
 
 	/**
 	 * Directory to scan for files that need mocks generated.
@@ -42,11 +42,33 @@ class FileGeneratorOptions
 	private $writeDirectory;
 
 	/**
+	 * Array of files to generate mocks for.
+	 *
+	 * @var	array
+	 */
+	private $filesToMock = [ ];
+
+	/**
 	 * Regex pattern to use to filter out files from mocking.
 	 *
 	 * @var	string
 	 */
-	private $fileFilterRegex;
+	private $ignoreFileRegex;
+
+	/**
+	 * Regex pattern to use to find files for mocking.
+	 *
+	 * @var	string
+	 */
+	private $includeFileRegex;
+
+	/**
+	 * Whether to mimick the read directory file structure
+	 * in the write directory.
+	 *
+	 * @var	bool
+	 */
+	private $preserveDirectoryStructure = true;
 
 	/**
 	 * Get whether to read the directory recursively.
@@ -89,13 +111,44 @@ class FileGeneratorOptions
 	}
 
 	/**
-	 * Get the file filter regex string.
+	 * Get an array of individual files to generate mocks for.
+	 *
+	 * @return	array
+	 */
+	public function getFilesToMock()
+	{
+		return $this->filesToMock;
+	}
+
+	/**
+	 * Get the ignore file regex string.
 	 *
 	 * @return	string
 	 */
-	public function getFileFilterRegex()
+	public function getIgnoreFileRegex()
 	{
-		return $this->fileFilterRegex;
+		return $this->ignoreFileRegex;
+	}
+
+	/**
+	 * Get the include file regex string.
+	 *
+	 * @return	string
+	 */
+	public function getIncludeFileRegex()
+	{
+		return $this->includeFileRegex;
+	}
+
+	/**
+	 * Get whether to mimick the read directory file structure
+	 * in the write directory.
+	 *
+	 * @return	bool
+	 */
+	public function getPreserveDirectoryStructure()
+	{
+		return $this->preserveDirectoryStructure;
 	}
 
 	/**
@@ -103,7 +156,7 @@ class FileGeneratorOptions
 	 *
 	 * @param	$recursiveRead	bool
 	 */
-	public function setRecursiveRead( $recursiveRead )
+	public function setRecursiveRead($recursiveRead)
 	{
 		$this->recursiveRead = $recursiveRead;
 	}
@@ -113,7 +166,7 @@ class FileGeneratorOptions
 	 *
 	 * @param	$overwriteExistingFiles		bool
 	 */
-	public function setOverwriteExistingFiles( $overwriteExistingFiles )
+	public function setOverwriteExistingFiles($overwriteExistingFiles)
 	{
 		$this->overwriteExistingFiles = $overwriteExistingFiles;
 	}
@@ -123,7 +176,7 @@ class FileGeneratorOptions
 	 *
 	 * @param	$readDirectory	string
 	 */
-	public function setReadDirectory( $readDirectory )
+	public function setReadDirectory($readDirectory)
 	{
 		$this->readDirectory = $readDirectory;
 	}
@@ -133,19 +186,68 @@ class FileGeneratorOptions
 	 *
 	 * @param	$writeDirectory	string
 	 */
-	public function setWriteDirectory( $writeDirectory )
+	public function setWriteDirectory($writeDirectory)
 	{
 		$this->writeDirectory = $writeDirectory;
 	}
 
 	/**
-	 * Set the file filter regex string.
+	 * Set an array of individual files to generate mocks for.
 	 *
-	 * @param	$fileFilterRegex	string
+	 * @param	$files	array
 	 */
-	public function setFileFilterRegex( $fileFilterRegex )
+	public function setFilesToMock($files)
 	{
-		$this->fileFilterRegex = $fileFilterRegex;
+		if (!is_array($files)) {
+			$files = array( $files );
+		}
+		$this->filesToMock = $files;
+	}
+
+	/**
+	 * Add either a single file or an array
+	 * of files to the "files to mock" array.
+	 *
+	 * @param	$files	mixed
+	 */
+	public function addFilesToMock($files)
+	{
+		if (is_array($files)) {
+			$this->setFilesToMock(array_merge($this->filesToMock, $files));
+		} else {
+			array_push($this->filesToMock, $files);
+		}
+	}
+
+	/**
+	 * Set the ignore file filter regex string.
+	 *
+	 * @param	$ignoreFileRegex	string	Regex string used to exclude files.
+	 */
+	public function setIgnoreFileRegex($ignoreFileRegex)
+	{
+		$this->ignoreFileRegex = $ignoreFileRegex;
+	}
+
+	/**
+	 * Set the include file regex string.
+	 *
+	 * @param	$includeFileRegex	string	Regex string used to include files.
+	 */
+	public function setIncludeFileRegex($includeFileRegex)
+	{
+		$this->includeFileRegex = $includeFileRegex;
+	}
+
+	/**
+	 * Set whether to mimick the read directory file structure
+	 * in the write directory.
+	 *
+	 * @param	$preserveDirectoryStructure	bool	Mirror read directory structure in write directory.
+	 */
+	public function setPreserveDirectoryStructure($preserveDirectoryStructure)
+	{
+		$this->preserveDirectoryStructure = $preserveDirectoryStructure;
 	}
 
 }
