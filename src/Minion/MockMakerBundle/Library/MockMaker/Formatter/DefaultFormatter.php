@@ -1,20 +1,13 @@
 <?php
 
 /**
- *	DefaultFormatter
+ * 	DefaultFormatter
  *
- *	TODO:
- *	do i want to make a base "classfile" with php "imports"
- *	from a datapoint[]?
- *	instead of building each part piece by piece,
- *	assign "code blocks" to datapoints[], then
- *	import them into a file that's included.
+ * 	Default code generator formatter for MockMaker
  *
- *	Default code generator formatter for MockMaker
- *
- *	@author		Evan Johnson <evan.johnson@rapp.com>
- *	@created	Apr 16, 2015
- *	@version	1.0
+ * 	@author		Evan Johnson <evan.johnson@rapp.com>
+ * 	@created	Apr 16, 2015
+ * 	@version	1.0
  */
 
 namespace Minion\MockMakerBundle\Library\MockMaker\Formatter;
@@ -25,7 +18,6 @@ use Minion\MockMakerBundle\Library\MockMaker\Worker\StringFormatterWorker;
 use Minion\MockMakerBundle\Library\MockMaker\Model\PropertyDetails;
 use Minion\MockMakerBundle\Library\MockMaker\Model\MethodDetails;
 use Minion\MockMakerBundle\Library\MockMaker\Model\ArgumentDetails;
-
 use Minion\UnitTestBundle\Library\DebuggerMinion;
 
 /**
@@ -36,148 +28,148 @@ use Minion\UnitTestBundle\Library\DebuggerMinion;
 class DefaultFormatter implements FormatterInterface
 {
 
-	/**
-	 * Format string used when generating class & file names.
-	 *
-	 * Will be used in generating the generated file names.
-	 * Allows substitution of pre-set values into the name.
-	 *
-	 * Substitution Values:
-	 *  ClassName
-	 *
-	 * Example: '%ClassName%Mock.php'
-	 *
-	 * @var	string
-	 */
-	private $classNameFormat = '%ClassName%Mock';
+    /**
+     * Format string used when generating class & file names.
+     *
+     * Will be used in generating the generated file names.
+     * Allows substitution of pre-set values into the name.
+     *
+     * Substitution Values:
+     *  ClassName
+     *
+     * Example: '%ClassName%Mock.php'
+     *
+     * @var	string
+     */
+    private $classNameFormat = '%ClassName%Mock';
 
-	/**
-	 * Formatted class name.
-	 *
-	 * @var	string
-	 */
-	private $formattedClassName;
+    /**
+     * Formatted class name.
+     *
+     * @var	string
+     */
+    private $formattedClassName;
 
-	/**
-	 * Name of the mocked class.
-	 *
-	 * @var string
-	 */
-	private $originalClassName;
+    /**
+     * Name of the mocked class.
+     *
+     * @var string
+     */
+    private $originalClassName;
 
-	/**
-	 * Name to use for the advanced method argument.
-	 *
-	 * @var string
-	 */
-	private $advancedMethodArgumentName = 'properties';
+    /**
+     * Name to use for the advanced method argument.
+     *
+     * @var string
+     */
+    private $advancedMethodArgumentName = 'properties';
 
-	/**
-	 * Get the format string used when generating class & file names.
-	 *
-	 * @return	string
-	 */
-	public function getClassNameFormat()
-	{
-		return $this->classNameFormat;
-	}
+    /**
+     * Get the format string used when generating class & file names.
+     *
+     * @return	string
+     */
+    public function getClassNameFormat()
+    {
+        return $this->classNameFormat;
+    }
 
-	/**
-	 * Get the argument name to use in the advanced method.
-	 *
-	 * @return	string
-	 */
-	public function getAdvancedMethodArgumentName()
-	{
-		return $this->advancedMethodArgumentName;
-	}
+    /**
+     * Get the argument name to use in the advanced method.
+     *
+     * @return	string
+     */
+    public function getAdvancedMethodArgumentName()
+    {
+        return $this->advancedMethodArgumentName;
+    }
 
-	/**
-	 * Get the formatted class name
-	 *
-	 * @return	string
-	 */
-	public function getFormattedClassName()
-	{
-		return $this->formattedClassName;
-	}
+    /**
+     * Get the formatted class name
+     *
+     * @return	string
+     */
+    public function getFormattedClassName()
+    {
+        return $this->formattedClassName;
+    }
 
-	/**
-	 * Get the original class name
-	 *
-	 * @return	string
-	 */
-	public function getOriginalClassName()
-	{
-		return $this->originalClassName;
-	}
+    /**
+     * Get the original class name
+     *
+     * @return	string
+     */
+    public function getOriginalClassName()
+    {
+        return $this->originalClassName;
+    }
 
-	/**
-	 * Set the format string used when generating class & file names.
-	 *
-	 * @param	$classNameFormat	string
-	 */
-	public function setClassNameFormat( $classNameFormat )
-	{
-		$this->classNameFormat = $classNameFormat;
-	}
+    /**
+     * Set the format string used when generating class & file names.
+     *
+     * @param	$classNameFormat	string
+     */
+    public function setClassNameFormat($classNameFormat)
+    {
+        $this->classNameFormat = $classNameFormat;
+    }
 
-	/**
-	 * Set the argument name to use in the advanced method.
-	 *
-	 * @param	$advancedMethodArgumentName		string
-	 */
-	public function setAdvancedMethodArgumentName( $advancedMethodArgumentName )
-	{
-		$this->advancedMethodArgumentName = $advancedMethodArgumentName;
-	}
+    /**
+     * Set the argument name to use in the advanced method.
+     *
+     * @param	$advancedMethodArgumentName		string
+     */
+    public function setAdvancedMethodArgumentName($advancedMethodArgumentName)
+    {
+        $this->advancedMethodArgumentName = $advancedMethodArgumentName;
+    }
 
-	/**
-	 * Generate the base code for mocking an object with default values.
-	 *
-	 * @param	$mockMaker	MockMaker
-	 * @return	string
-	 */
-	public function generateMockCode( MockMaker $mockMaker )
-	{
-		$this->setClassNameValues( $mockMaker->getClassShortName() );
-		return <<<CODE
+    /**
+     * Generate the base code for mocking an object with default values.
+     *
+     * @param	$mockMaker	MockMaker
+     * @return	string
+     */
+    public function generateMockCode(MockMaker $mockMaker)
+    {
+        $this->setClassNameValues($mockMaker->getClassShortName());
+        return <<<CODE
 <?php
 
-{$this->generateClassCommentCode( $mockMaker )}
+{$this->generateClassCommentCode($mockMaker)}
 
-{$this->generateClassUseStatements( $mockMaker )}
+{$this->generateClassUseStatements($mockMaker)}
 
-{$this->generateGetBasicMockCode( $mockMaker )}
+{$this->generateGetBasicMockCode($mockMaker)}
 
-{$this->generateGetAdvancedMockCode( $mockMaker )}
+{$this->generateGetAdvancedMockCode($mockMaker)}
 
 CODE;
-	}
+    }
 
-	/**
-	 * Generate the final class name.
-	 *
-	 * @param	$className		string
-	 */
-	public function setClassNameValues( $className )
-	{
-		$this->formattedClassName = StringFormatterWorker::vsprintf2( $this->classNameFormat, array('ClassName'=>$className) );
-		$this->originalClassName = $className;
-	}
+    /**
+     * Generate the final class name.
+     *
+     * @param	$className		string
+     */
+    public function setClassNameValues($className)
+    {
+        $this->formattedClassName = StringFormatterWorker::vsprintf2($this->classNameFormat, array( 'ClassName' => $className ));
+        $this->originalClassName = $className;
+    }
 
-	/**
-	 * Generate the class file's comment code
-	 *
-	 * @param	$mockMaker	MockMaker
-	 * @return	string
-	 */
-	private function generateClassCommentCode( MockMaker $mockMaker )
-	{
-		$today = new \DateTime('now');
-		$date = $today->format('Y-m-d');
+    /**
+     * Generate the class file's comment code
+     *
+     * @param	$mockMaker	MockMaker
+     * @return	string
+     */
+    private function generateClassCommentCode(MockMaker $mockMaker)
+    {
+        $today = new \DateTime('now');
+        $date = $today->format('Y-m-d');
 
-		return <<<COMMENTS
+        return <<<COMMENTS
 /**
  * {$this->formattedClassName};
  *
@@ -187,33 +179,33 @@ CODE;
  * @created		{$date}
  */
 COMMENTS;
-	}
+    }
 
-	/**
-	 * Generate the class file's use statements
-	 *
-	 * @param	$mockMaker	MockMaker
-	 * @return	string
-	 */
-	private function generateClassUseStatements( MockMaker $mockMaker )
-	{
-		return <<<CODE
+    /**
+     * Generate the class file's use statements
+     *
+     * @param	$mockMaker	MockMaker
+     * @return	string
+     */
+    private function generateClassUseStatements(MockMaker $mockMaker)
+    {
+        return <<<CODE
 namespace {$mockMaker->getMockNamespace()};
 
 use {$mockMaker->getClassFullName()};
 use RAPP\Bundle\LoyaltyBundle\Tests\Helpers\TestHelper;
 CODE;
-	}
+    }
 
-	/**
-	 * Generate the class file's basic functional code
-	 *
-	 * @param	$mockMaker	MockMaker
-	 * @return	string
-	 */
-	private function generateGetBasicMockCode( MockMaker $mockMaker )
-	{
-		$code = <<<CODE
+    /**
+     * Generate the class file's basic functional code
+     *
+     * @param	$mockMaker	MockMaker
+     * @return	string
+     */
+    private function generateGetBasicMockCode(MockMaker $mockMaker)
+    {
+        $code = <<<CODE
 class {$this->formattedClassName}
 {
 
@@ -230,37 +222,37 @@ class {$this->formattedClassName}
 		\$mock = new {$this->originalClassName}();
 
 CODE;
-		if( $this->doesMockedClassNeedReflection( $mockMaker ) ) {
-			$code .= "		\$reflection = new \ReflectionClass('{$mockMaker->getClassFullName()}');" . PHP_EOL;
-		}
+        if ($this->doesMockedClassNeedReflection($mockMaker)) {
+            $code .= "		\$reflection = new \ReflectionClass('{$mockMaker->getClassFullName()}');" . PHP_EOL;
+        }
 
-		$code .= <<<CODE
+        $code .= <<<CODE
 
 		// generateSetters
-{$this->generateSetters( $mockMaker )}
+{$this->generateSetters($mockMaker)}
 
 		// generatePropertiesWithoutSetters
-{$this->generatePropertiesWithoutSetters( $mockMaker )}
+{$this->generatePropertiesWithoutSetters($mockMaker)}
 
 		return \$mock;
 	}
 CODE;
 
-		return $code;
-	}
+        return $code;
+    }
 
-	/**
-	 * Generate the class file's advanced functional code
-	 * This method allows for passing in an associative
-	 * array of ( 'property' => 'value' ) pairs to dynamically
-	 * set the values of the mock object at runtime.
-	 *
-	 * @param	$mockMaker	MockMaker
-	 * @return	string
-	 */
-	private function generateGetAdvancedMockCode( MockMaker $mockMaker )
-	{
-		$code = <<<CODE
+    /**
+     * Generate the class file's advanced functional code
+     * This method allows for passing in an associative
+     * array of ( 'property' => 'value' ) pairs to dynamically
+     * set the values of the mock object at runtime.
+     *
+     * @param	$mockMaker	MockMaker
+     * @return	string
+     */
+    private function generateGetAdvancedMockCode(MockMaker $mockMaker)
+    {
+        $code = <<<CODE
 	/**
 	 * Generate a mock {$this->originalClassName} object.
 	 *
@@ -279,17 +271,17 @@ CODE;
 		\$mock = new {$this->originalClassName}();
 
 CODE;
-		if( $this->doesMockedClassNeedReflection( $mockMaker ) ) {
-			$code .= "		\$reflection = new \ReflectionClass('{$mockMaker->getClassFullName()}');" . PHP_EOL;
-		}
+        if ($this->doesMockedClassNeedReflection($mockMaker)) {
+            $code .= "		\$reflection = new \ReflectionClass('{$mockMaker->getClassFullName()}');" . PHP_EOL;
+        }
 
-		$code .= <<<CODE
+        $code .= <<<CODE
 
 		// generateSetters
-{$this->generateSetters( $mockMaker, TRUE )}
+{$this->generateSetters($mockMaker, TRUE)}
 
 		// generatePropertiesWithoutSetters
-{$this->generatePropertiesWithoutSetters( $mockMaker, TRUE )}
+{$this->generatePropertiesWithoutSetters($mockMaker, TRUE)}
 
 		return \$mock;
 	}
@@ -309,7 +301,7 @@ CODE;
 	 */
 	public static function getArgVal( \$argArr, \$property )
 	{
-{$this->generateDefaultValuesArrayCode( $mockMaker )}
+{$this->generateDefaultValuesArrayCode($mockMaker)}
 
 		return ( isset(\$argArr[\$property]) ) ? \$argArr[\$property] : \$defaultValuesArray[\$property];
 	}
@@ -317,335 +309,335 @@ CODE;
 }
 CODE;
 
-		return $code;
-	}
+        return $code;
+    }
 
-	/**
-	 * Determine if this mock is going to require a reflection class.
-	 *
-	 * @param	$mockMaker	MockMaker
-	 * @return	boolean
-	 */
-	private function doesMockedClassNeedReflection( MockMaker $mockMaker )
-	{
-		$properties = $mockMaker->getClassProperties();
-		$methods = $mockMaker->getClassMethods();
+    /**
+     * Determine if this mock is going to require a reflection class.
+     *
+     * @param	$mockMaker	MockMaker
+     * @return	boolean
+     */
+    private function doesMockedClassNeedReflection(MockMaker $mockMaker)
+    {
+        $properties = $mockMaker->getClassProperties();
+        $methods = $mockMaker->getClassMethods();
 
-		foreach( $properties as $scope => $property ) {
-			if( in_array( $scope, array('private', 'protected', 'static') ) ) {
-				return TRUE;
-			}
-		}
-		foreach( $methods as $scope => $method ) {
-			if( in_array( $scope, array('private', 'protected', 'static') ) ) {
-				return TRUE;
-			}
-		}
+        foreach ($properties as $scope => $property) {
+            if (in_array($scope, array( 'private', 'protected', 'static' ))) {
+                return TRUE;
+            }
+        }
+        foreach ($methods as $scope => $method) {
+            if (in_array($scope, array( 'private', 'protected', 'static' ))) {
+                return TRUE;
+            }
+        }
 
-		return FALSE;
-	}
+        return FALSE;
+    }
 
-	/**
-	 * Generate setter method execution code.
-	 *
-	 * @param	$mockMaker	MockMaker
-	 * @param	$advanced	bool		Use 'advanced' formatting & include property array argument as value.
-	 * @return	string
-	 */
-	private function generateSetters( MockMaker $mockMaker, $advanced = FALSE )
-	{
-		$code = '';
-		foreach( $mockMaker->getClassMethodDetails() as $scope => $methods ) {
-			if( !empty($methods) ) {
-				$code .= $this->generateSetterMethodsCode( $methods, $advanced );
-			}
-		}
+    /**
+     * Generate setter method execution code.
+     *
+     * @param	$mockMaker	MockMaker
+     * @param	$advanced	bool		Use 'advanced' formatting & include property array argument as value.
+     * @return	string
+     */
+    private function generateSetters(MockMaker $mockMaker, $advanced = FALSE)
+    {
+        $code = '';
+        foreach ($mockMaker->getClassMethodDetails() as $scope => $methods) {
+            if (!empty($methods)) {
+                $code .= $this->generateSetterMethodsCode($methods, $advanced);
+            }
+        }
 
-		return rtrim( $code, PHP_EOL);
-	}
+        return rtrim($code, PHP_EOL);
+    }
 
-	/**
-	 * Generate the setter method code.
-	 *
-	 * @param	$methods	array		Array of MethodDetails objects
-	 * @param	$advanced	bool		Use 'advanced' formatting & include property array argument as value.
-	 * @return	string
-	 */
-	private function generateSetterMethodsCode( $methods, $advanced )
-	{
-		$code = '';
-		foreach( $methods as $k => $method ) {
-			if( $method->isSetter ) {
-				$code .= $this->generateSetterCode( $method, $advanced );
-			}
-		}
+    /**
+     * Generate the setter method code.
+     *
+     * @param	$methods	array		Array of MethodDetails objects
+     * @param	$advanced	bool		Use 'advanced' formatting & include property array argument as value.
+     * @return	string
+     */
+    private function generateSetterMethodsCode($methods, $advanced)
+    {
+        $code = '';
+        foreach ($methods as $k => $method) {
+            if ($method->isSetter) {
+                $code .= $this->generateSetterCode($method, $advanced);
+            }
+        }
 
-		return $code;
-	}
+        return $code;
+    }
 
-	/**
-	 * Generate the code for a setter method.
-	 *
-	 * @param	$method		MethodDetails
-	 * @param	$advanced	bool			Use 'advanced' formatting & include property array argument as value.
-	 * @return	string
-	 */
-	private function generateSetterCode( MethodDetails $method, $advanced )
-	{
-		$code = '';
-		$argStr = $this->generateSetterArgumentString( $method, $advanced );
-		if( in_array( $method->scope, array('private', 'protected') ) ) {
-			$code .= "		\$r_{$method->name} = \$reflection->getMethod( '{$method->name}' );" . PHP_EOL;
-			$code .= "		\$r_{$method->name}->setAccessible( TRUE );" . PHP_EOL;
-			$code .= "		\$r_{$method->name}->invoke( \$mock, {$argStr} );" . PHP_EOL;
-		} else {
-			$code .= "		\$mock->{$method->name}( {$argStr} );". PHP_EOL;
-		}
-		return $code;
-	}
+    /**
+     * Generate the code for a setter method.
+     *
+     * @param	$method		MethodDetails
+     * @param	$advanced	bool			Use 'advanced' formatting & include property array argument as value.
+     * @return	string
+     */
+    private function generateSetterCode(MethodDetails $method, $advanced)
+    {
+        $code = '';
+        $argStr = $this->generateSetterArgumentString($method, $advanced);
+        if (in_array($method->scope, array( 'private', 'protected' ))) {
+            $code .= "		\$r_{$method->name} = \$reflection->getMethod( '{$method->name}' );" . PHP_EOL;
+            $code .= "		\$r_{$method->name}->setAccessible( TRUE );" . PHP_EOL;
+            $code .= "		\$r_{$method->name}->invoke( \$mock, {$argStr} );" . PHP_EOL;
+        } else {
+            $code .= "		\$mock->{$method->name}( {$argStr} );" . PHP_EOL;
+        }
+        return $code;
+    }
 
-	/**
-	 * Generate the argument string for a setter method
-	 *
-	 * @param	$method		MethodDetails
-	 * @param	$advanced	bool			Use 'advanced' formatting & include property array argument as value.
-	 * @return	string
-	 */
-	private function generateSetterArgumentString( MethodDetails $method, $advanced )
-	{
-		if( $advanced ) {
-			return $this->getAdvancedMockArgumentString( $method );
-		}
+    /**
+     * Generate the argument string for a setter method
+     *
+     * @param	$method		MethodDetails
+     * @param	$advanced	bool			Use 'advanced' formatting & include property array argument as value.
+     * @return	string
+     */
+    private function generateSetterArgumentString(MethodDetails $method, $advanced)
+    {
+        if ($advanced) {
+            return $this->getAdvancedMockArgumentString($method);
+        }
 
-		return $this->getBasicMockArgumentString( $method );
-	}
+        return $this->getBasicMockArgumentString($method);
+    }
 
-	/**
-	 * Generate the argument string for the basic mock generation method.
-	 *
-	 * No arguments = ''
-	 * If arguments, the return should include typehints/defaults if available
-	 *
-	 * @param	$method		MethodDetails
-	 * @return	string
-	 */
-	private function getBasicMockArgumentString( MethodDetails $method )
-	{
-		if( empty($method->arguments) ) {
-			return "''";
-		}
-		foreach( $method->arguments as $k => $arg ) {
-			$argArr[] = $this->generateArgStr( $arg );
-		}
+    /**
+     * Generate the argument string for the basic mock generation method.
+     *
+     * No arguments = ''
+     * If arguments, the return should include typehints/defaults if available
+     *
+     * @param	$method		MethodDetails
+     * @return	string
+     */
+    private function getBasicMockArgumentString(MethodDetails $method)
+    {
+        if (empty($method->arguments)) {
+            return "''";
+        }
+        foreach ($method->arguments as $k => $arg) {
+            $argArr[] = $this->generateArgStr($arg);
+        }
 
-		return join(', ', $argArr );
-	}
+        return join(', ', $argArr);
+    }
 
-	/**
-	 * Generate the code for a single argument
-	 *
-	 * @param	$details	ArgumentDetails or PropertyDetails object
-	 * @return	string
-	 */
-	private function generateArgStr( $details )
-	{
-		if( $details->type === 'object' ) {
-			return "{$details->typeHint} \${$details->name}";
-		}
-		if( !empty($details->defaultValue) ) {
-			return $this->formatValueForArgs( $details->type, $details->defaultValue );
-		}
-		if( (isset($details->allowsNull) && $details->allowsNull) || (isset($details->type) && $details->type) ) {
-			return 'NULL';
-		}
+    /**
+     * Generate the code for a single argument
+     *
+     * @param	$details	ArgumentDetails or PropertyDetails object
+     * @return	string
+     */
+    private function generateArgStr($details)
+    {
+        if ($details->type === 'object') {
+            return "{$details->typeHint} \${$details->name}";
+        }
+        if (!empty($details->defaultValue)) {
+            return $this->formatValueForArgs($details->type, $details->defaultValue);
+        }
+        if ((isset($details->allowsNull) && $details->allowsNull) || (isset($details->type) && $details->type)) {
+            return 'NULL';
+        }
 
-		return "'_'";
-	}
+        return "'_'";
+    }
 
-	/**
-	 * Quick format for argument values.
-	 *
-	 * @param	$type	string
-	 * @param	$arg	string
-	 * @return	string
-	 */
-	private function formatValueForArgs( $type, $arg )
-	{
-		if( $type === 'string' ) {
-			return "'{$arg}'";
-		}
-		if( in_array($type, array('integer','double') ) ) {
-			return $arg;
-		}
+    /**
+     * Quick format for argument values.
+     *
+     * @param	$type	string
+     * @param	$arg	string
+     * @return	string
+     */
+    private function formatValueForArgs($type, $arg)
+    {
+        if ($type === 'string') {
+            return "'{$arg}'";
+        }
+        if (in_array($type, array( 'integer', 'double' ))) {
+            return $arg;
+        }
 
-		return "_{$type}_";
-	}
+        return "_{$type}_";
+    }
 
-	/**
-	 * Generate the argument string for the advanced mock generation method.
-	 *
-	 * @param	$method		MethodDetails
-	 * @return	string
-	 */
-	private function getAdvancedMockArgumentString( MethodDetails $method )
-	{
-		$property = lcfirst( str_replace( 'set', '', $method->name ) );
+    /**
+     * Generate the argument string for the advanced mock generation method.
+     *
+     * @param	$method		MethodDetails
+     * @return	string
+     */
+    private function getAdvancedMockArgumentString(MethodDetails $method)
+    {
+        $property = lcfirst(str_replace('set', '', $method->name));
 
-		return "self::getArgVal( \${$this->getAdvancedMethodArgumentName()}, '$property' )";
-	}
+        return "self::getArgVal( \${$this->getAdvancedMethodArgumentName()}, '$property' )";
+    }
 
-	/**
-	 * Generate execution code for properties that do not have setters.
-	 *
-	 * @param	$mockMaker	MockMaker
-	 * @param	$advanced	bool		Use 'advanced' formatting & include property array argument as value.
-	 * @return	string
-	 */
-	private function generatePropertiesWithoutSetters( MockMaker $mockMaker, $advanced = FALSE )
-	{
-		$code = '';
-		foreach( $mockMaker->getClassPropertyDetails() as $scope => $properties ) {
-			if( !empty($properties) ) {
-				$code .= $this->generatePropertyAssignments( $properties, $advanced );
-			}
-		}
+    /**
+     * Generate execution code for properties that do not have setters.
+     *
+     * @param	$mockMaker	MockMaker
+     * @param	$advanced	bool		Use 'advanced' formatting & include property array argument as value.
+     * @return	string
+     */
+    private function generatePropertiesWithoutSetters(MockMaker $mockMaker, $advanced = FALSE)
+    {
+        $code = '';
+        foreach ($mockMaker->getClassPropertyDetails() as $scope => $properties) {
+            if (!empty($properties)) {
+                $code .= $this->generatePropertyAssignments($properties, $advanced);
+            }
+        }
 
-		return rtrim( $code, PHP_EOL );
-	}
+        return rtrim($code, PHP_EOL);
+    }
 
-	/**
-	 * Generate execution code for properties that do not have setters.
-	 *
-	 * @param	$properties	array	Array of PropertyDetails objects
-	 * @param	$advanced	bool	Use 'advanced' formatting & include property array argument as value.
-	 * @return	string
-	 */
-	private function generatePropertyAssignments( $properties, $advanced )
-	{
-		$code = '';
-		foreach( $properties as $k => $property ) {
-			if( !$property->setter ) {
-				$code .= $this->generatePropertyAssignmentCode( $property, $advanced );
-			}
-		}
+    /**
+     * Generate execution code for properties that do not have setters.
+     *
+     * @param	$properties	array	Array of PropertyDetails objects
+     * @param	$advanced	bool	Use 'advanced' formatting & include property array argument as value.
+     * @return	string
+     */
+    private function generatePropertyAssignments($properties, $advanced)
+    {
+        $code = '';
+        foreach ($properties as $k => $property) {
+            if (!$property->setter) {
+                $code .= $this->generatePropertyAssignmentCode($property, $advanced);
+            }
+        }
 
-		return $code;
-	}
+        return $code;
+    }
 
-	/**
-	 * Generate code to assign a value to a single property
-	 *
-	 * @param	$property	PropertyDetails		PropertyDetails objects
-	 * @param	$advanced	bool				Use 'advanced' formatting & include property array argument as value.
-	 * @return	string
-	 */
-	private function generatePropertyAssignmentCode( PropertyDetails $property, $advanced )
-	{
-		$value = $this->getPropertyAssignmentValue( $property, $advanced );
-		if( $property->scope === 'public' ) {
-			$code = "		\$mock->{$property->name} = $value;" . PHP_EOL;
-		}
-		if( in_array( $property->scope, array('private', 'protected') ) ) {
-			$code = "		\$r_{$property->name} = \$reflection->getProperty( '{$property->name}' );" . PHP_EOL;
-			$code .= "		\$r_{$property->name}->setAccessible( TRUE );" . PHP_EOL;
-			$code .= "		\$r_{$property->name}->setValue( \$mock, {$value} );" . PHP_EOL;
-		}
+    /**
+     * Generate code to assign a value to a single property
+     *
+     * @param	$property	PropertyDetails		PropertyDetails objects
+     * @param	$advanced	bool				Use 'advanced' formatting & include property array argument as value.
+     * @return	string
+     */
+    private function generatePropertyAssignmentCode(PropertyDetails $property, $advanced)
+    {
+        $value = $this->getPropertyAssignmentValue($property, $advanced);
+        if ($property->scope === 'public') {
+            $code = "		\$mock->{$property->name} = $value;" . PHP_EOL;
+        }
+        if (in_array($property->scope, array( 'private', 'protected' ))) {
+            $code = "		\$r_{$property->name} = \$reflection->getProperty( '{$property->name}' );" . PHP_EOL;
+            $code .= "		\$r_{$property->name}->setAccessible( TRUE );" . PHP_EOL;
+            $code .= "		\$r_{$property->name}->setValue( \$mock, {$value} );" . PHP_EOL;
+        }
 
-		return $code;
-	}
+        return $code;
+    }
 
-	/**
-	 * Generate the property assignment argument value
-	 *
-	 * if basic:
-	 *	use default value, if available
-	 *  else blank string
-	 *
-	 * if advanced:
-	 *	use properties array
-	 *
-	 * @param	$property	PropertyDetails		PropertyDetails objects
-	 * @param	$advanced	bool				Use 'advanced' formatting & include property array argument as value.
-	 * @return	string
-	 */
-	private function getPropertyAssignmentValue( PropertyDetails $property, $advanced )
-	{
-		if( $advanced ) {
-			return "self::getArgVal( \${$this->getAdvancedMethodArgumentName()}, '{$property->name}' )";
-		}
+    /**
+     * Generate the property assignment argument value
+     *
+     * if basic:
+     * 	use default value, if available
+     *  else blank string
+     *
+     * if advanced:
+     * 	use properties array
+     *
+     * @param	$property	PropertyDetails		PropertyDetails objects
+     * @param	$advanced	bool				Use 'advanced' formatting & include property array argument as value.
+     * @return	string
+     */
+    private function getPropertyAssignmentValue(PropertyDetails $property, $advanced)
+    {
+        if ($advanced) {
+            return "self::getArgVal( \${$this->getAdvancedMethodArgumentName()}, '{$property->name}' )";
+        }
 
-		return $this->generateArgStr( $property );
-	}
+        return $this->generateArgStr($property);
+    }
 
-	/**
-	 * Generate the defaultValuesArray used in the getArgVal() method.
-	 *
-	 * @param	$mockMaker	MockMaker
-	 * @return	string
-	 */
-	private function generateDefaultValuesArrayCode( MockMaker $mockMaker )
-	{
-		$classProperties = $mockMaker->getClassPropertyDetails();
+    /**
+     * Generate the defaultValuesArray used in the getArgVal() method.
+     *
+     * @param	$mockMaker	MockMaker
+     * @return	string
+     */
+    private function generateDefaultValuesArrayCode(MockMaker $mockMaker)
+    {
+        $classProperties = $mockMaker->getClassPropertyDetails();
 
-		$code = '		$defaultValuesArray = array(' . PHP_EOL;
-		foreach( $classProperties as $scope => $properties ) {
-			$code .= $this->generateDefaultPropertiesValueElement( $properties, $mockMaker->getClassShortName() );
-		}
-		$code .= '		);';
+        $code = '		$defaultValuesArray = array(' . PHP_EOL;
+        foreach ($classProperties as $scope => $properties) {
+            $code .= $this->generateDefaultPropertiesValueElement($properties, $mockMaker->getClassShortName());
+        }
+        $code .= '		);';
 
-		return $code;
-	}
+        return $code;
+    }
 
-	/**
-	 * Generate the array elements for use in the defaultValuesArray.
-	 *
-	 * @param	$properties		array		Array of PropertyDetails objects
-	 * @param	$className		string		Class name that's being mocked
-	 * @return	string
-	 */
-	private function generateDefaultPropertiesValueElement( $properties, $className )
-	{
-		$code = '';
-		foreach( $properties as $k => $property ) {
-			$code .= $this->generateDefaultPropertyValueElement( $property, $className );
-		}
+    /**
+     * Generate the array elements for use in the defaultValuesArray.
+     *
+     * @param	$properties		array		Array of PropertyDetails objects
+     * @param	$className		string		Class name that's being mocked
+     * @return	string
+     */
+    private function generateDefaultPropertiesValueElement($properties, $className)
+    {
+        $code = '';
+        foreach ($properties as $k => $property) {
+            $code .= $this->generateDefaultPropertyValueElement($property, $className);
+        }
 
-		return $code;
-	}
+        return $code;
+    }
 
-	/**
-	 * Generate a defaultValuesArray element for a property.
-	 *
-	 * @param	$property		PropertyDetails		PropertyDetails objects
-	 * @param	$className		string				Class name that's being mocked
-	 * @return	string
-	 */
-	private function generateDefaultPropertyValueElement( PropertyDetails $property, $className )
-	{
-		if( $property->scope === 'constant' || $property->isStatic ) {
-			$code = "'{$property->name}' => '{$className}::{$property->name}',";
-		} else {
-			if( !$property->isStatic ) {
-				$code = "'{$property->name}' => {$this->generateDefaultValuesArrayArgStr( $property )}";
-			}
-		}
+    /**
+     * Generate a defaultValuesArray element for a property.
+     *
+     * @param	$property		PropertyDetails		PropertyDetails objects
+     * @param	$className		string				Class name that's being mocked
+     * @return	string
+     */
+    private function generateDefaultPropertyValueElement(PropertyDetails $property, $className)
+    {
+        if ($property->scope === 'constant' || $property->isStatic) {
+            $code = "'{$property->name}' => '{$className}::{$property->name}',";
+        } else {
+            if (!$property->isStatic) {
+                $code = "'{$property->name}' => {$this->generateDefaultValuesArrayArgStr($property)}";
+            }
+        }
 
-		return "			{$code}" . PHP_EOL;
-	}
+        return "			{$code}" . PHP_EOL;
+    }
 
-	/**
-	 * Generate the code for a single argument
-	 *
-	 * @param	$details	ArgumentDetails or PropertyDetails object
-	 * @return	string
-	 */
-	private function generateDefaultValuesArrayArgStr( $details )
-	{
-		if( $details->type === 'object' ) {
-			return "\${$details->name},	// {$details->typeHint} object";
-		}
+    /**
+     * Generate the code for a single argument
+     *
+     * @param	$details	ArgumentDetails or PropertyDetails object
+     * @return	string
+     */
+    private function generateDefaultValuesArrayArgStr($details)
+    {
+        if ($details->type === 'object') {
+            return "\${$details->name},	// {$details->typeHint} object";
+        }
 
-		return "{$this->generateArgStr( $details )},";
-	}
+        return "{$this->generateArgStr($details)},";
+    }
 
 }

@@ -1,0 +1,74 @@
+MockMaker:
+
+    how to handle classes with __constructors when they're passing in a string?
+    - might have to sacrifice some relection abilities since we can't mock it
+    - they could always pass in mocks for the class?
+        - allow for automatic scanning of an existing "Mocks" folder
+        and then automagically include the basic mocks if they're present?
+        - if processing an entire directory, would it be a good idea to create
+        a "generation path" based on "who needs whom" requirements?
+            - no dependencies or external references, make them first so they
+            can be included in other mocks
+        - could look for use statements and combine that with type hints
+
+    create unit tests for mocks?
+
+    create a common mock manager file?
+
+FileGenerator:
+
+    If files are found in a sub-directory, save them to the same sub-directory
+    - allow preserveTree override
+
+    Create common "config" file that's passed around with the required settings
+
+    Create "validate" method to verify settings are good before running it.
+
+    Ensure "write directory" has a / on the end
+    - or just make sure the bloody path is right when writing the bloody thing
+
+    Add "include files with" and "exclude files with" regex statements
+    - Add a test utility to show what you'd get with the regex
+
+    Is it possible to automatically include mock calls for known classes?
+    - this might require analyzing the ORM annotations ...
+    - have to include auto-detect + override ... or custom implementation?
+
+FileFormatter:
+
+    change mock file format:
+    - $properties = null in advanced mock
+    - basic mock should just call advanced with no parameters
+    - use properties to iterate over which values to set in advanced
+        - if not in properties, DONT call the setter code
+
+    do i want to make a base "classfile" with php "imports" (think twig!)
+    - from a datapoint[]?
+    - instead of piece by piece assign "code blocks" to "datapoints"
+    - have a text file with mock code using <?=$datapoint['basicSetters']?> to print it out?
+        - use a vsprint2 variation to use delimiters?
+    - create a MockData model that holds all the stuff we'd need
+        - name spaces, file path, class name, references to typehinted classes
+    Pros:
+        - easier to extend
+            - if you want a different mock code file, you can actually write
+            out the code and test it to be sure it works before you run it.
+        - cleaner
+            - no more cobbled together code with heredocs
+    Cons:
+        - ...
+    Investigate:
+        - would it make adding custom reflection code easier?
+
+ArgumentWorker:
+
+    There are some values that cannot be obtained unless the PHP version is high enough:
+    - do I want to mess with these?
+    - need to investigate how these are used and WHY you'd want them.
+    - or i could just add them BIC
+        php >= 5.4
+            isCallable()
+            isDefaultValueConstant()
+            getDefaultValueConstantName()
+        php >= 5.6
+            isVariadic()	-> function sum(...$numbers) {} -> elipsis indicated method overloading
