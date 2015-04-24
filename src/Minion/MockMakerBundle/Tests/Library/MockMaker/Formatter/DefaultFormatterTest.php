@@ -33,7 +33,7 @@ class DefaultFormatterTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals( 'TestEntityMock', $actual );
 	}
 
-	public function test_outputformat()
+	public function _test_outputformat()
 	{
 		$class = new \Minion\MockMakerBundle\Tests\Resources\Entities\Badge;
 		//$class = new \Minion\MockMakerBundle\Tests\Resources\Entities\Challenge;
