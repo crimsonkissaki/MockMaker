@@ -10,6 +10,8 @@
 
 namespace MockMaker;
 
+require dirname(dirname(dirname(__FILE__))) . '/vendor/autoload.php';
+
 use MockMaker\Model\MockMakerConfig;
 
 class MockMaker
@@ -194,3 +196,9 @@ class MockMaker
     }
 
 }
+
+$mm = new MockMaker();
+
+echo "\n\n";
+print_r($mm);
+die("\n\n");
