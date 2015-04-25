@@ -9,7 +9,5 @@
  * file that was distributed with this source code.
  */
 
-$loader = require __DIR__ . "/../vendor/autoload.php";
-$loader->addPsr4('MockMaker\\', __DIR__ . '/MockMaker');
-
-date_default_timezone_set('UTC');
+$loader = require dirname(dirname(__FILE__)) . '/vendor/autoload.php';
+$loader->addPsr4('MockMakerTest\\', dirname(__FILE__) . '/MockMaker/');

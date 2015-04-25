@@ -9,7 +9,7 @@
 
     <filter>
         <whitelist>
-            <directory suffix=".php">src/MockMaker/</directory>
+            <directory suffix=".php">./src/MockMaker/</directory>
         </whitelist>
     </filter>
 </phpunit>

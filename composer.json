@@ -18,7 +18,9 @@
         "mockery/mockery": "dev-master"
     },
     "autoload": {
-        "psr-4": { "MockMaker\\": "src/MockMaker" }
+        "psr-4": {
+            "MockMaker\\": "library/MockMaker/"
+        }
     },
     "extra": {
         "branch-alias": {
