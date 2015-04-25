@@ -15,6 +15,8 @@ MockMaker:
 
     create a common mock manager file?
 
+    change case of true/false/null to match PSR2
+
 FileGenerator:
 
     If files are found in a sub-directory, save them to the same sub-directory
@@ -41,6 +43,7 @@ FileFormatter:
     - basic mock should just call advanced with no parameters
     - use properties to iterate over which values to set in advanced
         - if not in properties, DONT call the setter code
+    * don't need a basic/advanced version. just use advanced code & no arg for basic
 
     do i want to make a base "classfile" with php "imports" (think twig!)
     - from a datapoint[]?
@@ -72,3 +75,15 @@ ArgumentWorker:
             getDefaultValueConstantName()
         php >= 5.6
             isVariadic()	-> function sum(...$numbers) {} -> elipsis indicated method overloading
+
+
+
+BUGS:
+
+    static file assignments in default method are enclosed in quotes
+
+    all public methods are making it in, not just setters (is it '/^set/' ?)
+
+    add a check for setter methods that don't have an associated property
+    - put them in, but comment them out
+    - might need to change the method worker to ensure it DOES have a property
