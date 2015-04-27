@@ -13,6 +13,8 @@ namespace MockMaker;
 require dirname(dirname(dirname(__FILE__))) . '/vendor/autoload.php';
 
 use MockMaker\Model\MockMakerConfig;
+use MockMaker\Worker\DirectoryWorker;
+use MockMaker\Worker\FileWorker;
 
 class MockMaker
 {
@@ -25,6 +27,50 @@ class MockMaker
     private $config;
 
     /**
+     * Class that handles directory operations.
+     *
+     * @var DirectoryWorker
+     */
+    private $dirWorker;
+
+    /**
+     * Class that handles file operations.
+     *
+     * @var FileWorker
+     */
+    private $fileWorker;
+
+    /**
+     * Get the configuration options class
+     *
+     * @return  MockMakerConfig
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
+    /**
+     * Get the directory worker class
+     *
+     * @return  DirectoryWorker
+     */
+    public function getDirWorker()
+    {
+        return $this->dirWorker;
+    }
+
+    /**
+     * Get the file worker class
+     *
+     * @return  FileWorker
+     */
+    public function getFileWorker()
+    {
+        return $this->fileWorker;
+    }
+
+    /**
      * Create a new MockMaker instance.
      *
      * @return	MockMaker
@@ -32,6 +78,8 @@ class MockMaker
     public function __construct()
     {
         $this->config = new MockMakerConfig();
+        $this->dirWorker = new DirectoryWorker();
+        $this->fileWorker = new FileWorker();
     }
 
     /**
@@ -77,7 +125,7 @@ class MockMaker
      */
     public function getFilesFrom($readDirectory)
     {
-        $this->config->addReadDirectory($readDirectory);
+        $this->config->addReadDirectories($readDirectory);
 
         return $this;
     }
@@ -148,12 +196,12 @@ class MockMaker
      *
      * This is only used when a read directory has been specified.
      *
-     * @param	$ignoreRegex	string	Regex pattern.
+     * @param	$excludeRegex   string	Regex pattern.
      * @return	MockMaker
      */
-    public function ignoreFilesWithFormat($ignoreRegex)
+    public function excludeFilesWithFormat($excludeRegex)
     {
-        $this->config->setIgnoreFileRegex($ignoreRegex);
+        $this->config->setExcludeFileRegex($excludeRegex);
 
         return $this;
     }
@@ -174,6 +222,18 @@ class MockMaker
     }
 
     /**
+     * Use to verify MockMaker's settings before you kick things off for real.
+     *
+     * @return	MockMakerConfig
+     */
+    public function verifySettings()
+    {
+        $this->validateDirectories();
+        $this->validateFiles();
+        return $this->config;
+    }
+
+    /**
      * Test (in|ex)clude regex patterns against a specified read directory.
      *
      * TODO: finish this
@@ -182,23 +242,58 @@ class MockMaker
      */
     public function testRegexPatterns()
     {
-        return array( 'undefined' );
+        /**
+         * To test the regex patterns, we will already need to have the directories
+         * validated and approved.
+         * We then have to execute the "getFilesFromReadDirectories()" method
+         * and have the regex executed based on that.
+         */
+        return $this->fileWorker->testRegexPatterns($this->config);
     }
 
     /**
-     * Use to verify MockMaker's settings before you kick things off for real.
-     *
-     * @return	MockMakerConfig
+     * Git 'er done!
      */
-    public function verifySettings()
+    public function execute()
     {
-        return $this->config;
+        // are directories valid?
+        // add all files from directories to filesToMock[]
+        // are files valid?
+    }
+
+    /**
+     * Scan the provided read directories and get files to mock.
+     *
+     * @return  array
+     */
+    private function getFilesFromReadDirectories()
+    {
+        $files = $this->fileWorker->getFilesFromReadDirectories($this->config);
+        $this->config->addFilesToMock($files);
+
+        return $files;
+    }
+
+    /**
+     * Ensure all specified directories exist and have correct permissions.
+     *
+     * @throws  MockMakerException
+     * @return  bool
+     */
+    private function validateDirectories()
+    {
+        return $this->dirWorker->validateDirectories($this->config);
+    }
+
+    /**
+     * Ensure all specified files exist and have correct permissions.
+     *
+     * @throws  MockMakerException
+     * @return  bool
+     */
+    private function validateFiles()
+    {
+        return $this->fileWorker->validateFiles($this->config);
     }
 
 }
-
-$mm = new MockMaker();
-
-echo "\n\n";
-print_r($mm);
-die("\n\n");

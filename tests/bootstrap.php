@@ -10,4 +10,4 @@
  */
 
 $loader = require dirname(dirname(__FILE__)) . '/vendor/autoload.php';
-$loader->addPsr4('MockMakerTest\\', dirname(__FILE__) . '/MockMaker/');
+$loader->addPsr4('MockMaker\\', dirname(__FILE__) . '/MockMaker/');

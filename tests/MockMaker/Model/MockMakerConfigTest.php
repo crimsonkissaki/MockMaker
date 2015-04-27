@@ -8,37 +8,64 @@
  * 	@version	1.0
  */
 
-namespace Mockmaker\Model;
+namespace MockMaker\Model;
 
-//use Mockmaker\Model\MockMakerConfig;
-use Mockmaker\Worker\TestHelperTest;
+use MockMaker\Model\MockMakerConfig;
+use MockMaker\TestHelper;
 
 class MockMakerConfigTest extends \PHPUnit_Framework_TestCase
 {
+    /* @var $config MockMakerConfig */
 
-    public function test_mm()
+    public $config;
+    public $pathToEntities;
+    public $pathToGeneratedEntities;
+
+    public function setUp()
     {
-        /*
-          $mmc = new MockMakerConfig();
-          $this->assertTrue($mmc instanceof MockMakerConfig);
-          $this->assertTrue(true);
-         */
+        $this->config = new MockMakerConfig();
+        $this->pathToEntities = dirname(dirname(__FILE__)) . '/Entities/';
+        //$this->pathToGeneratedEntities = dirname(dirname(__FILE__)) . '/Resources/GeneratedEntities/';
+    }
 
-        echo "\n\n" . __FILE__ . "\n";
-        echo "\n" . TestHelperTest::myTest() . "\n\n";
+    public function test_addFilesToMock_addsSingleFileToList()
+    {
+        $file = $this->pathToEntities . 'SimpleEntity.php';
+        $this->config->addFilesToMock($file);
 
-        /*
-          echo "\n\n";
-          $dir = __DIR__ . "/../../../vendor/autoload.php";
-          //$loader = require __DIR__ . "/../../vendor/autoload.php";
-          $loader = require $dir;
-          echo "\n\n";
-          echo "loader:\n\n";
-          print_r($loader);
-          echo "\n\n";
-         */
+        $this->assertEquals(1, count($this->config->getFilesToMock()));
+    }
 
-        die();
+    public function test_addFilesToMock_addsArrayOfFilesToList()
+    {
+        $files = array(
+            $this->pathToEntities . 'SimpleEntity.php',
+            $this->pathToEntities . 'MethodWorkerEntity.php',
+            $this->pathToEntities . 'PropertyWorkerEntity.php',
+            $this->pathToEntities . 'TestEntity.php',
+        );
+        $this->config->addFilesToMock($files);
+
+        $this->assertEquals(4, count($this->config->getFilesToMock()));
+    }
+
+    public function test_addReadDirectories_addsSingleDirectory()
+    {
+        $this->config->addReadDirectories(dirname(__FILE__));
+
+        $this->assertEquals(1, count($this->config->getReadDirectories()));
+    }
+
+    public function test_addReadDirectories_addsArrayOfDirectories()
+    {
+        $dirs = array(
+            dirname(__FILE__),
+            dirname(dirname(__FILE__)),
+            dirname(dirname(dirname(__FILE__))),
+        );
+        $this->config->addReadDirectories($dirs);
+
+        $this->assertEquals(3, count($this->config->getReadDirectories()));
     }
 
 }

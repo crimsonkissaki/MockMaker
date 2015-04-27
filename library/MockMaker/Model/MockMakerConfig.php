@@ -25,7 +25,7 @@ class MockMakerConfig
      *
      * @var	bool
      */
-    private $overwriteExistingFiles = true;
+    private $overwriteExistingFiles = false;
 
     /**
      * Directories to scan for files that need mocks generated.
@@ -49,14 +49,14 @@ class MockMakerConfig
     private $filesToMock = [ ];
 
     /**
-     * Regex pattern to use to filter out files from mocking.
+     * Regex pattern to use to exclude files from mocking.
      *
      * @var	string
      */
-    private $ignoreFileRegex;
+    private $excludeFileRegex;
 
     /**
-     * Regex pattern to use to find files for mocking.
+     * Regex pattern to use to include files for mocking.
      *
      * @var	string
      */
@@ -98,11 +98,11 @@ class MockMakerConfig
     }
 
     /**
-     * Get directory name to scan for files to mock.
+     * Get directory names to scan for files to mock.
      *
      * @return	string
      */
-    public function getReadDirectory()
+    public function getReadDirectories()
     {
         return $this->readDirectories;
     }
@@ -128,13 +128,13 @@ class MockMakerConfig
     }
 
     /**
-     * Get the ignore file regex string.
+     * Get the exclude file regex string.
      *
      * @return	string
      */
-    public function getIgnoreFileRegex()
+    public function getExcludeFileRegex()
     {
-        return $this->ignoreFileRegex;
+        return $this->excludeFileRegex;
     }
 
     /**
@@ -195,7 +195,7 @@ class MockMakerConfig
      */
     public function setReadDirectories($readDirectories)
     {
-        $dirs = is_array($readDirectories) ? : array( $readDirectories );
+        $dirs = is_array($readDirectories) ? $readDirectories : array( $readDirectories );
         $this->readDirectories = $dirs;
     }
 
@@ -230,7 +230,7 @@ class MockMakerConfig
      */
     public function setFilesToMock($filesToMock)
     {
-        $files = is_array($filesToMock) ? : array( $filesToMock );
+        $files = is_array($filesToMock) ? $filesToMock : array( $filesToMock );
         $this->filesToMock = $files;
     }
 
@@ -252,11 +252,11 @@ class MockMakerConfig
     /**
      * Set the ignore file filter regex string.
      *
-     * @param	$ignoreFileRegex	string	Regex string used to exclude files.
+     * @param	$excludeFileRegex   string	Regex string used to exclude files.
      */
-    public function setIgnoreFileRegex($ignoreFileRegex)
+    public function setExcludeFileRegex($excludeFileRegex)
     {
-        $this->ignoreFileRegex = $ignoreFileRegex;
+        $this->excludeFileRegex = $excludeFileRegex;
     }
 
     /**
