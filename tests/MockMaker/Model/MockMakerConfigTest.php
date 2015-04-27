@@ -49,6 +49,27 @@ class MockMakerConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(4, count($this->config->getFilesToMock()));
     }
 
+    public function test_addFilesToAllDetectedFiles_addsSingleFileToList()
+    {
+        $file = $this->pathToEntities . 'SimpleEntity.php';
+        $this->config->addFilesToAllDetectedFiles($file);
+
+        $this->assertEquals(1, count($this->config->getAllDetectedFiles()));
+    }
+
+    public function test_addFilesToAllDetectedFiles_addsArrayOfFilesToList()
+    {
+        $files = array(
+            $this->pathToEntities . 'SimpleEntity.php',
+            $this->pathToEntities . 'MethodWorkerEntity.php',
+            $this->pathToEntities . 'PropertyWorkerEntity.php',
+            $this->pathToEntities . 'TestEntity.php',
+        );
+        $this->config->addFilesToAllDetectedFiles($files);
+
+        $this->assertEquals(4, count($this->config->getAllDetectedFiles()));
+    }
+
     public function test_addReadDirectories_addsSingleDirectory()
     {
         $this->config->addReadDirectories(dirname(__FILE__));

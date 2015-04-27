@@ -11,6 +11,7 @@
 namespace MockMaker;
 
 use MockMaker\MockMaker;
+use MockMaker\Helper\TestHelper;
 
 class MockMakerTest extends \PHPUnit_Framework_TestCase
 {
@@ -23,8 +24,22 @@ class MockMakerTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->mockMaker = new MockMaker();
-        $this->rootDir = dirname(dirname(__FILE__));
+        $this->rootDir = dirname(dirname(dirname(__FILE__)));
         $this->entitiesDir = $this->rootDir . '/tests/MockMaker/Entities/';
+    }
+
+    /**
+     * Used for testing workflow.
+     */
+    public function _test_workflow()
+    {
+        $actual = $this->mockMaker
+            ->getFilesFrom($this->entitiesDir)
+            ->recursively()
+            ->excludeFilesWithFormat('/^Method/')
+            ->verifySettings();
+
+        TestHelper::dbug($actual, __METHOD__, true);
     }
 
     /**
@@ -40,7 +55,7 @@ class MockMakerTest extends \PHPUnit_Framework_TestCase
     public function test_mockFiles_addsFiles()
     {
         $this->mockMaker->mockFiles($this->entitiesDir . 'SimpleEntity.php');
-        $this->assertEquals(1, count($this->mockMaker->getConfig()->getFilesToMock()));
+        $this->assertEquals(1, count($this->mockMaker->getConfig()->getAllDetectedFiles()));
     }
 
     public function test_getFilesFrom()
@@ -90,6 +105,82 @@ class MockMakerTest extends \PHPUnit_Framework_TestCase
         $expected = '/Entity$/';
         $this->mockMaker->includeFilesWithFormat($expected);
         $this->assertEquals($expected, $this->mockMaker->getConfig()->getIncludeFileRegex());
+    }
+
+    public function test_testRegexPatterns_returnsCorrectFilesWithOnlyExcludeRegex()
+    {
+        $regex = '/Underscore$/';
+        $actual = $this->mockMaker
+            ->getFilesFrom($this->entitiesDir . 'SubEntities/')
+            ->excludeFilesWithFormat($regex)
+            ->testRegexPatterns();
+        $expected = array(
+            'include' => array(
+                $this->entitiesDir . 'SubEntities/SimpleSubEntity.php',
+                $this->entitiesDir . 'SubEntities/SimpleSubEntityUnderscore.php'
+            ),
+            'exclude' => array(
+                $this->entitiesDir . 'SubEntities/SimpleSubEntityUnderscore.php'
+            ),
+            'workable' => array(
+                $this->entitiesDir . 'SubEntities/SimpleSubEntity.php',
+            ),
+        );
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function test_testRegexPatterns_returnsCorrectFilesWithOnlyIncludeRegex()
+    {
+        $regex = '/Entity$/';
+        $actual = $this->mockMaker
+            ->getFilesFrom($this->entitiesDir . 'SubEntities/')
+            ->includeFilesWithFormat($regex)
+            ->testRegexPatterns();
+        $expected = array(
+            'include' => array(
+                $this->entitiesDir . 'SubEntities/SimpleSubEntity.php',
+            ),
+            'exclude' => array(),
+            'workable' => array(
+                $this->entitiesDir . 'SubEntities/SimpleSubEntity.php',
+            ),
+        );
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function test_testRegexPatterns_returnsCorrectFilesWithBothIncludeAndExcludeRegex()
+    {
+        $i_regex = '/Entity$/';
+        $e_regex = '/^Simple.*$/';
+        $actual = $this->mockMaker
+            ->getFilesFrom($this->entitiesDir)
+            ->recursively()
+            ->includeFilesWithFormat($i_regex)
+            ->excludeFilesWithFormat($e_regex)
+            ->testRegexPatterns();
+        $expected = array(
+            'include' => array(
+                $this->entitiesDir . 'MethodWorkerEntity.php',
+                $this->entitiesDir . 'PropertyWorkerEntity.php',
+                $this->entitiesDir . 'SimpleEntity.php',
+                $this->entitiesDir . 'TestEntity.php',
+                $this->entitiesDir . 'SubEntities/SimpleSubEntity.php',
+            ),
+            'exclude' => array(
+                $this->entitiesDir . 'SimpleEntity.php',
+                $this->entitiesDir . 'SubEntities/SimpleSubEntityUnderscore.php',
+            ),
+            'workable' => array(
+                $this->entitiesDir . 'MethodWorkerEntity.php',
+                $this->entitiesDir . 'PropertyWorkerEntity.php',
+                $this->entitiesDir . 'TestEntity.php',
+                $this->entitiesDir . 'SubEntities/SimpleSubEntity.php',
+            ),
+        );
+
+        $this->assertEquals(sort($expected), sort($actual));
     }
 
 }

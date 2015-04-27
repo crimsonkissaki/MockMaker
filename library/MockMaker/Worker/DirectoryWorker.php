@@ -20,27 +20,13 @@ class DirectoryWorker
 {
 
     /**
-     * Validate all directories are valid and have correct permissions.
-     *
-     * @param   $config     Config      MockMaker configuration object
-     * @return  bool
-     */
-    public function validateDirectories(Config $config)
-    {
-        $this->validateReadDirs($config->getReadDirectories());
-        $this->validateWriteDir($config->getWriteDirectory());
-
-        return true;
-    }
-
-    /**
      * Validate specified read directories.
      *
      * @param   $dirs   array
      * @return  bool
      * @throws  MockMakerException
      */
-    private function validateReadDirs($dirs)
+    public function validateReadDirs($dirs)
     {
         foreach ($dirs as $k => $dir) {
             if (!is_dir($dir)) {
@@ -64,7 +50,7 @@ class DirectoryWorker
      * @return  bool
      * @throws  MockMakerException
      */
-    private function validateWriteDir($dir)
+    public function validateWriteDir($dir)
     {
         if (!is_dir($dir)) {
             if (!mkdir($dir, 0777)) {

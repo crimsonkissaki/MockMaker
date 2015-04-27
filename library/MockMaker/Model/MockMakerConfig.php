@@ -42,6 +42,13 @@ class MockMakerConfig
     private $writeDirectory;
 
     /**
+     * All files indicated by user or in read directories.
+     *
+     * @var	array
+     */
+    private $allDetectedFiles = [ ];
+
+    /**
      * Array of files to generate mocks for.
      *
      * @var	array
@@ -115,6 +122,16 @@ class MockMakerConfig
     public function getWriteDirectory()
     {
         return $this->writeDirectory;
+    }
+
+    /**
+     * Get an array all files indicated by user or in read directories.
+     *
+     * @return	array
+     */
+    public function getAllDetectedFiles()
+    {
+        return $this->allDetectedFiles;
     }
 
     /**
@@ -221,6 +238,31 @@ class MockMakerConfig
     public function setWriteDirectory($writeDirectory)
     {
         $this->writeDirectory = $writeDirectory;
+    }
+
+    /**
+     * Set an array all files indicated by user or in read directories.
+     *
+     * @param   $allDetectedFiles   array
+     */
+    public function setAllDetectedFiles($allDetectedFiles)
+    {
+        $this->allDetectedFiles = $allDetectedFiles;
+    }
+
+    /**
+     * Add either a single file or an array
+     * of files to the "all detected files" array.
+     *
+     * @param	$files	mixed
+     */
+    public function addFilesToAllDetectedFiles($files)
+    {
+        if (is_array($files)) {
+            $this->setAllDetectedFiles(array_merge($this->allDetectedFiles, $files));
+        } else {
+            array_push($this->allDetectedFiles, $files);
+        }
     }
 
     /**

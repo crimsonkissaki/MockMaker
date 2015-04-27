@@ -15,6 +15,7 @@ require dirname(dirname(dirname(__FILE__))) . '/vendor/autoload.php';
 use MockMaker\Model\MockMakerConfig;
 use MockMaker\Worker\DirectoryWorker;
 use MockMaker\Worker\FileWorker;
+use MockMaker\TestHelper;
 
 class MockMaker
 {
@@ -109,7 +110,7 @@ class MockMaker
      */
     public function mockFiles($files)
     {
-        $this->config->addFilesToMock($files);
+        $this->config->addFilesToAllDetectedFiles($files);
 
         return $this;
     }
@@ -192,7 +193,9 @@ class MockMaker
     }
 
     /**
-     * Define a regex pattern used to EXCLUDE files.
+     * Define a regex pattern used to EXCLUDE files based on the file name.
+     *
+     * YOU DO NOT NEED TO INCLUDE THE FILE EXTENSION IN THE REGEX STRING
      *
      * This is only used when a read directory has been specified.
      *
@@ -207,7 +210,9 @@ class MockMaker
     }
 
     /**
-     * Define a regex pattern used to INCLUDE files.
+     * Define a regex pattern used to INCLUDE files based on the file name.
+     *
+     * YOU DO NOT NEED TO INCLUDE THE FILE EXTENSION IN THE REGEX STRING
      *
      * This is only used when a read directory has been specified.
      *
@@ -228,26 +233,23 @@ class MockMaker
      */
     public function verifySettings()
     {
-        $this->validateDirectories();
-        $this->validateFiles();
+        $this->determineWorkableFiles();
+
         return $this->config;
     }
 
     /**
-     * Test (in|ex)clude regex patterns against a specified read directory.
+     * Test (in|ex)clude regex patterns against any spefified files or
+     * files found in specified read directories.
      *
-     * TODO: finish this
+     * Returns an associative array of [include],[exclude] files.
      *
      * @return	array
      */
     public function testRegexPatterns()
     {
-        /**
-         * To test the regex patterns, we will already need to have the directories
-         * validated and approved.
-         * We then have to execute the "getFilesFromReadDirectories()" method
-         * and have the regex executed based on that.
-         */
+        $this->getAllPossibleFilesToBeWorked();
+
         return $this->fileWorker->testRegexPatterns($this->config);
     }
 
@@ -256,44 +258,58 @@ class MockMaker
      */
     public function execute()
     {
-        // are directories valid?
-        // add all files from directories to filesToMock[]
-        // are files valid?
+        $this->determineWorkableFiles();
+        if ($this->config->getWriteDirectory()) {
+            $this->dirWorker->validateWriteDir($this->config->getWriteDirectory());
+        }
+        // process files
+        // $code = $this->processAllFiles();
     }
 
     /**
-     * Scan the provided read directories and get files to mock.
+     * Get every single file that's user specified or in the read directories.
      *
      * @return  array
      */
-    private function getFilesFromReadDirectories()
+    private function getAllPossibleFilesToBeWorked()
     {
-        $files = $this->fileWorker->getFilesFromReadDirectories($this->config);
-        $this->config->addFilesToMock($files);
+        $dirFiles = $this->getListOfFilesFromReadDir();
+        $this->config->addFilesToAllDetectedFiles($dirFiles);
 
-        return $files;
+        return $this->config->getAllDetectedFiles();
     }
 
     /**
-     * Ensure all specified directories exist and have correct permissions.
+     * Filter and validate the allDetectedFiles() array and return the
+     * files we need to actually process.
      *
-     * @throws  MockMakerException
-     * @return  bool
+     * @return  array
      */
-    private function validateDirectories()
+    private function determineWorkableFiles()
     {
-        return $this->dirWorker->validateDirectories($this->config);
+        $this->getAllPossibleFilesToBeWorked();
+        $workableFiles = $this->fileWorker->filterFilesWithRegex($this->config);
+        $this->fileWorker->validateFiles($workableFiles);
+        $this->config->setFilesToMock($workableFiles);
+
+        return $workableFiles;
     }
 
     /**
-     * Ensure all specified files exist and have correct permissions.
+     * Scan the specified directories for any files.
      *
-     * @throws  MockMakerException
-     * @return  bool
+     * @return  array
      */
-    private function validateFiles()
+    private function getListOfFilesFromReadDir()
     {
-        return $this->fileWorker->validateFiles($this->config);
+        $allFiles = [ ];
+        $readDirs = $this->config->getReadDirectories();
+        if (!empty($readDirs)) {
+            $this->dirWorker->validateReadDirs($readDirs);
+            $allFiles = $this->fileWorker->getAllFilesFromReadDirectories($readDirs, $this->config->getRecursiveRead());
+        }
+
+        return $allFiles;
     }
 
 }
