@@ -242,7 +242,7 @@ class MockMaker
      * Test (in|ex)clude regex patterns against any spefified files or
      * files found in specified read directories.
      *
-     * Returns an associative array of [include],[exclude] files.
+     * Returns an associative array of [include],[exclude],[workable] files.
      *
      * @return	array
      */
@@ -280,22 +280,6 @@ class MockMaker
     }
 
     /**
-     * Filter and validate the allDetectedFiles() array and return the
-     * files we need to actually process.
-     *
-     * @return  array
-     */
-    private function determineWorkableFiles()
-    {
-        $this->getAllPossibleFilesToBeWorked();
-        $workableFiles = $this->fileWorker->filterFilesWithRegex($this->config);
-        $this->fileWorker->validateFiles($workableFiles);
-        $this->config->setFilesToMock($workableFiles);
-
-        return $workableFiles;
-    }
-
-    /**
      * Scan the specified directories for any files.
      *
      * @return  array
@@ -310,6 +294,22 @@ class MockMaker
         }
 
         return $allFiles;
+    }
+
+    /**
+     * Filter and validate the allDetectedFiles() array and return the
+     * files we need to actually process.
+     *
+     * @return  array
+     */
+    private function determineWorkableFiles()
+    {
+        $this->getAllPossibleFilesToBeWorked();
+        $workableFiles = $this->fileWorker->filterFilesWithRegex($this->config);
+        $this->fileWorker->validateFiles($workableFiles);
+        $this->config->setFilesToMock($workableFiles);
+
+        return $workableFiles;
     }
 
 }
