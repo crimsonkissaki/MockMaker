@@ -79,6 +79,15 @@ class MockMakerClassWorkerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    public function test_getClassNamespaceFromFilePath_returnsCorrectNamespace()
+    {
+        $filePath = 'tests\MockMaker\Entities\SimpleEntity';
+        $method = TestHelper::getAccessibleNonPublicMethod($this->worker, 'getClassNamespaceFromFilePath');
+        $actual = $method->invoke($this->worker, $filePath);
+        $expected = 'MockMaker\Entities';
+        $this->assertEquals($expected, $actual);
+    }
+
     public function _test_generateNewObject_returnsCorrectUseStatements()
     {
         $expected = array(
