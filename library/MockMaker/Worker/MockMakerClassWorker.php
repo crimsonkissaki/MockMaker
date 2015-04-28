@@ -3,7 +3,7 @@
 /**
  * 	MockMakerClassWorker
  *
- * 	@author		Evan Johnson <evan.johnson@rapp.com>
+ * 	@author		Evan Johnson
  * 	@created	Apr 28, 2015
  * 	@version	1.0
  */
