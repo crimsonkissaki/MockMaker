@@ -22,16 +22,6 @@ FileGenerator:
     If files are found in a sub-directory, save them to the same sub-directory
     - allow preserveTree override
 
-    Create common "config" file that's passed around with the required settings
-
-    Create "validate" method to verify settings are good before running it.
-
-    Ensure "write directory" has a / on the end
-    - or just make sure the bloody path is right when writing the bloody thing
-
-    Add "include files with" and "exclude files with" regex statements
-    - Add a test utility to show what you'd get with the regex
-
     Is it possible to automatically include mock calls for known classes?
     - this might require analyzing the ORM annotations ...
     - have to include auto-detect + override ... or custom implementation?
