@@ -47,18 +47,16 @@ class MockMakerTest extends \PHPUnit_Framework_TestCase
      * These tests verify that MockMaker interfaces with the
      * MockMakerConfig class properly.
      */
-    public function test_setRootDirectory()
+    public function test_setProjectRootPath()
     {
-        $this->mockMaker->setRootDirectory($this->rootDir);
-        $this->assertEquals($this->rootDir,
-            $this->mockMaker->getConfig()->getRootDirectory());
+        $this->mockMaker->setProjectRootPath($this->rootDir);
+        $this->assertEquals($this->rootDir . '/', $this->mockMaker->getConfig()->getProjectRootPath());
     }
 
     public function test_mockFiles_addsFiles()
     {
         $this->mockMaker->mockFiles($this->entitiesDir . 'SimpleEntity.php');
-        $this->assertEquals(1,
-            count($this->mockMaker->getConfig()->getAllDetectedFiles()));
+        $this->assertEquals(1, count($this->mockMaker->getConfig()->getAllDetectedFiles()));
     }
 
     public function test_getFilesFrom()
@@ -79,8 +77,7 @@ class MockMakerTest extends \PHPUnit_Framework_TestCase
     public function test_saveFilesTo()
     {
         $this->mockMaker->saveFilesTo($this->entitiesDir);
-        $this->assertEquals($this->entitiesDir,
-            $this->mockMaker->getConfig()->getWriteDirectory());
+        $this->assertEquals($this->entitiesDir, $this->mockMaker->getConfig()->getWriteDirectory());
     }
 
     public function test_ignoreDirectoryStructure()
@@ -101,16 +98,14 @@ class MockMakerTest extends \PHPUnit_Framework_TestCase
     {
         $expected = '/Repository$/';
         $this->mockMaker->excludeFilesWithFormat($expected);
-        $this->assertEquals($expected,
-            $this->mockMaker->getConfig()->getExcludeFileRegex());
+        $this->assertEquals($expected, $this->mockMaker->getConfig()->getExcludeFileRegex());
     }
 
     public function test_includeFilesWithFormat()
     {
         $expected = '/Entity$/';
         $this->mockMaker->includeFilesWithFormat($expected);
-        $this->assertEquals($expected,
-            $this->mockMaker->getConfig()->getIncludeFileRegex());
+        $this->assertEquals($expected, $this->mockMaker->getConfig()->getIncludeFileRegex());
     }
 
     public function test_testRegexPatterns_returnsCorrectFilesWithOnlyExcludeRegex()

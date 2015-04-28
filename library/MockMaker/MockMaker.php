@@ -246,6 +246,37 @@ class MockMaker
     }
 
     /**
+     * NOT YET IMPLEMENTED
+     *
+     * Tell MockMaker to also generate basic unit tests for the mock files.
+     * Tests will only verify the mock returns a valid class instance.
+     *
+     * Default MockMaker setting is FALSE
+     *
+     * @return	MockMaker
+     */
+    public function generateMockUnitTests()
+    {
+        return $this;
+    }
+
+    /**
+     * NOT YET IMPLEMENTED
+     *
+     * Directory you want MockMaker to save unit test files for the mocks.
+     *
+     * If you do not specify a unit test directory, MockMaker will return
+     * the generated unit test code as a string.
+     *
+     * @param   $unitTestDirectory  string
+     * @return  MockMaker
+     */
+    public function saveUnitTestsTo($unitTestDirectory)
+    {
+        return $this;
+    }
+
+    /**
      * Use to verify MockMaker's settings before you kick things off for real.
      *
      * @return	MockMakerConfig
