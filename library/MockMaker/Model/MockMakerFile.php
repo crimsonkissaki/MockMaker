@@ -33,13 +33,6 @@ class MockMakerFile
     private $fileName;
 
     /**
-     * File use statements.
-     *
-     * @var array
-     */
-    private $useStatements = [ ];
-
-    /**
      * MockMakerClass data object
      *
      * @var type
@@ -64,16 +57,6 @@ class MockMakerFile
     public function getFileName()
     {
         return $this->fileName;
-    }
-
-    /**
-     * Get the file's use statements.
-     *
-     * @return array
-     */
-    public function getUseStatements()
-    {
-        return $this->useStatements;
     }
 
     /**
@@ -108,37 +91,6 @@ class MockMakerFile
     public function setFileName($fileName)
     {
         $this->fileName = $fileName;
-
-        return $this;
-    }
-
-    /**
-     * Set the file's use statements.
-     *
-     * @param   $useStatements  array
-     * @return  MockMakerFile
-     */
-    public function setUseStatements($useStatements)
-    {
-        $this->useStatements = $useStatements;
-
-        return $this;
-    }
-
-    /**
-     * Add a single or array of use statements to useStatements.
-     *
-     * @param   $useStatements  mixed
-     * @return  MockMakerFile
-     */
-    public function addUseStatements($useStatements)
-    {
-        if (is_array($useStatements)) {
-            $this->setUseStatements(array_merge($this->useStatements,
-                    $useStatements));
-        } else {
-            array_push($this->useStatements, $useStatements);
-        }
 
         return $this;
     }

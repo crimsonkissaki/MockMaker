@@ -30,6 +30,13 @@ class MockMakerClass
     private $classType = 'normal';
 
     /**
+     * Class use statements.
+     *
+     * @var array
+     */
+    private $useStatements = [ ];
+
+    /**
      * Does the class have a constructor.
      *
      * @var bool
@@ -63,5 +70,46 @@ class MockMakerClass
      * @var array
      */
     private $methods = [ ];
+
+    /**
+     * Get the class's use statements.
+     *
+     * @return array
+     */
+    public function getUseStatements()
+    {
+        return $this->useStatements;
+    }
+
+    /**
+     * Set the class's use statements.
+     *
+     * @param   $useStatements  array
+     * @return  MockMakerClass
+     */
+    public function setUseStatements($useStatements)
+    {
+        $this->useStatements = $useStatements;
+
+        return $this;
+    }
+
+    /**
+     * Add a single or array of use statements to useStatements.
+     *
+     * @param   $useStatements  mixed
+     * @return  MockMakerClass
+     */
+    public function addUseStatements($useStatements)
+    {
+        if (is_array($useStatements)) {
+            $this->setUseStatements(array_merge($this->useStatements,
+                    $useStatements));
+        } else {
+            array_push($this->useStatements, $useStatements);
+        }
+
+        return $this;
+    }
 
 }
