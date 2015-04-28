@@ -3,7 +3,7 @@
 /**
  * 	MockMakerConfig
  *
- * 	@author		Evan Johnson <evan.johnson@rapp.com>
+ * 	@author		Evan Johnson
  * 	@created	Apr 22, 2015
  * 	@version	1.0
  */
@@ -135,7 +135,7 @@ class MockMakerConfig
     }
 
     /**
-     * Get an array of individual files to generate mocks for.
+     * Get array of files that need mocks generated.
      *
      * @return	array
      */
@@ -224,7 +224,8 @@ class MockMakerConfig
     public function addReadDirectories($readDirectories)
     {
         if (is_array($readDirectories)) {
-            $this->setReadDirectories(array_merge($this->readDirectories, $readDirectories));
+            $this->setReadDirectories(array_merge($this->readDirectories,
+                    $readDirectories));
         } else {
             array_push($this->readDirectories, $readDirectories);
         }
@@ -259,7 +260,8 @@ class MockMakerConfig
     public function addFilesToAllDetectedFiles($files)
     {
         if (is_array($files)) {
-            $this->setAllDetectedFiles(array_merge($this->allDetectedFiles, $files));
+            $this->setAllDetectedFiles(array_merge($this->allDetectedFiles,
+                    $files));
         } else {
             array_push($this->allDetectedFiles, $files);
         }
