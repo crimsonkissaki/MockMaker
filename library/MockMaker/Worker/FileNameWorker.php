@@ -1,11 +1,11 @@
 <?php
 
 /**
- * 	FileWorker
+ * 	FileNameWorker
  *
  *  File operations for MockMaker
  *
- * 	@author		Evan Johnson <evan.johnson@rapp.com>
+ * 	@author		Evan Johnson
  * 	@created	Apr 26, 2015
  * 	@version	1.0
  */
@@ -17,7 +17,7 @@ use MockMaker\Exception\MockMakerException as MMException;
 use MockMaker\Exception\MockMakerErrors as MMErrors;
 use MockMaker\Helper\TestHelper;
 
-class FileWorker
+class FileNameWorker
 {
 
     /**
@@ -60,7 +60,8 @@ class FileWorker
     {
         foreach ($files as $file) {
             if (!is_readable($file)) {
-                throw new MMException(MMErrors::generateMessage(MMErrors::INVALID_SOURCE_FILE, array( 'file' => "'{$file}'" )));
+                throw new MMException(MMErrors::generateMessage(MMErrors::INVALID_SOURCE_FILE,
+                    array( 'file' => "'{$file}'" )));
             }
         }
 
@@ -77,8 +78,10 @@ class FileWorker
     {
         $files = $config->getAllDetectedFiles();
         return array(
-            'include' => $this->getIncludeFiles($files, $config->getIncludeFileRegex()),
-            'exclude' => $this->getExcludeFiles($files, $config->getExcludeFileRegex()),
+            'include' => $this->getIncludeFiles($files,
+                $config->getIncludeFileRegex()),
+            'exclude' => $this->getExcludeFiles($files,
+                $config->getExcludeFileRegex()),
             'workable' => $this->filterFilesWithRegex($config),
         );
     }
@@ -91,8 +94,10 @@ class FileWorker
      */
     public function filterFilesWithRegex(Config $config)
     {
-        $include = $this->getIncludeFiles($config->getAllDetectedFiles(), $config->getIncludeFileRegex());
-        $exclude = $this->getExcludeFiles($config->getAllDetectedFiles(), $config->getExcludeFileRegex());
+        $include = $this->getIncludeFiles($config->getAllDetectedFiles(),
+            $config->getIncludeFileRegex());
+        $exclude = $this->getExcludeFiles($config->getAllDetectedFiles(),
+            $config->getExcludeFileRegex());
         $validFiles = array_values(array_diff($include, $exclude));
 
         return $validFiles;
@@ -149,7 +154,8 @@ class FileWorker
                 $matches = $this->getMatchingFiles($files, $regex);
             }
         } catch (\Exception $e) {
-            throw new MMException(MMErrors::generateMessage(MMErrors::INVALID_REGEX, array( 'regex' => $regex )));
+            throw new MMException(MMErrors::generateMessage(MMErrors::INVALID_REGEX,
+                array( 'regex' => $regex )));
         }
 
         return $matches;
@@ -169,7 +175,8 @@ class FileWorker
             if (substr($file, -4) !== '.php') {
                 continue;
             }
-            $fileName = rtrim(join('', array_slice(explode('/', $file), -1)), '.php');
+            $fileName = rtrim(join('', array_slice(explode('/', $file), -1)),
+                '.php');
             if (preg_match($regex, $fileName) === 1) {
                 $matches[] = $file;
             }

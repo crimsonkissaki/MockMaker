@@ -1,21 +1,21 @@
 <?php
 
 /**
- * 	FileWorkerTest
+ * 	FileNameWorkerTest
  *
- * 	@author		Evan Johnson <evan.johnson@rapp.com>
+ * 	@author		Evan Johnson
  * 	@created	Apr 26, 2015
  * 	@version	1.0
  */
 
 namespace MockMaker\Worker;
 
-use MockMaker\Worker\FileWorker;
+use MockMaker\Worker\FileNameWorker;
 use MockMaker\Model\MockMakerConfig;
 use MockMaker\Exception\MockMakerException;
 use MockMaker\Helper\TestHelper;
 
-class FileWorkerTest extends \PHPUnit_Framework_TestCase
+class FileNameWorkerTest extends \PHPUnit_Framework_TestCase
 {
     /* @var $worker FileWorker */
 
@@ -45,7 +45,7 @@ class FileWorkerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->worker = new FileWorker();
+        $this->worker = new FileNameWorker();
         $this->config = new MockMakerConfig();
         $this->rootDir = dirname(dirname(dirname(dirname(__FILE__))));
         $this->entitiesDir = $this->rootDir . '/tests/MockMaker/Entities/';
@@ -60,7 +60,8 @@ class FileWorkerTest extends \PHPUnit_Framework_TestCase
 
     public function test_getAllFilesFromReadDirectories_recursively()
     {
-        $actual = $this->worker->getAllFilesFromReadDirectories(array( $this->entitiesDir ), true);
+        $actual = $this->worker->getAllFilesFromReadDirectories(array( $this->entitiesDir ),
+            true);
 
         $this->assertEquals(6, count($actual));
     }
@@ -112,21 +113,24 @@ class FileWorkerTest extends \PHPUnit_Framework_TestCase
      */
     public function test_getFilesThatMatchRegex_throwsExceptionForInvalidRegex()
     {
-        $method = TestHelper::getAccessibleNonPublicMethod($this->worker, 'getFilesThatMatchRegex');
+        $method = TestHelper::getAccessibleNonPublicMethod($this->worker,
+                'getFilesThatMatchRegex');
         $regex = 'blatantly invalid regex';
         $method->invoke($this->worker, $this->testFilesArr, $regex);
     }
 
     public function test_getIncludeFiles_returnsAllFilesIfNoRegexProvided()
     {
-        $method = TestHelper::getAccessibleNonPublicMethod($this->worker, 'getIncludeFiles');
+        $method = TestHelper::getAccessibleNonPublicMethod($this->worker,
+                'getIncludeFiles');
         $actual = $method->invoke($this->worker, $this->testFilesArr, '');
         $this->assertEquals($this->testFilesArr, $actual);
     }
 
     public function test_getIncludeFiles_returnsCorrectFilesForRegex()
     {
-        $method = TestHelper::getAccessibleNonPublicMethod($this->worker, 'getIncludeFiles');
+        $method = TestHelper::getAccessibleNonPublicMethod($this->worker,
+                'getIncludeFiles');
         $regex = '/Entity$/';
         $actual = $method->invoke($this->worker, $this->testFilesArr, $regex);
         $expected = array(
@@ -139,14 +143,16 @@ class FileWorkerTest extends \PHPUnit_Framework_TestCase
 
     public function test_getExcludeFiles_returnsNoFilesIfNoRegexProvided()
     {
-        $method = TestHelper::getAccessibleNonPublicMethod($this->worker, 'getExcludeFiles');
+        $method = TestHelper::getAccessibleNonPublicMethod($this->worker,
+                'getExcludeFiles');
         $actual = $method->invoke($this->worker, $this->testFilesArr, '');
         $this->assertEmpty($actual);
     }
 
     public function test_getExcludeFiles_returnsCorrectFilesForRegex()
     {
-        $method = TestHelper::getAccessibleNonPublicMethod($this->worker, 'getExcludeFiles');
+        $method = TestHelper::getAccessibleNonPublicMethod($this->worker,
+                'getExcludeFiles');
         $regex = '/Repository$/';
         $actual = $method->invoke($this->worker, $this->testFilesArr, $regex);
         $expected = array(
