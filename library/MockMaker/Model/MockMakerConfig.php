@@ -224,10 +224,9 @@ class MockMakerConfig
     public function addReadDirectories($readDirectories)
     {
         if (is_array($readDirectories)) {
-            $this->setReadDirectories(array_merge($this->readDirectories,
-                    $readDirectories));
+            $this->setReadDirectories(array_merge($this->readDirectories, $readDirectories));
         } else {
-            array_push($this->readDirectories, $readDirectories);
+            array_push($this->readDirectories, trim($readDirectories));
         }
     }
 
@@ -238,7 +237,7 @@ class MockMakerConfig
      */
     public function setWriteDirectory($writeDirectory)
     {
-        $this->writeDirectory = $writeDirectory;
+        $this->writeDirectory = trim($writeDirectory);
     }
 
     /**
@@ -260,8 +259,7 @@ class MockMakerConfig
     public function addFilesToAllDetectedFiles($files)
     {
         if (is_array($files)) {
-            $this->setAllDetectedFiles(array_merge($this->allDetectedFiles,
-                    $files));
+            $this->setAllDetectedFiles(array_merge($this->allDetectedFiles, $files));
         } else {
             array_push($this->allDetectedFiles, $files);
         }
@@ -300,7 +298,7 @@ class MockMakerConfig
      */
     public function setExcludeFileRegex($excludeFileRegex)
     {
-        $this->excludeFileRegex = $excludeFileRegex;
+        $this->excludeFileRegex = trim($excludeFileRegex);
     }
 
     /**
@@ -310,7 +308,7 @@ class MockMakerConfig
      */
     public function setIncludeFileRegex($includeFileRegex)
     {
-        $this->includeFileRegex = $includeFileRegex;
+        $this->includeFileRegex = trim($includeFileRegex);
     }
 
     /**
@@ -331,7 +329,7 @@ class MockMakerConfig
      */
     public function setProjectRootPath($projectRootPath)
     {
-        $this->projectRootPath = $projectRootPath;
+        $this->projectRootPath = trim($projectRootPath);
     }
 
 }
