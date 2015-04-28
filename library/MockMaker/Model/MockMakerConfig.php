@@ -10,6 +10,8 @@
 
 namespace MockMaker\Model;
 
+use MockMaker\Worker\StringFormatterWorker as Formatter;
+
 class MockMakerConfig
 {
 
@@ -206,14 +208,14 @@ class MockMakerConfig
     }
 
     /**
-     * Set directory name to scan for files to mock.
+     * Set directory name(s) to scan for files to mock.
      *
      * @param	$readDirectories	mixed
      */
     public function setReadDirectories($readDirectories)
     {
         $dirs = is_array($readDirectories) ? $readDirectories : array( $readDirectories );
-        $this->readDirectories = $dirs;
+        $this->readDirectories = Formatter::formatDirectoryPaths($dirs);
     }
 
     /**
@@ -224,9 +226,10 @@ class MockMakerConfig
     public function addReadDirectories($readDirectories)
     {
         if (is_array($readDirectories)) {
-            $this->setReadDirectories(array_merge($this->readDirectories, $readDirectories));
+            $merged = array_merge($this->readDirectories, $readDirectories);
+            $this->setReadDirectories(Formatter::formatDirectoryPaths($merged));
         } else {
-            array_push($this->readDirectories, trim($readDirectories));
+            array_push($this->readDirectories, Formatter::formatDirectoryPath($readDirectories));
         }
     }
 
@@ -237,7 +240,7 @@ class MockMakerConfig
      */
     public function setWriteDirectory($writeDirectory)
     {
-        $this->writeDirectory = trim($writeDirectory);
+        $this->writeDirectory = Formatter::formatDirectoryPath($writeDirectory);
     }
 
     /**
@@ -329,7 +332,7 @@ class MockMakerConfig
      */
     public function setProjectRootPath($projectRootPath)
     {
-        $this->projectRootPath = trim($projectRootPath);
+        $this->projectRootPath = Formatter::formatDirectoryPath($projectRootPath);
     }
 
 }
