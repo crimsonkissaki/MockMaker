@@ -1,39 +1,37 @@
 <?php
 
 /**
- *	SimpleSubEntity
+ * 	SimpleSubEntity
  *
- *	A very simple entity used for testing sub-folders & recursion reading.
+ * 	A very simple entity used for testing sub-folders & recursion reading.
  *
- *	@author		Evan Johnson
- *	@created	Apr 19, 2015
- *	@version	1.0
+ * 	@author		Evan Johnson
+ * 	@created	Apr 19, 2015
+ * 	@version	1.0
  */
 
-namespace Minion\MockMakerBundle\Tests\Resources\Entities\SubEntities;
+namespace MockMaker\Entities\SubEntities;
 
 class SimpleSubEntity
 {
 
-	public $publicProperty;
+    public $publicProperty;
+    private $privateProperty;
+    protected $protectedProperty;
 
-	private $privateProperty;
+    public function publicFunction()
+    {
+        return true;
+    }
 
-	protected $protectedProperty;
+    private function privateFunction()
+    {
+        return true;
+    }
 
-	public function publicFunction()
-	{
-		return true;
-	}
-
-	private function privateFunction()
-	{
-		return true;
-	}
-
-	protected function protectedFunction()
-	{
-		return true;
-	}
+    protected function protectedFunction()
+    {
+        return true;
+    }
 
 }
