@@ -26,24 +26,14 @@ class MockMakerFileWorkerTest extends \PHPUnit_Framework_TestCase
 
     public function test_generateNewObj_returnsCorrectFullFilePath()
     {
-        $actual = $this->worker->generateNewObj($this->file);
+        $actual = $this->worker->generateNewObject($this->file);
         $this->assertEquals($this->file, $actual->getFullFilePath());
     }
 
     public function test_generateNewObj_returnsCorrectFileName()
     {
-        $actual = $this->worker->generateNewObj($this->file);
+        $actual = $this->worker->generateNewObject($this->file);
         $this->assertEquals('SimpleEntity.php', $actual->getFileName());
-    }
-
-    public function test_generateNewObj_returnsCorrectUseStatements()
-    {
-        $expected = array(
-            'MockMaker\Entities\TestEntity',
-            'MockMaker\Entities\PropertyWorkerEntity',
-        );
-        $actual = $this->worker->generateNewObj($this->file);
-        $this->assertEquals($expected, $actual->getUseStatements());
     }
 
 }

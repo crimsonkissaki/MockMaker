@@ -23,13 +23,11 @@ class MockMakerFileWorker
      * @param   $file   string
      * @return  MockMakerFile
      */
-    public function generateNewObj($file)
+    public function generateNewObject($file)
     {
         $obj = new MockMakerFile();
         $obj->setFullFilePath($file)
-            ->setFileName($this->getFileName($file))
-            ->setUseStatements($this->getUseStatements($file));
-
+            ->setFileName($this->getFileName($file));
 
         return $obj;
     }
@@ -43,19 +41,6 @@ class MockMakerFileWorker
     private function getFileName($file)
     {
         return join('', array_slice(explode('/', $file), -1));
-    }
-
-    /**
-     * Get the use statements, if any.
-     *
-     * @param   $file   string
-     * @return  array
-     */
-    private function getUseStatements($file)
-    {
-        $use = [ ];
-
-        return $use;
     }
 
 }
