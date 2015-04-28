@@ -17,6 +17,8 @@ MockMaker:
 
     change case of true/false/null to match PSR2
 
+    allow for multiple (in|ex)clude regex strings?
+
 FileGenerator:
 
     If files are found in a sub-directory, save them to the same sub-directory
