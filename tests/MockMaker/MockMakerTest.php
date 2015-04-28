@@ -3,7 +3,7 @@
 /**
  * 	MockMakerTest
  *
- * 	@author		Evan Johnson <evan.johnson@rapp.com>
+ * 	@author		Evan Johnson
  * 	@created	Apr 26, 2015
  * 	@version	1.0
  */
@@ -31,13 +31,14 @@ class MockMakerTest extends \PHPUnit_Framework_TestCase
     /**
      * Used for testing workflow.
      */
-    public function _test_workflow()
+    public function test_workflow()
     {
         $actual = $this->mockMaker
             ->getFilesFrom($this->entitiesDir)
             ->recursively()
             ->excludeFilesWithFormat('/^Method/')
-            ->verifySettings();
+            ->createMocks();
+        //->verifySettings();
 
         TestHelper::dbug($actual, __METHOD__, true);
     }
@@ -49,13 +50,15 @@ class MockMakerTest extends \PHPUnit_Framework_TestCase
     public function test_setRootDirectory()
     {
         $this->mockMaker->setRootDirectory($this->rootDir);
-        $this->assertEquals($this->rootDir, $this->mockMaker->getConfig()->getRootDirectory());
+        $this->assertEquals($this->rootDir,
+            $this->mockMaker->getConfig()->getRootDirectory());
     }
 
     public function test_mockFiles_addsFiles()
     {
         $this->mockMaker->mockFiles($this->entitiesDir . 'SimpleEntity.php');
-        $this->assertEquals(1, count($this->mockMaker->getConfig()->getAllDetectedFiles()));
+        $this->assertEquals(1,
+            count($this->mockMaker->getConfig()->getAllDetectedFiles()));
     }
 
     public function test_getFilesFrom()
@@ -76,7 +79,8 @@ class MockMakerTest extends \PHPUnit_Framework_TestCase
     public function test_saveFilesTo()
     {
         $this->mockMaker->saveFilesTo($this->entitiesDir);
-        $this->assertEquals($this->entitiesDir, $this->mockMaker->getConfig()->getWriteDirectory());
+        $this->assertEquals($this->entitiesDir,
+            $this->mockMaker->getConfig()->getWriteDirectory());
     }
 
     public function test_ignoreDirectoryStructure()
@@ -97,14 +101,16 @@ class MockMakerTest extends \PHPUnit_Framework_TestCase
     {
         $expected = '/Repository$/';
         $this->mockMaker->excludeFilesWithFormat($expected);
-        $this->assertEquals($expected, $this->mockMaker->getConfig()->getExcludeFileRegex());
+        $this->assertEquals($expected,
+            $this->mockMaker->getConfig()->getExcludeFileRegex());
     }
 
     public function test_includeFilesWithFormat()
     {
         $expected = '/Entity$/';
         $this->mockMaker->includeFilesWithFormat($expected);
-        $this->assertEquals($expected, $this->mockMaker->getConfig()->getIncludeFileRegex());
+        $this->assertEquals($expected,
+            $this->mockMaker->getConfig()->getIncludeFileRegex());
     }
 
     public function test_testRegexPatterns_returnsCorrectFilesWithOnlyExcludeRegex()

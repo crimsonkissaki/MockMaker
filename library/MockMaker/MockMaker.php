@@ -3,7 +3,7 @@
 /**
  * 	MockMaker
  *
- * 	@author		Evan Johnson <evan.johnson@rapp.com>
+ * 	@author		Evan Johnson
  * 	@created	Apr 24, 2015
  * 	@version	1.0
  */
@@ -14,7 +14,8 @@ require dirname(dirname(dirname(__FILE__))) . '/vendor/autoload.php';
 
 use MockMaker\Model\MockMakerConfig;
 use MockMaker\Worker\DirectoryWorker;
-use MockMaker\Worker\FileWorker;
+use MockMaker\Worker\FileNameWorker;
+use MockMaker\Worker\FileProcessorWorker;
 use MockMaker\TestHelper;
 
 class MockMaker
@@ -35,11 +36,18 @@ class MockMaker
     private $dirWorker;
 
     /**
-     * Class that handles file operations.
+     * Class that handles file name operations.
      *
      * @var FileWorker
      */
-    private $fileWorker;
+    private $fileNameWorker;
+
+    /**
+     * Class that handles actual processing of each target file.
+     *
+     * @var FileProcessorWorker
+     */
+    private $fileProcessorWorker;
 
     /**
      * Get the configuration options class
@@ -68,7 +76,17 @@ class MockMaker
      */
     public function getFileWorker()
     {
-        return $this->fileWorker;
+        return $this->fileNameWorker;
+    }
+
+    /**
+     * Get the file processor worker class
+     *
+     * @return  FileProcessorWorker
+     */
+    public function getFileProcessorWorker()
+    {
+        return $this->fileProcessorWorker;
     }
 
     /**
@@ -80,7 +98,8 @@ class MockMaker
     {
         $this->config = new MockMakerConfig();
         $this->dirWorker = new DirectoryWorker();
-        $this->fileWorker = new FileWorker();
+        $this->fileNameWorker = new FileNameWorker();
+        $this->fileProcessorWorker = new FileProcessorWorker();
     }
 
     /**
@@ -250,20 +269,27 @@ class MockMaker
     {
         $this->getAllPossibleFilesToBeWorked();
 
-        return $this->fileWorker->testRegexPatterns($this->config);
+        return $this->fileNameWorker->testRegexPatterns($this->config);
     }
 
     /**
-     * Git 'er done!
+     * Iterate over each workable file and generate mock code for it.
+     *
+     * If a write directory has been specified, the code will be saved
+     * there. Otherwise it will be returned as a string.
+     *
+     * @return  string
      */
-    public function execute()
+    public function createMocks()
     {
         $this->determineWorkableFiles();
         if ($this->config->getWriteDirectory()) {
             $this->dirWorker->validateWriteDir($this->config->getWriteDirectory());
         }
-        // process files
-        // $code = $this->processAllFiles();
+        $this->fileProcessorWorker->setConfig($this->config);
+        $code = $this->fileProcessorWorker->processFiles();
+
+        return $code;
     }
 
     /**
@@ -290,7 +316,8 @@ class MockMaker
         $readDirs = $this->config->getReadDirectories();
         if (!empty($readDirs)) {
             $this->dirWorker->validateReadDirs($readDirs);
-            $allFiles = $this->fileWorker->getAllFilesFromReadDirectories($readDirs, $this->config->getRecursiveRead());
+            $allFiles = $this->fileNameWorker->getAllFilesFromReadDirectories($readDirs,
+                $this->config->getRecursiveRead());
         }
 
         return $allFiles;
@@ -305,9 +332,10 @@ class MockMaker
     private function determineWorkableFiles()
     {
         $this->getAllPossibleFilesToBeWorked();
-        $workableFiles = $this->fileWorker->filterFilesWithRegex($this->config);
-        $this->fileWorker->validateFiles($workableFiles);
-        $this->config->setFilesToMock($workableFiles);
+        $workableFiles = $this->fileNameWorker->filterFilesWithRegex($this->config);
+        if ($this->fileNameWorker->validateFiles($workableFiles)) {
+            $this->config->setFilesToMock($workableFiles);
+        }
 
         return $workableFiles;
     }
