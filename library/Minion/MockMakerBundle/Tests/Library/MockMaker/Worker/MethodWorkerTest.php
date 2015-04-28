@@ -9,7 +9,7 @@
  *	This is seriously going to violate the usual "one test one assertion"
  *	SOP, but what can you do?
  *
- *	@author		Evan Johnson <evan.johnson@rapp.com>
+ *	@author		Evan Johnson
  *	@created	Apr 19, 2015
  *	@version	1.0
  */

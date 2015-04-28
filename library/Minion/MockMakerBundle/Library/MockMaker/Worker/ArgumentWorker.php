@@ -5,7 +5,7 @@
  *
  * 	Processes method arguments
  *
- * 	@author		Evan Johnson <evan.johnson@rapp.com>
+ * 	@author		Evan Johnson
  * 	@created	Apr 22, 2015
  * 	@version	1.0
  */

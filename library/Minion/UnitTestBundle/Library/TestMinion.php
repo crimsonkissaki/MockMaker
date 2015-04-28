@@ -5,7 +5,7 @@
  *
  *	Proxy for simple access to various utility classes.
  *
- *	@author		Evan Johnson <evan.johnson@rapp.com>
+ *	@author		Evan Johnson
  *	@created	Apr 1, 2015
  *	@version	1.0
  */

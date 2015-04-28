@@ -3,7 +3,7 @@
 /**
  *	MockMakerFileGeneratorTest
  *
- *	@author		Evan Johnson <evan.johnson@rapp.com>
+ *	@author		Evan Johnson
  *	@created	Apr 20, 2015
  *	@version	1.0
  */

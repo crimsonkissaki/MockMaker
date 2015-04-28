@@ -5,7 +5,7 @@
  *
  *  Directory operations for MockMaker
  *
- * 	@author		Evan Johnson <evan.johnson@rapp.com>
+ * 	@author		Evan Johnson
  * 	@created	Apr 26, 2015
  * 	@version	1.0
  */

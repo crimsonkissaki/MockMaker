@@ -5,7 +5,7 @@
  *
  *	Default code generator formatter for MockMaker
  *
- *	@author		Evan Johnson <evan.johnson@rapp.com>
+ *	@author		Evan Johnson
  *	@created	Apr 16, 2015
  *	@version	1.0
  */

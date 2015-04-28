@@ -6,7 +6,7 @@
  * Generates a basic class mock so you don't have to.
  * Good when you just need a class mock set up for testing.
  *
- * @author		Evan Johnson <evan.johnson@rapp.com>
+ * @author		Evan Johnson
  * @created		Apr 16, 2015
  * @version		1.0
  */

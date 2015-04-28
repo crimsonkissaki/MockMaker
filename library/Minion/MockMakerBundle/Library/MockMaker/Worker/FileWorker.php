@@ -7,7 +7,7 @@
  *
  *	This assumes PSR-0 adherence for namespacing.
  *
- *	@author		Evan Johnson <evan.johnson@rapp.com>
+ *	@author		Evan Johnson
  *	@created	Apr 20, 2015
  *	@version	1.0
  */

@@ -5,7 +5,7 @@
  *
  *	Entity for testing method worker.
  *
- *	@author		Evan Johnson <evan.johnson@rapp.com>
+ *	@author		Evan Johnson
  *	@created	Apr 19, 2015
  *	@version	1.0
  */
