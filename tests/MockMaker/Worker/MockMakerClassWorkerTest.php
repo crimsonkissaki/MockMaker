@@ -88,6 +88,13 @@ class MockMakerClassWorkerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    public function test_getReflectionClassInstance_returnsReflectionClass()
+    {
+        $method = TestHelper::getAccessibleNonPublicMethod($this->worker, 'getReflectionClassInstance');
+        $actual = $method->invoke($this->worker, 'MockMaker\Entities\SimpleEntity');
+        $this->assertInstanceOf('\ReflectionClass', $actual);
+    }
+
     public function _test_generateNewObject_returnsCorrectUseStatements()
     {
         $expected = array(
