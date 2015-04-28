@@ -13,6 +13,8 @@ namespace MockMaker\Worker;
 use MockMaker\Worker\MockMakerClassWorker;
 use MockMaker\Worker\MockMakerFileWorker;
 use MockMaker\Model\MockMakerFile;
+use MockMaker\Model\MockMakerConfig;
+use MockMaker\Helper\TestHelper;
 
 class MockMakerClassWorkerTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,16 +23,63 @@ class MockMakerClassWorkerTest extends \PHPUnit_Framework_TestCase
     public $worker;
     // @var $fileObj MockMakerFile
     public $fileObj;
-    public $file = '/Applications/XAMPP/xamppfiles/htdocs/mockmaker/tests/MockMaker/Entities/SimpleEntity.php';
+    // @var $config MockMakerConfig
+    public $config;
+    public $fileName = '/Applications/XAMPP/xamppfiles/htdocs/mockmaker/tests/MockMaker/Entities/SimpleEntity.php';
 
     public function setUp()
     {
-        $this->worker = new MockMakerClassWorker();
+        $this->config = new MockMakerConfig();
+        $this->config->setProjectRootPath('/Applications/XAMPP/xamppfiles/htdocs/mockmaker/');
         $fileWorker = new MockMakerFileWorker();
-        $this->fileObj = $fileWorker->generateNewObject($this->file);
+        $this->fileObj = $fileWorker->generateNewObject($this->fileName, $this->config);
+        $this->worker = new MockMakerClassWorker();
     }
 
-    public function test_generateNewObject_returnsCorrectUseStatements()
+    public function test_addValidNamespaces_addsNewNamespaceToArray()
+    {
+        $namespace = 'MockMaker\Worker';
+        $expected = array(
+            $namespace,
+        );
+        $this->worker->addValidNamespaces($namespace);
+        $this->assertEquals($expected, $this->worker->getValidNamespaces());
+    }
+
+    public function test_addValidNamespaces_doesNotAddExistingNamespaceToArray()
+    {
+        $namespace = 'MockMaker\Worker';
+        $expected = array(
+            $namespace,
+        );
+        $this->worker->addValidNamespaces($namespace);
+        $this->worker->addValidNamespaces($namespace);
+        $this->assertEquals($expected, $this->worker->getValidNamespaces());
+    }
+
+    public function test_determineClassName_returnsCorrectClassName()
+    {
+        $method = TestHelper::getAccessibleNonPublicMethod($this->worker, 'determineClassName');
+        $actual = $method->invoke($this->worker, $this->fileObj);
+        $this->assertEquals('SimpleEntity', $actual);
+    }
+
+    public function test_convertFileNameToClassPath_returnsCorrectClassPath()
+    {
+        $method = TestHelper::getAccessibleNonPublicMethod($this->worker, 'convertFileNameToClassPath');
+        $actual = $method->invoke($this->worker, $this->fileObj);
+        $this->assertEquals('tests\MockMaker\Entities\SimpleEntity', $actual);
+    }
+
+    public function test_getClassNamespace_returnsCorrectNamespace()
+    {
+        $method = TestHelper::getAccessibleNonPublicMethod($this->worker, 'getClassNamespace');
+        $actual = $method->invoke($this->worker, $this->fileObj);
+        $expected = 'MockMaker\Entities';
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function _test_generateNewObject_returnsCorrectUseStatements()
     {
         $expected = array(
             'MockMaker\Entities\TestEntity',

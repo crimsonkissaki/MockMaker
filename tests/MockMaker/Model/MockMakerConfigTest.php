@@ -89,4 +89,11 @@ class MockMakerConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(3, count($this->config->getReadDirectories()));
     }
 
+    public function test_setProjectRootPath_TrimsCorrectly()
+    {
+        $root = dirname(dirname(__FILE__));
+        $this->config->setProjectRootPath(" {$root} ");
+        $this->assertEquals($root, $this->config->getProjectRootPath());
+    }
+
 }

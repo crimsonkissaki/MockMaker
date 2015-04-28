@@ -15,6 +15,7 @@ namespace MockMaker\Worker;
 use MockMaker\Model\MockMakerConfig;
 use MockMaker\Model\MockMakerFile;
 use MockMaker\Worker\MockMakerFileWorker;
+use MockMaker\Worker\MockMakerClassWorker;
 
 class FileProcessorWorker
 {
@@ -32,6 +33,13 @@ class FileProcessorWorker
      * @var MockMakerFileWorker
      */
     private $mockMakerFileWorker;
+
+    /**
+     * Class that handles processing of the target file's class.
+     *
+     * @var MockMakerClassWorker
+     */
+    private $mockMakerClassWorker;
 
     /**
      * Array of MockMakerFile classes.
@@ -88,8 +96,7 @@ class FileProcessorWorker
     public function addMockMakerFiles($mockMakerFiles)
     {
         if (is_array($mockMakerFiles)) {
-            $this->setMockMakerFiles(array_merge($this->mockMakerFiles,
-                    $mockMakerFiles));
+            $this->setMockMakerFiles(array_merge($this->mockMakerFiles, $mockMakerFiles));
         } else {
             array_push($this->mockMakerFiles, $mockMakerFiles);
         }
@@ -111,6 +118,7 @@ class FileProcessorWorker
     public function __construct()
     {
         $this->mockMakerFileWorker = new MockMakerFileWorker();
+        $this->mockMakerClassWorker = new MockMakerClassWorker();
     }
 
     /**
@@ -121,7 +129,7 @@ class FileProcessorWorker
     public function processFiles()
     {
         foreach ($this->config->getFilesToMock() as $file) {
-            $this->processFile($file);
+            $this->processFile($file, $this->config);
         }
 
         return $this;
@@ -130,9 +138,10 @@ class FileProcessorWorker
     /**
      * Process a single file for mocking.
      *
-     * @param   $file   string
+     * @param   $file       string
+     * @param   $config     MockMakerConfig
      */
-    private function processFile($file)
+    private function processFile($file, MockMakerConfig $config)
     {
         /**
          * ok, what do we need to do here?
@@ -143,18 +152,20 @@ class FileProcessorWorker
          * - get property properties
          * - can then pass off that model to the code processor
          */
-        $this->addMockMakerFiles($this->createMockMakerFileObject($file));
+        $this->addMockMakerFiles($this->generateMockMakerFileObject($file, $config));
     }
 
     /**
      * Create a new MockMakerFile object.
      *
      * @param   $file           string
+     * @param   $config         MockMakerConfig
      * @return  MockMakerFile
      */
-    private function createMockMakerFileObject($file)
+    private function generateMockMakerFileObject($file, $config)
     {
-        $mmFileObj = $this->mockMakerFileWorker->generateNewObject($file);
+        $mmFileObj = $this->mockMakerFileWorker->generateNewObject($file, $config);
+        $mmFileObj->setMockMakerClass($this->mockMakerClassWorker->generateNewObject($mmFileObj));
 
         return $mmFileObj;
     }
