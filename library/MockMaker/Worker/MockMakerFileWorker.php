@@ -13,6 +13,7 @@
 namespace MockMaker\Worker;
 
 use MockMaker\Model\MockMakerFile;
+use MockMaker\Model\MockMakerConfig;
 
 class MockMakerFileWorker
 {
@@ -20,14 +21,16 @@ class MockMakerFileWorker
     /**
      * Create & populate a new MockMakerFile object.
      *
-     * @param   $file   string
+     * @param   $file           string
+     * @param   $config         MockMakerConfig
      * @return  MockMakerFile
      */
-    public function generateNewObject($file)
+    public function generateNewObject($file, MockMakerConfig $config)
     {
         $obj = new MockMakerFile();
         $obj->setFullFilePath($file)
-            ->setFileName($this->getFileName($file));
+            ->setFileName($this->getFileName($file))
+            ->setProjectRootPath($config->getProjectRootPath());
 
         return $obj;
     }

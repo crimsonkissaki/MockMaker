@@ -30,10 +30,12 @@ class DirectoryWorker
     {
         foreach ($dirs as $k => $dir) {
             if (!is_dir($dir)) {
-                throw new MMException(MMErrors::generateMessage(MMErrors::READ_DIR_NOT_EXIST, array( 'dir' => "'{$dir}'" )));
+                throw new MMException(MMErrors::generateMessage(MMErrors::READ_DIR_NOT_EXIST,
+                    array( 'dir' => "'{$dir}'" )));
             }
             if (!is_readable($dir)) {
-                throw new MMException(MMErrors::generateMessage(MMErrors::READ_DIR_INVALID_PERMISSIONS, array( 'dir' => "'{$dir}'" )));
+                throw new MMException(MMErrors::generateMessage(MMErrors::READ_DIR_INVALID_PERMISSIONS,
+                    array( 'dir' => "'{$dir}'" )));
             }
         }
 
@@ -54,14 +56,36 @@ class DirectoryWorker
     {
         if (!is_dir($dir)) {
             if (!mkdir($dir, 0777)) {
-                throw new MMException(MMErrors::generateMessage(MMErrors::WRITE_DIR_NOT_EXIST, array( 'dir' => "'{$dir}'" )));
+                throw new MMException(MMErrors::generateMessage(MMErrors::WRITE_DIR_NOT_EXIST,
+                    array( 'dir' => "'{$dir}'" )));
             }
         }
         if (!is_writeable($dir)) {
-            throw new MMException(MMErrors::generateMessage(MMErrors::WRITE_DIR_INVALID_PERMISSIONS, array( 'dir' => "'{$dir}'" )));
+            throw new MMException(MMErrors::generateMessage(MMErrors::WRITE_DIR_INVALID_PERMISSIONS,
+                array( 'dir' => "'{$dir}'" )));
         }
 
         return true;
+    }
+
+    /**
+     * Try to guess the project root path.
+     *
+     * First attempt to find the 'vendor' directory in the file path,
+     * and return the path up to that point.
+     * If there is no 'vendor' directory, then we try to find it based
+     * on the directory structure of this file.
+     *
+     * @return  string
+     */
+    public function guessProjectRootPath()
+    {
+        $vendorPos = strpos(__FILE__, 'vendor');
+        if ($vendorPos !== false) {
+            return substr(__FILE__, 0, $vendorPos);
+        }
+
+        return dirname(dirname(dirname(dirname(__FILE__)))) . '/';
     }
 
 }

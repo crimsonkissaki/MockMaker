@@ -33,6 +33,13 @@ class MockMakerFile
     private $fileName;
 
     /**
+     * Path to the project root directory
+     *
+     * @var string
+     */
+    private $projectRootPath;
+
+    /**
      * MockMakerClass data object
      *
      * @var type
@@ -57,6 +64,16 @@ class MockMakerFile
     public function getFileName()
     {
         return $this->fileName;
+    }
+
+    /**
+     * Get the path to the project root directory.
+     *
+     * @return  string
+     */
+    public function getProjectRootPath()
+    {
+        return $this->projectRootPath;
     }
 
     /**
@@ -93,6 +110,16 @@ class MockMakerFile
         $this->fileName = $fileName;
 
         return $this;
+    }
+
+    /**
+     * Set the path to the project root directory.
+     *
+     * @param   $projectRootPath    string
+     */
+    public function setProjectRootPath($projectRootPath)
+    {
+        $this->projectRootPath = $projectRootPath;
     }
 
     /**

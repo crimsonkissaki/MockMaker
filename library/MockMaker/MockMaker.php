@@ -108,12 +108,12 @@ class MockMaker
      * MockMaker will do its best to guess this based on class namespaces,
      * but you can set it manually if it's having problems.
      *
-     * @param	$rootDir	string	Project root directory.
+     * @param	$projectRootPath   string	Project root directory path.
      * @return	MockMaker
      */
-    public function setRootDirectory($rootDir)
+    public function setProjectRootPath($projectRootPath)
     {
-        $this->config->setRootDirectory($rootDir);
+        $this->config->setProjectRootPath($projectRootPath);
 
         return $this;
     }
@@ -252,7 +252,7 @@ class MockMaker
      */
     public function verifySettings()
     {
-        $this->determineWorkableFiles();
+        $this->performFinalSetup();
 
         return $this->config;
     }
@@ -282,7 +282,7 @@ class MockMaker
      */
     public function createMocks()
     {
-        $this->determineWorkableFiles();
+        $this->performFinalSetup();
         if ($this->config->getWriteDirectory()) {
             $this->dirWorker->validateWriteDir($this->config->getWriteDirectory());
         }
@@ -290,6 +290,21 @@ class MockMaker
         $code = $this->fileProcessorWorker->processFiles();
 
         return $code;
+    }
+
+    /**
+     * Do the final set up we need before processing can begin.
+     *
+     * @return  bool
+     */
+    private function performFinalSetup()
+    {
+        $this->determineWorkableFiles();
+        if (!$this->config->getProjectRootPath()) {
+            $this->config->setProjectRootPath($this->dirWorker->guessProjectRootPath());
+        }
+
+        return true;
     }
 
     /**

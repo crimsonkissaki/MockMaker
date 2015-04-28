@@ -82,7 +82,7 @@ class MockMakerConfig
      *
      * @var	string
      */
-    private $rootDirectory;
+    private $projectRootPath;
 
     /**
      * Get whether to read the directory recursively.
@@ -180,9 +180,9 @@ class MockMakerConfig
      *
      * @return	string
      */
-    public function getRootDirectory()
+    public function getProjectRootPath()
     {
-        return $this->rootDirectory;
+        return $this->projectRootPath;
     }
 
     /**
@@ -327,11 +327,11 @@ class MockMakerConfig
     /**
      * Set the project's root directory path.
      *
-     * @param	$rootDirectory	string	Path to your project's root directory.
+     * @param	$projectRootPath	string	Path to your project's root directory.
      */
-    public function setRootDirectory($rootDirectory)
+    public function setProjectRootPath($projectRootPath)
     {
-        $this->rootDirectory = $rootDirectory;
+        $this->projectRootPath = $projectRootPath;
     }
 
 }

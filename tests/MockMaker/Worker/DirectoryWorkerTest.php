@@ -61,4 +61,11 @@ class DirectoryWorkerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($actual);
     }
 
+    public function test_guessProjectRootPath_returnsCorrectProjectRootPath()
+    {
+        $actual = $this->worker->guessProjectRootPath();
+        $this->assertEquals('/Applications/XAMPP/xamppfiles/htdocs/mockmaker/',
+            $actual);
+    }
+
 }
