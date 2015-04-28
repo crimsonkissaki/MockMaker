@@ -1,7 +1,0 @@
-minion_unit_test:
-    resource: "@MinionUnitTestBundle/Resources/config/routing.yml"
-    prefix:   /
-
-minion_mock_maker:
-    resource: "@MinionMockMakerBundle/Resources/config/routing.yml"
-    prefix:   /

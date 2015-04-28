@@ -87,3 +87,5 @@ BUGS:
     add a check for setter methods that don't have an associated property
     - put them in, but comment them out
     - might need to change the method worker to ensure it DOES have a property
+
+	cannot instantiate abstract classes
