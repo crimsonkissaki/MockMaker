@@ -30,13 +30,6 @@ class MockMakerClass
     private $className;
 
     /**
-     * Is this a normal/abstract/interface class?
-     *
-     * @var string
-     */
-    private $classType = 'normal';
-
-    /**
      * Reflection class instance.
      *
      * @var \ReflectionClass
@@ -44,18 +37,18 @@ class MockMakerClass
     private $reflectionClass;
 
     /**
+     * Is this a concrete/abstract/interface/final class
+     *
+     * @var string
+     */
+    private $classType = 'concrete';
+
+    /**
      * Class use statements.
      *
      * @var array
      */
     private $useStatements = [ ];
-
-    /**
-     * Does the class have a constructor.
-     *
-     * @var bool
-     */
-    private $constructor = false;
 
     /**
      * Classes that are implemented by the target class.
@@ -70,6 +63,13 @@ class MockMakerClass
      * @var array
      */
     private $extends = [ ];
+
+    /**
+     * Does the class have a constructor.
+     *
+     * @var bool
+     */
+    private $hasConstructor = false;
 
     /**
      * Array of MockMakerProperty objects.
@@ -106,6 +106,26 @@ class MockMakerClass
     }
 
     /**
+     * Get the reflection class instance.
+     *
+     * @return  \ReflectionClass
+     */
+    public function getReflectionClass()
+    {
+        return $this->reflectionClass;
+    }
+
+    /**
+     * Get the class type - concrete/abstract/interface/final.
+     *
+     * @return  string
+     */
+    public function getClassType()
+    {
+        return $this->classType;
+    }
+
+    /**
      * Get the class's use statements.
      *
      * @return array
@@ -113,6 +133,16 @@ class MockMakerClass
     public function getUseStatements()
     {
         return $this->useStatements;
+    }
+
+    /**
+     * Get if the class has a constructor.
+     *
+     * @return  bool
+     */
+    public function getHasConstructor()
+    {
+        return $this->hasConstructor;
     }
 
     /**
@@ -137,6 +167,32 @@ class MockMakerClass
     public function setClassName($className)
     {
         $this->className = $className;
+
+        return $this;
+    }
+
+    /**
+     * Set the reflection class instance.
+     *
+     * @param   $reflectionClass    \ReflectionClass
+     * @return  MockMakerClass
+     */
+    public function setReflectionClass(\ReflectionClass $reflectionClass)
+    {
+        $this->reflectionClass = $reflectionClass;
+
+        return $this;
+    }
+
+    /**
+     * Set the class type - concrete/abstract/interface/final.
+     *
+     * @param   $classType  string
+     * @return  MockMakerClass
+     */
+    public function setClassType($classType)
+    {
+        $this->classType = $classType;
 
         return $this;
     }
@@ -167,6 +223,19 @@ class MockMakerClass
         } else {
             array_push($this->useStatements, $useStatements);
         }
+
+        return $this;
+    }
+
+    /**
+     * Set if the class has a constructor.
+     *
+     * @param   $hasConstructor bool
+     * @return  MockMakerClass
+     */
+    public function setHasConstructor($hasConstructor)
+    {
+        $this->hasConstructor = $hasConstructor;
 
         return $this;
     }
