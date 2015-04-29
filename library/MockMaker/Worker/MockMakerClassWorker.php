@@ -13,6 +13,8 @@ namespace MockMaker\Worker;
 use MockMaker\Model\MockMakerFile;
 use MockMaker\Model\MockMakerClass;
 use MockMaker\Worker\TokenWorker;
+use MockMaker\Worker\MockMakerPropertyWorker;
+use MockMaker\Worker\MockMakerMethodWorker;
 use MockMaker\Helper\TestHelper;
 
 class MockMakerClassWorker
@@ -26,11 +28,25 @@ class MockMakerClassWorker
     private $validNamespaces = [ ];
 
     /**
-     * File token worker class
+     * File token worker class.
      *
      * @var TokenWorker
      */
     private $tokenWorker;
+
+    /**
+     * Class that generates MockMakerMethod objects
+     *
+     * @var MockMakerMethodWorker
+     */
+    private $methodWorker;
+
+    /**
+     * Class that generates MockMakerProperty objects.
+     *
+     * @var MockMakerPropertyWorker
+     */
+    private $propertyWorker;
 
     /**
      * Get the array of valid namespaces.
@@ -65,6 +81,8 @@ class MockMakerClassWorker
     public function __construct()
     {
         $this->tokenWorker = new TokenWorker();
+        $this->propertyWorker = new MockMakerPropertyWorker();
+        $this->methodWorker = new MockMakerMethodWorker();
     }
 
     /**
@@ -81,16 +99,27 @@ class MockMakerClassWorker
         $className = $this->determineClassName($fileObj);
         $classNamespace = $this->getClassNamespace($fileObj);
         $reflectionClass = $this->getReflectionClassInstance("{$classNamespace}\\{$className}");
+        $classType = $this->getClassType($reflectionClass);
 
         $obj = new MockMakerClass();
         $obj->setClassName($className)
             ->setClassNamespace($classNamespace)
             ->setReflectionClass($reflectionClass)
-            ->setClassType($this->getClassType($reflectionClass))
-            ->setHasConstructor($this->getIfClassHasConstructor($reflectionClass))
+            ->setClassType($classType);
+
+        // We cannot mock abstract or interface classes
+        if (in_array($classType, array( 'abstract', 'interface' ))) {
+            return $obj;
+        }
+
+        $obj->setHasConstructor($this->getIfClassHasConstructor($reflectionClass))
             ->addUseStatements($this->getClassUseStatements($fileObj->getFullFilePath()))
             ->setExtends($this->getExtendsClass($reflectionClass))
             ->addImplements($this->getImplementsClasses($reflectionClass));
+        $methods = $this->getClassMethods($reflectionClass);
+        $obj->addMethods($methods);
+        $properties = $this->getClassProperties($reflectionClass, $methods);
+        $obj->addProperties($properties);
 
         /*
           $obj->setClassName($this->determineClassName($fileObj))
@@ -299,6 +328,29 @@ class MockMakerClassWorker
         }
 
         return $results;
+    }
+
+    /**
+     * Get an array of MockMakerMethod objects.
+     *
+     * @param   $class  \ReflectionClass
+     * @return  array
+     */
+    private function getClassMethods(\ReflectionClass $class)
+    {
+        return $this->methodWorker->generateMethodObjects($class);
+    }
+
+    /**
+     * Get an array of MockMakerProperty objects.
+     *
+     * @param   $class      \ReflectionClass    Reflection of class to be mocked.
+     * @param   $methods    array               Array of MockMakerMethod objects.
+     * @return  array
+     */
+    private function getClassProperties(\ReflectionClass $class, $methods)
+    {
+        return $this->propertyWorker->generatePropertyObjects($class, $methods);
     }
 
 }

@@ -36,13 +36,6 @@ class FileProcessorWorker
     private $mockMakerFileWorker;
 
     /**
-     * Class that handles processing of the target file's class.
-     *
-     * @var MockMakerClassWorker
-     */
-    private $mockMakerClassWorker;
-
-    /**
      * Array of MockMakerFile classes.
      *
      * @var array
@@ -119,7 +112,6 @@ class FileProcessorWorker
     public function __construct()
     {
         $this->mockMakerFileWorker = new MockMakerFileWorker();
-        $this->mockMakerClassWorker = new MockMakerClassWorker();
     }
 
     /**
@@ -151,16 +143,10 @@ class FileProcessorWorker
      */
     private function processFile($file, MockMakerConfig $config)
     {
-        /**
-         * ok, what do we need to do here?
-         * pull in the file we want to process
-         * assign it to a FileModel...
-         * get the "file properties"
-         * - get properties for each method
-         * - get property properties
-         * - can then pass off that model to the code processor
-         */
-        $this->addMockMakerFiles($this->generateMockMakerFileObject($file, $config));
+        $mockMakerFile = $this->generateMockMakerFileObject($file, $config);
+        if (!in_array($mockMakerFile->getMockMakerClass()->getClassType(), array( 'abstract', 'interface' ))) {
+            $this->addMockMakerFiles($mockMakerFile);
+        }
     }
 
     /**
@@ -173,7 +159,9 @@ class FileProcessorWorker
     private function generateMockMakerFileObject($file, $config)
     {
         $mmFileObj = $this->mockMakerFileWorker->generateNewObject($file, $config);
-        $mmFileObj->setMockMakerClass($this->mockMakerClassWorker->generateNewObject($mmFileObj));
+        // we need a new ClassWorker for each file
+        $classWorker = new MockMakerClassWorker();
+        $mmFileObj->setMockMakerClass($classWorker->generateNewObject($mmFileObj));
 
         return $mmFileObj;
     }

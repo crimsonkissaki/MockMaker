@@ -20,20 +20,27 @@ class MockMakerMethod
      *
      * @var string
      */
-    private $name;
+    public $name;
 
     /**
-     * Visibility of the method: public/private/protected
+     * Visibility of the method: public/public/protected/etc.
      *
      * @var string
      */
-    private $visibility;
+    public $visibility;
+
+    /**
+     * Is the method a setter.
+     *
+     * @var bool
+     */
+    public $isSetter;
 
     /**
      * Array of MockMakerArgument objects.
      *
      * @var array
      */
-    private $arguments = [ ];
+    public $arguments = [ ];
 
 }

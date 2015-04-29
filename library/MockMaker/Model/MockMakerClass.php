@@ -85,18 +85,18 @@ class MockMakerClass
     private $hasConstructor = false;
 
     /**
-     * Array of MockMakerProperty objects.
-     *
-     * @var array
-     */
-    private $properties = [ ];
-
-    /**
      * Array of MockMakerMethod objects.
      *
      * @var array
      */
     private $methods = [ ];
+
+    /**
+     * Array of MockMakerProperty objects.
+     *
+     * @var array
+     */
+    private $properties = [ ];
 
     /**
      * Get the class's namespace.
@@ -176,6 +176,26 @@ class MockMakerClass
     public function getHasConstructor()
     {
         return $this->hasConstructor;
+    }
+
+    /**
+     * Get the array of MockMakerMethod objects
+     *
+     * @return  array
+     */
+    public function getMethods()
+    {
+        return $this->methods;
+    }
+
+    /**
+     * Get the array of MockMakerProperty objects
+     *
+     * @return  array
+     */
+    public function getProperties()
+    {
+        return $this->properties;
     }
 
     /**
@@ -312,6 +332,66 @@ class MockMakerClass
     public function setHasConstructor($hasConstructor)
     {
         $this->hasConstructor = $hasConstructor;
+
+        return $this;
+    }
+
+    /**
+     * Set the array of MockMakerMethod objects
+     *
+     * @param   $methods    array
+     * @return  MockMakerClass
+     */
+    public function setMethods($methods)
+    {
+        $this->methods = $methods;
+
+        return $this;
+    }
+
+    /**
+     * Add (single|array of) MockMakerMethod objects to methods array.
+     *
+     * @param   $methods    mixed
+     * @return  MockMakerClass
+     */
+    public function addMethods($methods)
+    {
+        if (is_array($methods)) {
+            $this->setMethods(array_merge($this->methods, $methods));
+        } else {
+            array_push($this->methods, $methods);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the array of MockMakerProperty objects
+     *
+     * @param   $properties     array
+     * @return  MockMakerClass
+     */
+    public function setProperties($properties)
+    {
+        $this->properties = $properties;
+
+        return $this;
+    }
+
+    /**
+     * Add (single|array of) MockMakerProperty objects to properties array.
+     *
+     * @param   $properties     mixed
+     * @return  MockMakerClass
+     */
+    public function addProperties($properties)
+    {
+        if (is_array($properties)) {
+            $this->setProperties(array_merge($this->properties, $properties));
+        } else {
+            array_push($this->properties, $properties);
+        }
 
         return $this;
     }

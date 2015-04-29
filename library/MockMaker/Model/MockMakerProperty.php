@@ -20,43 +20,48 @@ class MockMakerProperty
      *
      * @var string
      */
-    private $name;
+    public $name;
 
     /**
-     * Visibility of the property: public/private/protected
+     * Visibility of the property: public/public/protected
      *
      * @var string
      */
-    private $visibility;
+    public $visibility;
 
     /**
-     * Data type of the property.
+     * Is the property static
      *
-     * @var string
+     * @var bool
      */
-    private $type;
+    public $isStatic;
 
     /**
      * Default property value, if any.
      *
      * @var mixed
      */
-    private $defaultValue;
+    public $defaultValue;
 
     /**
-     * If the property is a class, this is the fully qualified class
-     * name of the property type.
+     * Data type of the property.
      *
      * @var string
      */
-    private $fullClassName;
+    public $dataType;
 
     /**
-     * If the property is a class, this is the class
-     * name of the property type.
+     * Object name of object property types.
      *
      * @var string
      */
-    private $className;
+    public $className;
+
+    /**
+     * Object namespace of object property types.
+     *
+     * @var string
+     */
+    public $classNamespace;
 
 }

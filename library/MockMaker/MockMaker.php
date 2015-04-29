@@ -305,6 +305,8 @@ class MockMaker
      * If a write directory has been specified, the code will be saved
      * there. Otherwise it will be returned as a string.
      *
+     * -- WARNING -- Abstract/Interface classes cannot be mocked!
+     *
      * @return  string
      */
     public function createMocks()
