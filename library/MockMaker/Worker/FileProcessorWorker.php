@@ -16,6 +16,7 @@ use MockMaker\Model\MockMakerConfig;
 use MockMaker\Model\MockMakerFile;
 use MockMaker\Worker\MockMakerFileWorker;
 use MockMaker\Worker\MockMakerClassWorker;
+use MockMaker\Helper\TestHelper;
 
 class FileProcessorWorker
 {
@@ -129,7 +130,14 @@ class FileProcessorWorker
     public function processFiles()
     {
         foreach ($this->config->getFilesToMock() as $file) {
-            $this->processFile($file, $this->config);
+            try {
+                $this->processFile($file, $this->config);
+            } catch (\Exception $e) {
+                //$msg = $e->getTraceAsString() . "\n\n" . $e->getMessage();
+                //TestHelper::dbug($msg, "Fatal MockMaker Exception:");
+                TestHelper::dbug($e->getMessage(), "Fatal MockMaker Exception:");
+                continue;
+            }
         }
 
         return $this;
