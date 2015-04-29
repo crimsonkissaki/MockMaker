@@ -44,7 +44,7 @@ class FileData
      *
      * @var type
      */
-    private $mockMakerClass;
+    private $classData;
 
     /**
      * Get the file's full path.
@@ -83,7 +83,7 @@ class FileData
      */
     public function getClassData()
     {
-        return $this->mockMakerClass;
+        return $this->classData;
     }
 
     /**
@@ -125,12 +125,12 @@ class FileData
     /**
      * Set the file's ClassData object
      *
-     * @param   $mockMakerClass  ClassData
+     * @param   $classData  ClassData
      * @return  FileData
      */
-    public function setClassData(ClassData $mockMakerClass)
+    public function setClassData(ClassData $classData)
     {
-        $this->mockMakerClass = $mockMakerClass;
+        $this->classData = $classData;
 
         return $this;
     }

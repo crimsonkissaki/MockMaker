@@ -33,7 +33,7 @@ class FileProcessorWorker
      *
      * @var FileDataWorker
      */
-    private $mockMakerFileWorker;
+    private $fileDataWorker;
 
     /**
      * Array of FileData classes.
@@ -59,7 +59,7 @@ class FileProcessorWorker
      */
     public function getFileDataWorker()
     {
-        return $this->mockMakerFileWorker;
+        return $this->fileDataWorker;
     }
 
     /**
@@ -111,7 +111,7 @@ class FileProcessorWorker
      */
     public function __construct()
     {
-        $this->mockMakerFileWorker = new FileDataWorker();
+        $this->fileDataWorker = new FileDataWorker();
     }
 
     /**
@@ -121,9 +121,13 @@ class FileProcessorWorker
      */
     public function processFiles()
     {
+        $generatedCode = [ ];
         foreach ($this->config->getFilesToMock() as $file) {
             try {
-                $this->processFile($file, $this->config);
+                if ($fileData = $this->processFile($file, $this->config)) {
+                    $key = $fileData->getClassData()->getClassName();
+                    $generatedCode[$key] = '';
+                }
             } catch (\Exception $e) {
                 //$msg = $e->getTraceAsString() . "\n\n" . $e->getMessage();
                 //TestHelper::dbug($msg, "Fatal MockMaker Exception:");
@@ -133,6 +137,7 @@ class FileProcessorWorker
         }
 
         return $this;
+        //return $generatedCode;
     }
 
     /**
@@ -140,13 +145,17 @@ class FileProcessorWorker
      *
      * @param   $file       string
      * @param   $config     ConfigData
+     * @return  FileData
      */
     private function processFile($file, ConfigData $config)
     {
-        $mockMakerFile = $this->generateFileDataObject($file, $config);
-        if (!in_array($mockMakerFile->getClassData()->getClassType(), array( 'abstract', 'interface' ))) {
-            $this->addFileData($mockMakerFile);
+        $fileData = $this->generateFileDataObject($file, $config);
+        if (!in_array($fileData->getClassData()->getClassType(), array( 'abstract', 'interface' ))) {
+            $this->addFileData($fileData);
+            return $fileData;
         }
+
+        return false;
     }
 
     /**
@@ -158,7 +167,7 @@ class FileProcessorWorker
      */
     private function generateFileDataObject($file, $config)
     {
-        $mmFileObj = $this->mockMakerFileWorker->generateNewObject($file, $config);
+        $mmFileObj = $this->fileDataWorker->generateNewObject($file, $config);
         // we need a new ClassWorker for each file
         $classWorker = new ClassDataWorker();
         $mmFileObj->setClassData($classWorker->generateNewObject($mmFileObj));
