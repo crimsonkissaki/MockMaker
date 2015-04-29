@@ -15,6 +15,7 @@ use MockMaker\Worker\MockMakerFileWorker;
 use MockMaker\Model\MockMakerFile;
 use MockMaker\Model\MockMakerConfig;
 use MockMaker\Helper\TestHelper;
+use MockMaker\Entities;
 
 class MockMakerClassWorkerTest extends \PHPUnit_Framework_TestCase
 {
@@ -95,14 +96,67 @@ class MockMakerClassWorkerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\ReflectionClass', $actual);
     }
 
-    public function _test_generateNewObject_returnsCorrectUseStatements()
+    public function getClassTypeProvider()
     {
-        $expected = array(
-            'MockMaker\Entities\TestEntity',
-            'MockMaker\Entities\PropertyWorkerEntity',
+        return array(
+            array( 'concrete', 'MockMaker\Entities\SimpleEntity' ),
+            array( 'concrete', 'MockMaker\Entities\EntityThatExtends' ),
+            array( 'abstract', 'MockMaker\Entities\AbstractEntity' ),
         );
-        $actual = $this->worker->generateNewObject($this->fileObj);
-        $this->assertEquals($expected, $actual->getUseStatements());
+    }
+
+    /**
+     * @dataProvider getClassTypeProvider
+     */
+    public function test_getClassType_returnsCorrectClassType($expected, $class)
+    {
+        $reflection = new \ReflectionClass($class);
+        $method = TestHelper::getAccessibleNonPublicMethod($this->worker, 'getClassType');
+        $actual = $method->invoke($this->worker, $reflection);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function test_getClassUseStatements_returnsCorrectUseStatements()
+    {
+        $method = TestHelper::getAccessibleNonPublicMethod($this->worker, 'getClassUseStatements');
+        $actual = $method->invoke($this->worker, $this->fileName);
+        $expected = array(
+            'use MockMaker\Entities\TestEntity;',
+            'use MockMaker\Entities\PropertyWorkerEntity;',
+        );
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function test_getExtendsClass_returnsCorrectData()
+    {
+        $reflection = new \ReflectionClass('MockMaker\Entities\EntityThatExtends');
+        $method = TestHelper::getAccessibleNonPublicMethod($this->worker, 'getExtendsClass');
+        $actual = $method->invoke($this->worker, $reflection);
+        $expected = array(
+            'className' => 'AbstractEntity',
+            'classNamespace' => 'MockMaker\Entities',
+        );
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function test_getImplementsClasses_returnsCorrectData()
+    {
+        $reflection = new \ReflectionClass('MockMaker\Entities\EntityThatImplements');
+        $method = TestHelper::getAccessibleNonPublicMethod($this->worker, 'getImplementsClasses');
+        $actual = $method->invoke($this->worker, $reflection);
+        $expected = array( array(
+                'className' => 'EntityInterface',
+                'classNamespace' => 'MockMaker\Entities'
+            ) );
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function test_getImplementsClasses_returnsEmptyArrayIfNoInterfaces()
+    {
+        $reflection = new \ReflectionClass('MockMaker\Entities\SimpleEntity');
+        $method = TestHelper::getAccessibleNonPublicMethod($this->worker, 'getImplementsClasses');
+        $actual = $method->invoke($this->worker, $reflection);
+        $this->assertEquals([ ], $actual);
     }
 
 }

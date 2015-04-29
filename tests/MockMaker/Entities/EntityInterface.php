@@ -10,7 +10,7 @@
  * 	@version	1.0
  */
 
-namespace MockMaker\Entity;
+namespace MockMaker\Entities;
 
 interface EntityInterface
 {

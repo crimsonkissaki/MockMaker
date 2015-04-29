@@ -51,14 +51,27 @@ class MockMakerClass
     private $useStatements = [ ];
 
     /**
-     * Classes that are implemented by the target class.
+     * Associative array of any classes implemented by the target class, if any.
+     *
+     * implements = array(
+     *   array(
+     *     'className' => class,
+     *     'classNamespace' => namespace
+     *   ),
+     *   ...
+     * )
      *
      * @var array
      */
     private $implements = [ ];
 
     /**
-     * Classes that are extended by the target class.
+     * Associative array of the class extended by the target class, if any.
+     *
+     * extends = array(
+     *   'className' => class,
+     *   'classNamespace' => namespace
+     * )
      *
      * @var array
      */
@@ -133,6 +146,26 @@ class MockMakerClass
     public function getUseStatements()
     {
         return $this->useStatements;
+    }
+
+    /**
+     * Get an array of classes the class implements.
+     *
+     * @return  array
+     */
+    public function getImplements()
+    {
+        return $this->implements;
+    }
+
+    /**
+     * Get an array of classes the class extends.
+     *
+     * @return  array
+     */
+    public function getExtends()
+    {
+        return $this->extends;
     }
 
     /**
@@ -223,6 +256,49 @@ class MockMakerClass
         } else {
             array_push($this->useStatements, $useStatements);
         }
+
+        return $this;
+    }
+
+    /**
+     * Set an array of classes the class implements.
+     *
+     * @param   $implements  array
+     * @return  MockMakerClass
+     */
+    public function setImplements($implements)
+    {
+        $this->implements = $implements;
+
+        return $this;
+    }
+
+    /**
+     * Add (single|array of) classes the class implements.
+     *
+     * @param   $implements  mixed
+     * @return  MockMakerClass
+     */
+    public function addImplements($implements)
+    {
+        if (is_array($implements)) {
+            $this->setImplements(array_merge($this->implements, $implements));
+        } else {
+            array_push($this->implements, $implements);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set an array of classes the class extends.
+     *
+     * @param   $extends    array
+     * @return  MockMakerClass
+     */
+    public function setExtends($extends)
+    {
+        $this->extends = $extends;
 
         return $this;
     }

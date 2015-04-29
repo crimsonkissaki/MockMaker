@@ -13,6 +13,7 @@ namespace MockMaker\Worker;
 use MockMaker\Model\MockMakerFile;
 use MockMaker\Model\MockMakerClass;
 use MockMaker\Worker\TokenWorker;
+use MockMaker\Helper\TestHelper;
 
 class MockMakerClassWorker
 {
@@ -56,6 +57,11 @@ class MockMakerClassWorker
         }
     }
 
+    /**
+     * Create a new instance of MockMakerClassWorker
+     *
+     * @return  MockMakerClassWorker
+     */
     public function __construct()
     {
         $this->tokenWorker = new TokenWorker();
@@ -82,7 +88,9 @@ class MockMakerClassWorker
             ->setReflectionClass($reflectionClass)
             ->setClassType($this->getClassType($reflectionClass))
             ->setHasConstructor($this->getIfClassHasConstructor($reflectionClass))
-            ->addUseStatements($this->getClassUseStatements($fileObj->getFullFilePath()));
+            ->addUseStatements($this->getClassUseStatements($fileObj->getFullFilePath()))
+            ->setExtends($this->getExtendsClass($reflectionClass))
+            ->addImplements($this->getImplementsClasses($reflectionClass));
 
         /*
           $obj->setClassName($this->determineClassName($fileObj))
@@ -251,6 +259,46 @@ class MockMakerClassWorker
     private function getClassUseStatements($file)
     {
         return $this->tokenWorker->getUseStatementsWithTokens($file);
+    }
+
+    /**
+     * Get information on the extended class for the target class, if any.
+     *
+     * @param   $reflectionClass    \ReflectionClass
+     * @return  array
+     */
+    private function getExtendsClass(\ReflectionClass $reflectionClass)
+    {
+        $extends = [ ];
+        if ($parent = $reflectionClass->getParentClass()) {
+            $extends = array(
+                'className' => $parent->getShortName(),
+                'classNamespace' => $parent->getNamespaceName(),
+            );
+        }
+
+        return $extends;
+    }
+
+    /**
+     * Get an array of classes that the target class implements, if any.
+     *
+     * @param   $reflectionClass    \ReflectionClass
+     * @return  array
+     */
+    private function getImplementsClasses(\ReflectionClass $reflectionClass)
+    {
+        $results = [ ];
+        if (!empty($interfaces = $reflectionClass->getInterfaces())) {
+            foreach ($interfaces as $interface) {
+                $results[] = array(
+                    'className' => $interface->getShortName(),
+                    'classNamespace' => $interface->getNamespaceName(),
+                );
+            }
+        }
+
+        return $results;
     }
 
 }
