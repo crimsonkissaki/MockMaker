@@ -2,6 +2,7 @@ MockMaker:
 
     how to handle classes with __constructors when they're passing in a string?
     - might have to sacrifice some relection abilities since we can't mock it
+    - use mockery to create mocks of __construct arguments
     - they could always pass in mocks for the class?
         - allow for automatic scanning of an existing "Mocks" folder
         and then automagically include the basic mocks if they're present?
@@ -12,8 +13,6 @@ MockMaker:
         - could look for use statements and combine that with type hints
 
     create unit tests for mocks?
-
-    create a common mock manager file?
 
     change case of true/false/null to match PSR2
 
@@ -79,5 +78,3 @@ BUGS:
     add a check for setter methods that don't have an associated property
     - put them in, but comment them out
     - might need to change the method worker to ensure it DOES have a property
-
-	cannot instantiate abstract classes
