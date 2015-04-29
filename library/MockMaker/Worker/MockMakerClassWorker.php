@@ -242,6 +242,12 @@ class MockMakerClassWorker
         return false;
     }
 
+    /**
+     * Get any use statements in the file.
+     *
+     * @param   $file   string
+     * @return  array
+     */
     private function getClassUseStatements($file)
     {
         return $this->tokenWorker->getUseStatementsWithTokens($file);

@@ -43,7 +43,6 @@ class TokenWorker
                 $useTokenKey += 1;
             }
             if (is_array($token) && $token[0] === 356) {
-                // T_CLASS token.
                 break;
             }
         }
@@ -52,7 +51,15 @@ class TokenWorker
         return $results;
     }
 
-    public function compileTokenIdsIntoString($tokens, $fileTokens)
+    /**
+     * Use an array of start/end token keys to slice out sections of the full
+     * php file token array and compile them into an array of strings.
+     *
+     * @param   $tokens         array
+     * @param   $fileTokens     array
+     * @return  array
+     */
+    private function compileTokenIdsIntoString($tokens, $fileTokens)
     {
         $strings = [ ];
         foreach ($tokens as $k => $token) {
@@ -65,7 +72,13 @@ class TokenWorker
         return $strings;
     }
 
-    public function compileString($tokens)
+    /**
+     * Compile a slice of PHP tokens into a string.
+     *
+     * @param   $tokens     array
+     * @return  string
+     */
+    private function compileString($tokens)
     {
         $string = '';
         foreach ($tokens as $token) {
