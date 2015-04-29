@@ -23,6 +23,17 @@ class TestEntity
     const CONSTANT_PROPERTY2 = 'constProperty2 value';
 
     // public bicycle
+    /**
+     * @ORM\ManyToOne(targetEntity="MockManager\Entity\SimpleEntity",inversedBy="simples")
+     * @ORM\JoinColumn(name="simpleEntity", referencedColumnName="id", onDelete="CASCADE", nullable=false)
+     */
+    public $publicORMSimpleEntityProperty;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="MockManager\Entity\EntityThatExtends",inversedBy="extends")
+     * @ORM\JoinColumn(name="extendsEntity", referencedColumnName="id", onDelete="CASCADE", nullable=false)
+     */
+    public $publicORMEntityThatExtendsProperty;
     public $publicProperty1 = 'publicProperty1 value';
     public $publicProperty2 = 'publicProperty2 value';
     public $publicPropertyDefaultValueAssignedByConstructor;
@@ -74,7 +85,12 @@ class TestEntity
         $this->publicProperty2 = $publicProperty2;
     }
 
-    public function setPublicTypehintedProperty(SimpleEntity $simpleEntity)
+    public function setPublicTypehintedProperty1(SimpleEntity $simpleEntity)
+    {
+        $this->publicTypehintedProperty = $simpleEntity;
+    }
+
+    public function setPublicTypehintedProperty2(\DateTime $simpleEntity)
     {
         $this->publicTypehintedProperty = $simpleEntity;
     }

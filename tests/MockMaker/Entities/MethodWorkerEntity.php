@@ -50,6 +50,16 @@ class MethodWorkerEntity
         return $argument;
     }
 
+    public function oneArgumentDefaultInteger($argument = 100)
+    {
+        return $argument;
+    }
+
+    public function oneArgumentDefaultArray($argument = [ ])
+    {
+        return $argument;
+    }
+
     public function oneArgumentDefaultBoolFalse($argument = false)
     {
         return $argument;
@@ -72,6 +82,12 @@ class MethodWorkerEntity
 
     public function oneArgumentTypehinted(SimpleEntity $simpleEntity)
     {
+        return $simpleEntity->publicProperty;
+    }
+
+    public function twoArgumentsTypehinted(SimpleEntity $simpleEntity, \stdClass $aClass)
+    {
+        $this->oneArgumentTypehintedWithDefaultNull($simpleEntity);
         return $simpleEntity->publicProperty;
     }
 

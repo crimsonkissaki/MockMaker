@@ -11,6 +11,7 @@
 namespace MockMaker\Worker;
 
 use MockMaker\Model\ArgumentData;
+use MockMaker\Helper\TestHelper;
 
 class ArgumentDataWorker
 {
@@ -66,6 +67,10 @@ class ArgumentDataWorker
 
     /**
      * Get the argument data type.
+     *
+     * Returns same data types as PHP's gettype() method:
+     *  'boolean', 'integer', 'double', 'string', 'array',
+     *  'object', 'resource', 'NULL', 'unknown type'
      *
      * @param	$argument	\ReflectionParameter
      * @return	string
