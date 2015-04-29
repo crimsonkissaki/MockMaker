@@ -216,8 +216,6 @@ class MockMaker
      *
      * YOU DO NOT NEED TO INCLUDE THE FILE EXTENSION IN THE REGEX STRING
      *
-     * This is only used when a read directory has been specified.
-     *
      * @param	$excludeRegex   string	Regex pattern.
      * @return	MockMaker
      */
@@ -232,8 +230,6 @@ class MockMaker
      * Define a regex pattern used to INCLUDE files based on the file name.
      *
      * YOU DO NOT NEED TO INCLUDE THE FILE EXTENSION IN THE REGEX STRING
-     *
-     * This is only used when a read directory has been specified.
      *
      * @param	$includeRegex	string	Regex pattern.
      * @return	MockMaker
