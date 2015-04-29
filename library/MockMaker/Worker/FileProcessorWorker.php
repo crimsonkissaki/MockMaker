@@ -40,7 +40,7 @@ class FileProcessorWorker
      *
      * @var array
      */
-    private $mockMakerFiles = [ ];
+    private $fileData = [ ];
 
     /**
      * Get the config file.
@@ -67,32 +67,32 @@ class FileProcessorWorker
      *
      * @return  array
      */
-    public function getFileDatas()
+    public function getFileData()
     {
-        return $this->mockMakerFiles;
+        return $this->fileData;
     }
 
     /**
      * Set the mock maker files array.
      *
-     * @param   $mockMakerFiles     array
+     * @param   $fileData     array
      */
-    public function setFileDatas($mockMakerFiles)
+    public function setFileData($fileData)
     {
-        $this->mockMakerFiles = $mockMakerFiles;
+        $this->fileData = $fileData;
     }
 
     /**
-     * Add single or array of FileData objects to mockMakerFiles.
+     * Add single or array of FileData objects to fileData.
      *
-     * @param   $mockMakerFiles     mixed
+     * @param   $fileData     mixed
      */
-    public function addFileDatas($mockMakerFiles)
+    public function addFileData($fileData)
     {
-        if (is_array($mockMakerFiles)) {
-            $this->setFileDatas(array_merge($this->mockMakerFiles, $mockMakerFiles));
+        if (is_array($fileData)) {
+            $this->setFileData(array_merge($this->fileData, $fileData));
         } else {
-            array_push($this->mockMakerFiles, $mockMakerFiles);
+            array_push($this->fileData, $fileData);
         }
     }
 
@@ -145,7 +145,7 @@ class FileProcessorWorker
     {
         $mockMakerFile = $this->generateFileDataObject($file, $config);
         if (!in_array($mockMakerFile->getClassData()->getClassType(), array( 'abstract', 'interface' ))) {
-            $this->addFileDatas($mockMakerFile);
+            $this->addFileData($mockMakerFile);
         }
     }
 
