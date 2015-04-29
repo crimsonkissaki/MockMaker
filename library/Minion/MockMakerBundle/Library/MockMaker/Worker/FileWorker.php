@@ -3,7 +3,7 @@
 /**
  *	FileWorker
  *
- *	Processes files as required by MockMakerFileGenerator
+ *	Processes files as required by FileDataGenerator
  *
  *	This assumes PSR-0 adherence for namespacing.
  *

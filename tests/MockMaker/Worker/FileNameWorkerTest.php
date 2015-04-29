@@ -11,7 +11,7 @@
 namespace MockMaker\Worker;
 
 use MockMaker\Worker\FileNameWorker;
-use MockMaker\Model\MockMakerConfig;
+use MockMaker\Model\ConfigData;
 use MockMaker\Exception\MockMakerException;
 use MockMaker\Helper\TestHelper;
 
@@ -20,7 +20,7 @@ class FileNameWorkerTest extends \PHPUnit_Framework_TestCase
     /* @var $worker FileWorker */
 
     public $worker;
-    /* @var $worker MockMakerConfig */
+    /* @var $worker ConfigData */
     public $config;
     /* @var $entitiesDir string */
     public $entitiesDir;
@@ -46,7 +46,7 @@ class FileNameWorkerTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->worker = new FileNameWorker();
-        $this->config = new MockMakerConfig();
+        $this->config = new ConfigData();
         $this->rootDir = dirname(dirname(dirname(dirname(__FILE__))));
         $this->entitiesDir = $this->rootDir . '/tests/MockMaker/Entities/';
     }

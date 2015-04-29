@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 	MockMakerFileWorkerTest
+ * 	FileDataWorkerTest
  *
  * 	@author		Evan Johnson
  * 	@created	Apr 28, 2015
@@ -10,22 +10,22 @@
 
 namespace MockMaker\Worker;
 
-use MockMaker\Worker\MockMakerFileWorker;
-use MockMaker\Model\MockMakerConfig;
+use MockMaker\Worker\FileDataWorker;
+use MockMaker\Model\ConfigData;
 
-class MockMakerFileWorkerTest extends \PHPUnit_Framework_TestCase
+class FileDataWorkerTest extends \PHPUnit_Framework_TestCase
 {
 
-    // @var $worker MockMakerFileWorker
+    // @var $worker FileDataWorker
     public $worker;
-    // @var $config MockMakerConfig
+    // @var $config ConfigData
     public $config;
     public $file = '/Applications/XAMPP/xamppfiles/htdocs/mockmaker/tests/MockMaker/Entities/SimpleEntity.php';
 
     public function setUp()
     {
-        $this->worker = new MockMakerFileWorker();
-        $this->config = new MockMakerConfig();
+        $this->worker = new FileDataWorker();
+        $this->config = new ConfigData();
     }
 
     public function test_generateNewObject_returnsCorrectFullFilePath()

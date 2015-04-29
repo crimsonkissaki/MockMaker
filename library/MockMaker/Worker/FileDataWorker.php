@@ -1,9 +1,9 @@
 <?php
 
 /**
- * 	MockMakerFileWorker
+ * 	FileDataWorker
  *
- *  This class handles processing operations for the MockMakerFile model.
+ *  This class handles processing operations for the FileData model.
  *
  * 	@author		Evan Johnson
  * 	@created	Apr 28, 2015
@@ -12,22 +12,22 @@
 
 namespace MockMaker\Worker;
 
-use MockMaker\Model\MockMakerFile;
-use MockMaker\Model\MockMakerConfig;
+use MockMaker\Model\FileData;
+use MockMaker\Model\ConfigData;
 
-class MockMakerFileWorker
+class FileDataWorker
 {
 
     /**
-     * Create & populate a new MockMakerFile object.
+     * Create & populate a new FileData object.
      *
      * @param   $file           string
-     * @param   $config         MockMakerConfig
-     * @return  MockMakerFile
+     * @param   $config         ConfigData
+     * @return  FileData
      */
-    public function generateNewObject($file, MockMakerConfig $config)
+    public function generateNewObject($file, ConfigData $config)
     {
-        $obj = new MockMakerFile();
+        $obj = new FileData();
         $obj->setFullFilePath($file)
             ->setFileName($this->getFileName($file))
             ->setProjectRootPath($config->getProjectRootPath());

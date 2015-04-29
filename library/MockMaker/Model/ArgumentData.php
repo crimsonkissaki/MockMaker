@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 	MockMakerArgument
+ * 	ArgumentData
  *
  *  Class that holds method argument details.
  *
@@ -12,7 +12,7 @@
 
 namespace MockMaker\Model;
 
-class MockMakerArgument
+class ArgumentData
 {
 
     /**

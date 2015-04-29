@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 	MockMakerClassWorker
+ * 	ClassDataWorker
  *
  * 	@author		Evan Johnson
  * 	@created	Apr 28, 2015
@@ -10,14 +10,14 @@
 
 namespace MockMaker\Worker;
 
-use MockMaker\Model\MockMakerFile;
-use MockMaker\Model\MockMakerClass;
+use MockMaker\Model\FileData;
+use MockMaker\Model\ClassData;
 use MockMaker\Worker\TokenWorker;
-use MockMaker\Worker\MockMakerPropertyWorker;
-use MockMaker\Worker\MockMakerMethodWorker;
+use MockMaker\Worker\PropertyDataWorker;
+use MockMaker\Worker\MethodDataWorker;
 use MockMaker\Helper\TestHelper;
 
-class MockMakerClassWorker
+class ClassDataWorker
 {
 
     /**
@@ -35,16 +35,16 @@ class MockMakerClassWorker
     private $tokenWorker;
 
     /**
-     * Class that generates MockMakerMethod objects
+     * Class that generates MethodData objects
      *
-     * @var MockMakerMethodWorker
+     * @var MethodDataWorker
      */
     private $methodWorker;
 
     /**
-     * Class that generates MockMakerProperty objects.
+     * Class that generates PropertyData objects.
      *
-     * @var MockMakerPropertyWorker
+     * @var PropertyDataWorker
      */
     private $propertyWorker;
 
@@ -74,26 +74,26 @@ class MockMakerClassWorker
     }
 
     /**
-     * Create a new instance of MockMakerClassWorker
+     * Create a new instance of ClassDataWorker
      *
-     * @return  MockMakerClassWorker
+     * @return  ClassDataWorker
      */
     public function __construct()
     {
         $this->tokenWorker = new TokenWorker();
-        $this->propertyWorker = new MockMakerPropertyWorker();
-        $this->methodWorker = new MockMakerMethodWorker();
+        $this->propertyWorker = new PropertyDataWorker();
+        $this->methodWorker = new MethodDataWorker();
     }
 
     /**
-     * Create a new MockMakerClass object.
+     * Create a new ClassData object.
      *
      * This will have LOTS of problems if you don't adhere to PSR-0 or PSR-4 class naming standards.
      *
-     * @param   $fileObj    MockMakerFile
-     * @return  MockMakerClass
+     * @param   $fileObj    FileData
+     * @return  ClassData
      */
-    public function generateNewObject(MockMakerFile $fileObj)
+    public function generateNewObject(FileData $fileObj)
     {
 
         $className = $this->determineClassName($fileObj);
@@ -101,7 +101,7 @@ class MockMakerClassWorker
         $reflectionClass = $this->getReflectionClassInstance("{$classNamespace}\\{$className}");
         $classType = $this->getClassType($reflectionClass);
 
-        $obj = new MockMakerClass();
+        $obj = new ClassData();
         $obj->setClassName($className)
             ->setClassNamespace($classNamespace)
             ->setReflectionClass($reflectionClass)
@@ -131,10 +131,10 @@ class MockMakerClassWorker
     /**
      * Determine the class's name.
      *
-     * @param   $fileObj  MockMakerFile
+     * @param   $fileObj  FileData
      * @return  string
      */
-    private function determineClassName(MockMakerFile $fileObj)
+    private function determineClassName(FileData $fileObj)
     {
         return rtrim($fileObj->getFileName(), '.php');
     }
@@ -142,10 +142,10 @@ class MockMakerClassWorker
     /**
      * Get the class's name space.
      *
-     * @param   $fileObj    MockMakerFile
+     * @param   $fileObj    FileData
      * @return  string
      */
-    private function getClassNamespace(MockMakerFile $fileObj)
+    private function getClassNamespace(FileData $fileObj)
     {
         $className = $this->determineClassName($fileObj);
         if ($result = $this->checkClassUsingValidNamespacesArray($className)) {
@@ -186,10 +186,10 @@ class MockMakerClassWorker
     /**
      * Convert a fully qualified file path to a usable namespace formatted string.
      *
-     * @param   $fileObj    MockMakerFile
+     * @param   $fileObj    FileData
      * @return  string
      */
-    private function convertFileNameToClassPath(MockMakerFile $fileObj)
+    private function convertFileNameToClassPath(FileData $fileObj)
     {
         // simplify things by removing the root dir path from the file name
         $shortPath = str_replace($fileObj->getProjectRootPath(), '', $fileObj->getFullFilePath());
@@ -331,7 +331,7 @@ class MockMakerClassWorker
     }
 
     /**
-     * Get an array of MockMakerMethod objects.
+     * Get an array of MethodData objects.
      *
      * @param   $class  \ReflectionClass
      * @return  array
@@ -342,10 +342,10 @@ class MockMakerClassWorker
     }
 
     /**
-     * Get an array of MockMakerProperty objects.
+     * Get an array of PropertyData objects.
      *
      * @param   $class      \ReflectionClass    Reflection of class to be mocked.
-     * @param   $methods    array               Array of MockMakerMethod objects.
+     * @param   $methods    array               Array of MethodData objects.
      * @return  array
      */
     private function getClassProperties(\ReflectionClass $class, $methods)

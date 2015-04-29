@@ -1,7 +1,7 @@
 <?php
 
 /**
- *	MockMakerFileGeneratorTest
+ *	FileDataGeneratorTest
  *
  *	@author		Evan Johnson
  *	@created	Apr 20, 2015
@@ -10,19 +10,19 @@
 
 namespace Minion\MockMakerBundle\Tests\Library;
 
-use Minion\MockMakerBundle\Library\MockMakerFileGenerator;
+use Minion\MockMakerBundle\Library\FileDataGenerator;
 use Minion\MockMakerBundle\Library\MockMaker\Exception\MockMakerErrors;
 use Minion\MockMakerBundle\Library\MockMaker\Exception\MockMakerException;
 
 use Minion\UnitTestBundle\Library\DebuggerMinion;
 use Minion\UnitTestBundle\Library\ReflectionMinion;
 
-class MockMakerFileGeneratorTest extends \PHPUnit_Framework_TestCase
+class FileDataGeneratorTest extends \PHPUnit_Framework_TestCase
 {
 
 	const PROJECT_ROOT_DIRECTORY = '/Applications/XAMPP/xamppfiles/htdocs/mockMaker/src/';
 
-	/* @var $generator MockMakerFileGenerator */
+	/* @var $generator FileDataGenerator */
 	public $generator;
 
 	public $pathToEntities;
@@ -31,7 +31,7 @@ class MockMakerFileGeneratorTest extends \PHPUnit_Framework_TestCase
 
 	public function setUp()
 	{
-		$this->generator = new MockMakerFileGenerator;
+		$this->generator = new FileDataGenerator;
 		$this->pathToEntities = dirname(dirname(__FILE__)) . '/Resources/Entities/';
 		$this->pathToGeneratedEntities = dirname(dirname(__FILE__)) . '/Resources/GeneratedEntities/';
 	}

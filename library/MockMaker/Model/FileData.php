@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 	MockMakerFile
+ * 	FileData
  *
  *  Holds all file information we need to create the mock file and
  *  will be passed to the code generator classes later on.
@@ -13,9 +13,9 @@
 
 namespace MockMaker\Model;
 
-use MockMaker\Model\MockMakerClass;
+use MockMaker\Model\ClassData;
 
-class MockMakerFile
+class FileData
 {
 
     /**
@@ -40,7 +40,7 @@ class MockMakerFile
     private $projectRootPath;
 
     /**
-     * MockMakerClass data object
+     * ClassData data object
      *
      * @var type
      */
@@ -77,11 +77,11 @@ class MockMakerFile
     }
 
     /**
-     * Get the file's MockMakerClass object.
+     * Get the file's ClassData object.
      *
      * @return string
      */
-    public function getMockMakerClass()
+    public function getClassData()
     {
         return $this->mockMakerClass;
     }
@@ -90,7 +90,7 @@ class MockMakerFile
      * Set the file's full path.
      *
      * @param   $fullFilePath   string
-     * @return  MockMakerFile
+     * @return  FileData
      */
     public function setFullFilePath($fullFilePath)
     {
@@ -103,7 +103,7 @@ class MockMakerFile
      * Set the file's name.
      *
      * @param   $fileName   string
-     * @return  MockMakerFile
+     * @return  FileData
      */
     public function setFileName($fileName)
     {
@@ -123,12 +123,12 @@ class MockMakerFile
     }
 
     /**
-     * Set the file's MockMakerClass object
+     * Set the file's ClassData object
      *
-     * @param   $mockMakerClass  MockMakerClass
-     * @return  MockMakerFile
+     * @param   $mockMakerClass  ClassData
+     * @return  FileData
      */
-    public function setMockMakerClass(MockMakerClass $mockMakerClass)
+    public function setClassData(ClassData $mockMakerClass)
     {
         $this->mockMakerClass = $mockMakerClass;
 

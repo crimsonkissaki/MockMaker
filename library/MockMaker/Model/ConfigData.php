@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 	MockMakerConfig
+ * 	ConfigData
  *
  * 	@author		Evan Johnson
  * 	@created	Apr 22, 2015
@@ -12,7 +12,7 @@ namespace MockMaker\Model;
 
 use MockMaker\Worker\StringFormatterWorker as Formatter;
 
-class MockMakerConfig
+class ConfigData
 {
 
     /**

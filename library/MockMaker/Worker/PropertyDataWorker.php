@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 	MockMakerPropertyWorker
+ * 	PropertyDataWorker
  *
  * 	@author		Evan Johnson
  * 	@created	Apr 28, 2015
@@ -10,10 +10,10 @@
 
 namespace MockMaker\Worker;
 
-use MockMaker\Model\MockMakerProperty;
+use MockMaker\Model\PropertyData;
 use MockMaker\Helper\TestHelper;
 
-class MockMakerPropertyWorker
+class PropertyDataWorker
 {
 
     /**
@@ -31,14 +31,14 @@ class MockMakerPropertyWorker
     private $reflectionClass;
 
     /**
-     * Array of the class's methods in MockMakerMethod form.
+     * Array of the class's methods in MethodData form.
      *
      * @var array
      */
     private $methods = [ ];
 
     /**
-     * Associative array of MockMakerProperty objects in visibility => array( properties ) format.
+     * Associative array of PropertyData objects in visibility => array( properties ) format.
      *
      * array(
      *   'public' => array( ... ),
@@ -50,10 +50,10 @@ class MockMakerPropertyWorker
     private $classPropertyObjects = [ ];
 
     /**
-     * Generate an array of MockMakerProperty objects for a class.
+     * Generate an array of PropertyData objects for a class.
      *
      * @param   $class      \ReflectionClass    Reflection of the class to be mocked.
-     * @param   $methods    array               Array of MockMakerMethod objects.
+     * @param   $methods    array               Array of MethodData objects.
      * @return  array
      */
     public function generatePropertyObjects(\ReflectionClass $class, $methods)
@@ -86,7 +86,7 @@ class MockMakerPropertyWorker
     }
 
     /**
-     * Get an array of MockMakerProperty objects for the class properties.
+     * Get an array of PropertyData objects for the class properties.
      *
      * @param   $classProperties     array  Array of \ReflectionProperties
      * @return  array
@@ -129,11 +129,11 @@ class MockMakerPropertyWorker
      * @param	$visibility     string		Public/private/protected/static/etc
      * @param	$key	        mixed		String or int array key
      * @param	$value	        mixed		String or \ReflectionProperty object
-     * @return  MockMakerProperty
+     * @return  PropertyData
      */
     private function getPropertyDetails($visibility, $key, $value)
     {
-        $result = new MockMakerProperty();
+        $result = new PropertyData();
         $result->name = (is_object($value)) ? $value->name : $key;
         $result->visibility = $visibility;
         $result->isStatic = (is_object($value)) ? $value->isStatic() : false;

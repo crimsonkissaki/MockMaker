@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 	MockMakerMethodWorker
+ * 	MethodDataWorker
  *
  * 	@author		Evan Johnson
  * 	@created	Apr 28, 2015
@@ -10,26 +10,26 @@
 
 namespace MockMaker\Worker;
 
-use MockMaker\Model\MockMakerMethod;
-use MockMaker\Worker\MockMakerArgumentWorker;
+use MockMaker\Model\MethodData;
+use MockMaker\Worker\ArgumentDataWorker;
 
-class MockMakerMethodWorker
+class MethodDataWorker
 {
 
     /**
-     * Class that handles generation of MockMakerArgument objects.
+     * Class that handles generation of ArgumentData objects.
      *
-     * @var MockMakerArgumentWorker
+     * @var ArgumentDataWorker
      */
     private $argumentWorker;
 
     public function __construct()
     {
-        $this->argumentWorker = new MockMakerArgumentWorker();
+        $this->argumentWorker = new ArgumentDataWorker();
     }
 
     /**
-     * Generate an array of MockMakerMethod objects.
+     * Generate an array of MethodData objects.
      *
      * @param   $class  \ReflectionClass
      * @return  array
@@ -95,11 +95,11 @@ class MockMakerMethodWorker
      *
      * @param	$visibility     string
      * @param	$method		    \ReflectionMethod
-     * @return	MockMakerMethod
+     * @return	MethodData
      */
     private function getMethodDetails($visibility, \ReflectionMethod $method)
     {
-        $details = new MockMakerMethod();
+        $details = new MethodData();
         $details->name = $method->getName();
         $details->visibility = $visibility;
         $details->isSetter = (preg_match('/^set/', $method->getName()) === 1) ? true : false;

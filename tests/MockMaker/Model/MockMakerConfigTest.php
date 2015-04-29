@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 	MockMakerConfigTest
+ * 	ConfigDataTest
  *
  * 	@author		Evan Johnson
  * 	@created	Apr 24, 2015
@@ -10,12 +10,12 @@
 
 namespace MockMaker\Model;
 
-use MockMaker\Model\MockMakerConfig;
+use MockMaker\Model\ConfigData;
 use MockMaker\TestHelper;
 
-class MockMakerConfigTest extends \PHPUnit_Framework_TestCase
+class ConfigDataTest extends \PHPUnit_Framework_TestCase
 {
-    /* @var $config MockMakerConfig */
+    /* @var $config ConfigData */
 
     public $config;
     public $pathToEntities;
@@ -23,7 +23,7 @@ class MockMakerConfigTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->config = new MockMakerConfig();
+        $this->config = new ConfigData();
         $this->pathToEntities = dirname(dirname(__FILE__)) . '/Entities/';
     }
 

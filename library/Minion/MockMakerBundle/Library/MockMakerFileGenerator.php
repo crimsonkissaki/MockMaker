@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 	MockMakerFileGenerator
+ * 	FileDataGenerator
  *
  * 	Generate and save mock files for single files or an entire directory.
  *
@@ -22,7 +22,7 @@ use Minion\MockMakerBundle\Library\MockMaker\Exception\MockMakerException;
 use RAPP\Bundle\LoyaltyBundle\Tests\Helpers\Utilities\MockMaker\Worker\StringFormatterWorker;
 use Minion\UnitTestBundle\Library\DebuggerMinion;
 
-class MockMakerFileGenerator
+class FileDataGenerator
 {
 
     /**
@@ -234,7 +234,7 @@ class MockMakerFileGenerator
      */
 
     /**
-     * Get a new MockMakerFileGenerator instance.
+     * Get a new FileDataGenerator instance.
      */
     public function __construct()
     {

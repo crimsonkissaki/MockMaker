@@ -12,7 +12,7 @@ namespace MockMaker;
 
 require dirname(dirname(dirname(__FILE__))) . '/vendor/autoload.php';
 
-use MockMaker\Model\MockMakerConfig;
+use MockMaker\Model\ConfigData;
 use MockMaker\Worker\DirectoryWorker;
 use MockMaker\Worker\FileNameWorker;
 use MockMaker\Worker\FileProcessorWorker;
@@ -24,7 +24,7 @@ class MockMaker
     /**
      * MockMaker configuration class.
      *
-     * @var MockMakerConfig
+     * @var ConfigData
      */
     private $config;
 
@@ -52,7 +52,7 @@ class MockMaker
     /**
      * Get the configuration options class
      *
-     * @return  MockMakerConfig
+     * @return  ConfigData
      */
     public function getConfig()
     {
@@ -96,7 +96,7 @@ class MockMaker
      */
     public function __construct()
     {
-        $this->config = new MockMakerConfig();
+        $this->config = new ConfigData();
         $this->dirWorker = new DirectoryWorker();
         $this->fileNameWorker = new FileNameWorker();
         $this->fileProcessorWorker = new FileProcessorWorker();
@@ -275,7 +275,7 @@ class MockMaker
     /**
      * Use to verify MockMaker's settings before you kick things off for real.
      *
-     * @return	MockMakerConfig
+     * @return	ConfigData
      */
     public function verifySettings()
     {

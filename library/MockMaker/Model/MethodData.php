@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 	MockMakerMethod
+ * 	MethodData
  *
  *  Class that holds all information for a method.
  *
@@ -12,7 +12,7 @@
 
 namespace MockMaker\Model;
 
-class MockMakerMethod
+class MethodData
 {
 
     /**
@@ -37,7 +37,7 @@ class MockMakerMethod
     public $isSetter;
 
     /**
-     * Array of MockMakerArgument objects.
+     * Array of ArgumentData objects.
      *
      * @var array
      */

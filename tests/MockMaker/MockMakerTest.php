@@ -45,7 +45,7 @@ class MockMakerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * These tests verify that MockMaker interfaces with the
-     * MockMakerConfig class properly.
+     * ConfigData class properly.
      */
     public function test_setProjectRootPath()
     {

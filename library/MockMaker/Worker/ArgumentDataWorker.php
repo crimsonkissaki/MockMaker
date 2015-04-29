@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 	MockMakerArgumentWorker
+ * 	ArgumentDataWorker
  *
  * 	@author		Evan Johnson
  * 	@created	Apr 29, 2015
@@ -10,13 +10,13 @@
 
 namespace MockMaker\Worker;
 
-use MockMaker\Model\MockMakerArgument;
+use MockMaker\Model\ArgumentData;
 
-class MockMakerArgumentWorker
+class ArgumentDataWorker
 {
 
     /**
-     * Generate an array of MockMakerArgument objects.
+     * Generate an array of ArgumentData objects.
      *
      * @param	$method     \ReflectionMethod
      * @return  array
@@ -41,11 +41,11 @@ class MockMakerArgumentWorker
      * Get the details for a single method argument
      *
      * @param	$argument	\ReflectionParameter
-     * @return	MockMakerArgument
+     * @return	ArgumentData
      */
     private function getArgumentDetails(\ReflectionParameter $argument)
     {
-        $details = new MockMakerArgument();
+        $details = new ArgumentData();
         $details->name = $argument->getName();
         $details->passedByReference = $argument->isPassedByReference();
         // true if no typehinting or typehinted argument defaults to null

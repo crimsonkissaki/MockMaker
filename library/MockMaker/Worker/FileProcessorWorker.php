@@ -12,10 +12,10 @@
 
 namespace MockMaker\Worker;
 
-use MockMaker\Model\MockMakerConfig;
-use MockMaker\Model\MockMakerFile;
-use MockMaker\Worker\MockMakerFileWorker;
-use MockMaker\Worker\MockMakerClassWorker;
+use MockMaker\Model\ConfigData;
+use MockMaker\Model\FileData;
+use MockMaker\Worker\FileDataWorker;
+use MockMaker\Worker\ClassDataWorker;
 use MockMaker\Helper\TestHelper;
 
 class FileProcessorWorker
@@ -24,19 +24,19 @@ class FileProcessorWorker
     /**
      * MockMaker config class
      *
-     * @var MockMakerConfig
+     * @var ConfigData
      */
     private $config;
 
     /**
-     * Class that handles processing for the MockMakerFile models.
+     * Class that handles processing for the FileData models.
      *
-     * @var MockMakerFileWorker
+     * @var FileDataWorker
      */
     private $mockMakerFileWorker;
 
     /**
-     * Array of MockMakerFile classes.
+     * Array of FileData classes.
      *
      * @var array
      */
@@ -53,11 +53,11 @@ class FileProcessorWorker
     }
 
     /**
-     * Get the MockMakerFileWorker class instance.
+     * Get the FileDataWorker class instance.
      *
-     * @return  MockMakerFileWorker
+     * @return  FileDataWorker
      */
-    public function getMockMakerFileWorker()
+    public function getFileDataWorker()
     {
         return $this->mockMakerFileWorker;
     }
@@ -67,7 +67,7 @@ class FileProcessorWorker
      *
      * @return  array
      */
-    public function getMockMakerFiles()
+    public function getFileDatas()
     {
         return $this->mockMakerFiles;
     }
@@ -77,20 +77,20 @@ class FileProcessorWorker
      *
      * @param   $mockMakerFiles     array
      */
-    public function setMockMakerFiles($mockMakerFiles)
+    public function setFileDatas($mockMakerFiles)
     {
         $this->mockMakerFiles = $mockMakerFiles;
     }
 
     /**
-     * Add single or array of MockMakerFile objects to mockMakerFiles.
+     * Add single or array of FileData objects to mockMakerFiles.
      *
      * @param   $mockMakerFiles     mixed
      */
-    public function addMockMakerFiles($mockMakerFiles)
+    public function addFileDatas($mockMakerFiles)
     {
         if (is_array($mockMakerFiles)) {
-            $this->setMockMakerFiles(array_merge($this->mockMakerFiles, $mockMakerFiles));
+            $this->setFileDatas(array_merge($this->mockMakerFiles, $mockMakerFiles));
         } else {
             array_push($this->mockMakerFiles, $mockMakerFiles);
         }
@@ -99,9 +99,9 @@ class FileProcessorWorker
     /**
      * Set the config file.
      *
-     * @param   $config   MockMakerConfig
+     * @param   $config   ConfigData
      */
-    public function setConfig(MockMakerConfig $config)
+    public function setConfig(ConfigData $config)
     {
         $this->config = $config;
     }
@@ -111,7 +111,7 @@ class FileProcessorWorker
      */
     public function __construct()
     {
-        $this->mockMakerFileWorker = new MockMakerFileWorker();
+        $this->mockMakerFileWorker = new FileDataWorker();
     }
 
     /**
@@ -139,29 +139,29 @@ class FileProcessorWorker
      * Process a single file for mocking.
      *
      * @param   $file       string
-     * @param   $config     MockMakerConfig
+     * @param   $config     ConfigData
      */
-    private function processFile($file, MockMakerConfig $config)
+    private function processFile($file, ConfigData $config)
     {
-        $mockMakerFile = $this->generateMockMakerFileObject($file, $config);
-        if (!in_array($mockMakerFile->getMockMakerClass()->getClassType(), array( 'abstract', 'interface' ))) {
-            $this->addMockMakerFiles($mockMakerFile);
+        $mockMakerFile = $this->generateFileDataObject($file, $config);
+        if (!in_array($mockMakerFile->getClassData()->getClassType(), array( 'abstract', 'interface' ))) {
+            $this->addFileDatas($mockMakerFile);
         }
     }
 
     /**
-     * Create a new MockMakerFile object.
+     * Create a new FileData object.
      *
      * @param   $file           string
-     * @param   $config         MockMakerConfig
-     * @return  MockMakerFile
+     * @param   $config         ConfigData
+     * @return  FileData
      */
-    private function generateMockMakerFileObject($file, $config)
+    private function generateFileDataObject($file, $config)
     {
         $mmFileObj = $this->mockMakerFileWorker->generateNewObject($file, $config);
         // we need a new ClassWorker for each file
-        $classWorker = new MockMakerClassWorker();
-        $mmFileObj->setMockMakerClass($classWorker->generateNewObject($mmFileObj));
+        $classWorker = new ClassDataWorker();
+        $mmFileObj->setClassData($classWorker->generateNewObject($mmFileObj));
 
         return $mmFileObj;
     }

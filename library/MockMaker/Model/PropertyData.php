@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 	MockMakerProperty
+ * 	PropertyData
  *
  *  Class that holds all information for a property.
  *
@@ -12,7 +12,7 @@
 
 namespace MockMaker\Model;
 
-class MockMakerProperty
+class PropertyData
 {
 
     /**

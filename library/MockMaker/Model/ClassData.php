@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 	MockMakerClass
+ * 	ClassData
  *
  *  Class model that holds all class-specific information.
  *
@@ -12,7 +12,7 @@
 
 namespace MockMaker\Model;
 
-class MockMakerClass
+class ClassData
 {
 
     /**
@@ -85,14 +85,14 @@ class MockMakerClass
     private $hasConstructor = false;
 
     /**
-     * Array of MockMakerMethod objects.
+     * Array of MethodData objects.
      *
      * @var array
      */
     private $methods = [ ];
 
     /**
-     * Array of MockMakerProperty objects.
+     * Array of PropertyData objects.
      *
      * @var array
      */
@@ -179,7 +179,7 @@ class MockMakerClass
     }
 
     /**
-     * Get the array of MockMakerMethod objects
+     * Get the array of MethodData objects
      *
      * @return  array
      */
@@ -189,7 +189,7 @@ class MockMakerClass
     }
 
     /**
-     * Get the array of MockMakerProperty objects
+     * Get the array of PropertyData objects
      *
      * @return  array
      */
@@ -202,7 +202,7 @@ class MockMakerClass
      * Set the class's name space.
      *
      * @param   $classNamespace     string
-     * @return  MockMakerClass
+     * @return  ClassData
      */
     public function setClassNamespace($classNamespace)
     {
@@ -215,7 +215,7 @@ class MockMakerClass
      * Set the class's name.
      *
      * @param   $className     string
-     * @return  MockMakerClass
+     * @return  ClassData
      */
     public function setClassName($className)
     {
@@ -228,7 +228,7 @@ class MockMakerClass
      * Set the reflection class instance.
      *
      * @param   $reflectionClass    \ReflectionClass
-     * @return  MockMakerClass
+     * @return  ClassData
      */
     public function setReflectionClass(\ReflectionClass $reflectionClass)
     {
@@ -241,7 +241,7 @@ class MockMakerClass
      * Set the class type - concrete/abstract/interface/final.
      *
      * @param   $classType  string
-     * @return  MockMakerClass
+     * @return  ClassData
      */
     public function setClassType($classType)
     {
@@ -254,7 +254,7 @@ class MockMakerClass
      * Set the class's use statements.
      *
      * @param   $useStatements  array
-     * @return  MockMakerClass
+     * @return  ClassData
      */
     public function setUseStatements($useStatements)
     {
@@ -267,7 +267,7 @@ class MockMakerClass
      * Add a single or array of use statements to useStatements.
      *
      * @param   $useStatements  mixed
-     * @return  MockMakerClass
+     * @return  ClassData
      */
     public function addUseStatements($useStatements)
     {
@@ -284,7 +284,7 @@ class MockMakerClass
      * Set an array of classes the class implements.
      *
      * @param   $implements  array
-     * @return  MockMakerClass
+     * @return  ClassData
      */
     public function setImplements($implements)
     {
@@ -297,7 +297,7 @@ class MockMakerClass
      * Add (single|array of) classes the class implements.
      *
      * @param   $implements  mixed
-     * @return  MockMakerClass
+     * @return  ClassData
      */
     public function addImplements($implements)
     {
@@ -314,7 +314,7 @@ class MockMakerClass
      * Set an array of classes the class extends.
      *
      * @param   $extends    array
-     * @return  MockMakerClass
+     * @return  ClassData
      */
     public function setExtends($extends)
     {
@@ -327,7 +327,7 @@ class MockMakerClass
      * Set if the class has a constructor.
      *
      * @param   $hasConstructor bool
-     * @return  MockMakerClass
+     * @return  ClassData
      */
     public function setHasConstructor($hasConstructor)
     {
@@ -337,10 +337,10 @@ class MockMakerClass
     }
 
     /**
-     * Set the array of MockMakerMethod objects
+     * Set the array of MethodData objects
      *
      * @param   $methods    array
-     * @return  MockMakerClass
+     * @return  ClassData
      */
     public function setMethods($methods)
     {
@@ -350,10 +350,10 @@ class MockMakerClass
     }
 
     /**
-     * Add (single|array of) MockMakerMethod objects to methods array.
+     * Add (single|array of) MethodData objects to methods array.
      *
      * @param   $methods    mixed
-     * @return  MockMakerClass
+     * @return  ClassData
      */
     public function addMethods($methods)
     {
@@ -367,10 +367,10 @@ class MockMakerClass
     }
 
     /**
-     * Set the array of MockMakerProperty objects
+     * Set the array of PropertyData objects
      *
      * @param   $properties     array
-     * @return  MockMakerClass
+     * @return  ClassData
      */
     public function setProperties($properties)
     {
@@ -380,10 +380,10 @@ class MockMakerClass
     }
 
     /**
-     * Add (single|array of) MockMakerProperty objects to properties array.
+     * Add (single|array of) PropertyData objects to properties array.
      *
      * @param   $properties     mixed
-     * @return  MockMakerClass
+     * @return  ClassData
      */
     public function addProperties($properties)
     {

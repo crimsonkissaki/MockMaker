@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 	MockMakerClassWorkerTest
+ * 	ClassDataWorkerTest
  *
  * 	@author		Evan Johnson
  * 	@created	Apr 28, 2015
@@ -10,31 +10,31 @@
 
 namespace MockMaker\Worker;
 
-use MockMaker\Worker\MockMakerClassWorker;
-use MockMaker\Worker\MockMakerFileWorker;
-use MockMaker\Model\MockMakerFile;
-use MockMaker\Model\MockMakerConfig;
+use MockMaker\Worker\ClassDataWorker;
+use MockMaker\Worker\FileDataWorker;
+use MockMaker\Model\FileData;
+use MockMaker\Model\ConfigData;
 use MockMaker\Helper\TestHelper;
 use MockMaker\Entities;
 
-class MockMakerClassWorkerTest extends \PHPUnit_Framework_TestCase
+class ClassDataWorkerTest extends \PHPUnit_Framework_TestCase
 {
 
-    // @var $worker MockMakerClassWorker
+    // @var $worker ClassDataWorker
     public $worker;
-    // @var $fileObj MockMakerFile
+    // @var $fileObj FileData
     public $fileObj;
-    // @var $config MockMakerConfig
+    // @var $config ConfigData
     public $config;
     public $fileName = '/Applications/XAMPP/xamppfiles/htdocs/mockmaker/tests/MockMaker/Entities/SimpleEntity.php';
 
     public function setUp()
     {
-        $this->config = new MockMakerConfig();
+        $this->config = new ConfigData();
         $this->config->setProjectRootPath('/Applications/XAMPP/xamppfiles/htdocs/mockmaker/');
-        $fileWorker = new MockMakerFileWorker();
+        $fileWorker = new FileDataWorker();
         $this->fileObj = $fileWorker->generateNewObject($this->fileName, $this->config);
-        $this->worker = new MockMakerClassWorker();
+        $this->worker = new ClassDataWorker();
     }
 
     public function test_addValidNamespaces_addsNewNamespaceToArray()

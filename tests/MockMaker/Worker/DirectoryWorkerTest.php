@@ -11,7 +11,7 @@
 namespace MockMaker\Worker;
 
 use MockMaker\Worker\DirectoryWorker;
-use MockMaker\Model\MockMakerConfig;
+use MockMaker\Model\ConfigData;
 use MockMaker\Exception\MockMakerException;
 
 class DirectoryWorkerTest extends \PHPUnit_Framework_TestCase
@@ -19,14 +19,14 @@ class DirectoryWorkerTest extends \PHPUnit_Framework_TestCase
     /* @var $worker DirectoryWorker */
 
     public $worker;
-    /* @var $worker MockMakerConfig */
+    /* @var $worker ConfigData */
     public $config;
     public $entitiesDir;
 
     public function setUp()
     {
         $this->worker = new DirectoryWorker();
-        $this->config = new MockMakerConfig();
+        $this->config = new ConfigData();
         $this->rootDir = dirname(dirname(dirname(dirname(__FILE__))));
         $this->entitiesDir = $this->rootDir . '/tests/MockMaker/Entities/';
     }

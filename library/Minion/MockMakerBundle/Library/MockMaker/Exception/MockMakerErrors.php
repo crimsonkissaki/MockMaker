@@ -17,7 +17,7 @@ use Minion\MockMakerBundle\Library\MockMaker\Worker\StringFormatterWorker;
 class MockMakerErrors
 {
 
-	// MockMaker & MockMakerFileGenerator
+	// MockMaker & FileDataGenerator
 	const WRITE_DIR_NOT_EXIST = "WRITE_DIR_NOT_EXIST";
 	const WRITE_DIR_NOT_EXIST_MSG = "Provided write directory (%dir%) does not exist.";
 	const WRITE_DIR_INVALID_PERMISSIONS = "WRITE_DIR_INVALID_PERMISSIONS";
