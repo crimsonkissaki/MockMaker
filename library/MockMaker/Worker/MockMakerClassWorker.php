@@ -12,6 +12,7 @@ namespace MockMaker\Worker;
 
 use MockMaker\Model\MockMakerFile;
 use MockMaker\Model\MockMakerClass;
+use MockMaker\Worker\TokenWorker;
 
 class MockMakerClassWorker
 {
@@ -22,6 +23,13 @@ class MockMakerClassWorker
      * @var array
      */
     private $validNamespaces = [ ];
+
+    /**
+     * File token worker class
+     *
+     * @var TokenWorker
+     */
+    private $tokenWorker;
 
     /**
      * Get the array of valid namespaces.
@@ -48,6 +56,11 @@ class MockMakerClassWorker
         }
     }
 
+    public function __construct()
+    {
+        $this->tokenWorker = new TokenWorker();
+    }
+
     /**
      * Create a new MockMakerClass object.
      *
@@ -58,12 +71,18 @@ class MockMakerClassWorker
      */
     public function generateNewObject(MockMakerFile $fileObj)
     {
+
         $className = $this->determineClassName($fileObj);
         $classNamespace = $this->getClassNamespace($fileObj);
+        $reflectionClass = $this->getReflectionClassInstance("{$classNamespace}\\{$className}");
 
         $obj = new MockMakerClass();
         $obj->setClassName($className)
-            ->setClassNamespace($classNamespace);
+            ->setClassNamespace($classNamespace)
+            ->setReflectionClass($reflectionClass)
+            ->setClassType($this->getClassType($reflectionClass))
+            ->setHasConstructor($this->getIfClassHasConstructor($reflectionClass))
+            ->addUseStatements($this->getClassUseStatements($fileObj->getFullFilePath()));
 
         /*
           $obj->setClassName($this->determineClassName($fileObj))
@@ -98,10 +117,14 @@ class MockMakerClassWorker
         // not already in our array, so we have to find it the hard way
         $classPath = $this->convertFileNameToClassPath($fileObj);
         if (!$result = $this->getClassNamespaceFromFilePath($classPath)) {
-            echo "--> unable to find class namespace using file path\n";
-            echo "--> TODO: parse file to find namespace?\n";
+            $msg = "Unable to find a class namespace for {$className}\n";
+            $msg .= "File Object Values:\n";
+            $msg .= "Full path: {$fileObj->getFullFilePath()}\n";
+            $msg .= "File name: {$fileObj->getFileName()}\n";
+            throw new \Exception($msg);
         }
 
+        $this->addValidNamespaces($result);
         return $result;
     }
 
@@ -147,7 +170,7 @@ class MockMakerClassWorker
      * @param	$filePath	string
      * @return	mixed
      */
-    public function getClassNamespaceFromFilePath($filePath)
+    private function getClassNamespaceFromFilePath($filePath)
     {
         if (!class_exists($filePath)) {
             if (( $pos = strpos($filePath, '\\') ) === false) {
@@ -160,6 +183,68 @@ class MockMakerClassWorker
         }
 
         return $filePath;
+    }
+
+    /**
+     * Get a reflection class instance of the target class.
+     *
+     * TODO:
+     * Eventually this needs to be able to handle classes with constructors as well.
+     *
+     * Might need to use Mockery to generate mocked versions of the constructor arguments
+     * so this can continue.
+     *
+     * PHP >= 5.4 has the ReflectionClass::newInstanceWithoutConstructor method.
+     *
+     * Otherwise ... parse the file directly?
+     *
+     * @param   $class  string
+     * @return  \ReflectionClass
+     */
+    private function getReflectionClassInstance($class)
+    {
+        return new \ReflectionClass($class);
+    }
+
+    /**
+     * Get the class's type - concrete/abstract/interface/final.
+     *
+     * @param   $class  \ReflectionClass
+     * @return  string
+     */
+    private function getClassType(\ReflectionClass $class)
+    {
+        if ($class->isFinal()) {
+            return 'final';
+        }
+        if ($class->isAbstract()) {
+            return 'abstract';
+        }
+        if ($class->isInterface()) {
+            return 'interface';
+        }
+
+        return 'concrete';
+    }
+
+    /**
+     * Determine of the class has a constructor or not.
+     *
+     * @param   $class  \ReflectionClass
+     * @return  bool
+     */
+    private function getIfClassHasConstructor(\ReflectionClass $class)
+    {
+        if (!is_null($class->getConstructor())) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function getClassUseStatements($file)
+    {
+        return $this->tokenWorker->getUseStatementsWithTokens($file);
     }
 
 }
