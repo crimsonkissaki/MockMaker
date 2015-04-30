@@ -31,7 +31,7 @@ class MockMakerTest extends \PHPUnit_Framework_TestCase
     /**
      * Used for testing workflow.
      */
-    public function test_workflow()
+    public function _test_workflow()
     {
         $actual = $this->mockMaker
             ->getFilesFrom($this->entitiesDir)

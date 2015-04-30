@@ -213,13 +213,12 @@ class ConfigData
     /**
      * Sets directories to scan for files to mock
      *
-     * @param	string|array    $readDirectories	Directories to scan
+     * @param	array    $readDirectories	Directories to scan
      * @return  void
      */
-    public function setReadDirectories($readDirectories)
+    public function setReadDirectories(array $readDirectories)
     {
-        $dirs = is_array($readDirectories) ? $readDirectories : array( $readDirectories );
-        $this->readDirectories = Formatter::formatDirectoryPaths($dirs);
+        $this->readDirectories = Formatter::formatDirectoryPaths($readDirectories);
     }
 
     /**
@@ -252,13 +251,12 @@ class ConfigData
     /**
      * Sets files indicated by user or in read directories
      *
-     * @param   string|array   $allDetectedFiles   File(s) detected as possible mocking candidates
+     * @param   array   $allDetectedFiles   File(s) detected as possible mocking candidates
      * @return  void
      */
-    public function setAllDetectedFiles($allDetectedFiles)
+    public function setAllDetectedFiles(array $allDetectedFiles)
     {
-        $files = is_array($allDetectedFiles) ? $allDetectedFiles : array( $allDetectedFiles );
-        $this->allDetectedFiles = $files;
+        $this->allDetectedFiles = $allDetectedFiles;
     }
 
     /**
@@ -282,10 +280,9 @@ class ConfigData
      * @param	string|array    $filesToMock	Files to be mocked
      * @return  void
      */
-    public function setFilesToMock($filesToMock)
+    public function setFilesToMock(array $filesToMock)
     {
-        $files = is_array($filesToMock) ? $filesToMock : array( $filesToMock );
-        $this->filesToMock = $files;
+        $this->filesToMock = $filesToMock;
     }
 
     /**

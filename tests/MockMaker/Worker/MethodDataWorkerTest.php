@@ -23,7 +23,7 @@ class MethodDataWorkerTest extends \PHPUnit_Framework_TestCase
         $this->worker = new MethodDataWorker();
     }
 
-    public function test_mm()
+    public function _test_mm()
     {
         $this->assertTrue(false);
     }

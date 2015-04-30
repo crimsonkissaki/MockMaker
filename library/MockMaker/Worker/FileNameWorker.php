@@ -91,7 +91,7 @@ class FileNameWorker
      * @param   ConfigData  $config     ConfigData object
      * @return  array
      */
-    public function filterFilesWithRegex(Config $config)
+    public function filterFilesWithRegex(ConfigData $config)
     {
         $include = $this->getIncludeFiles($config->getAllDetectedFiles(), $config->getIncludeFileRegex());
         $exclude = $this->getExcludeFiles($config->getAllDetectedFiles(), $config->getExcludeFileRegex());
