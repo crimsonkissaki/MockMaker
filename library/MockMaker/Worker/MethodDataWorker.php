@@ -1,11 +1,12 @@
 <?php
 
 /**
- * 	MethodDataWorker
+ * MethodDataWorker
  *
- * 	@author		Evan Johnson
- * 	@created	Apr 28, 2015
- * 	@version	1.0
+ * @package     MockMaker
+ * @author		Evan Johnson
+ * @created	    Apr 28, 2015
+ * @version	    1.0
  */
 
 namespace MockMaker\Worker;
@@ -17,7 +18,7 @@ class MethodDataWorker
 {
 
     /**
-     * Class that handles generation of ArgumentData objects.
+     * Class that handles generation of ArgumentData objects
      *
      * @var ArgumentDataWorker
      */
@@ -29,9 +30,9 @@ class MethodDataWorker
     }
 
     /**
-     * Generate an array of MethodData objects.
+     * Generate an array of MethodData objects
      *
-     * @param   $class  \ReflectionClass
+     * @param   \ReflectionClass    $class  ReflectionClass instance of the class being mocked
      * @return  array
      */
     public function generateMethodObjects(\ReflectionClass $class)
@@ -42,6 +43,12 @@ class MethodDataWorker
         return $classMethodDetails;
     }
 
+    /**
+     * Gets a class's methods through its ReflectionClass instance
+     *
+     * @param   \ReflectionClass    $class  ReflectionClass instance of the class being mocked
+     * @return  array
+     */
     private function getClassMethodsByVisibility(\ReflectionClass $class)
     {
         $classMethods = [ ];
@@ -56,9 +63,9 @@ class MethodDataWorker
     }
 
     /**
-     * Get all of the class's method's details.
+     * Gets all of the class method's details
      *
-     * @param	$classMethods	array	Array of \ReflectionMethod objects.
+     * @param	array   $classMethods	Array of \ReflectionMethod objects
      * @return	array
      */
     private function getAllClassMethodDetails($classMethods)
@@ -74,10 +81,10 @@ class MethodDataWorker
     }
 
     /**
-     * Get the method details in a particular visibility
+     * Gets the method details in a particular visibility
      *
-     * @param	$visibility     string      Public/private/protected/etc
-     * @param	$methods	    array       Array of \ReflectionMethod objects
+     * @param	string  $visibility     Method visibility
+     * @param	array   $methods	    Array of \ReflectionMethod objects
      * @return	array
      */
     private function getMethodDetailsByVisibility($visibility, $methods)
@@ -91,10 +98,10 @@ class MethodDataWorker
     }
 
     /**
-     * Get the details for a method.
+     * Gets a method's details
      *
-     * @param	$visibility     string
-     * @param	$method		    \ReflectionMethod
+     * @param	string              $visibility     Method visibility
+     * @param	\ReflectionMethod   $method		    Method's \ReflectionMethod instance
      * @return	MethodData
      */
     private function getMethodDetails($visibility, \ReflectionMethod $method)

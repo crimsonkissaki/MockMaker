@@ -1,13 +1,14 @@
 <?php
 
 /**
- * 	DirectoryWorker
+ * DirectoryWorker
  *
- *  Directory operations for MockMaker
+ * Performs directory related operations for MockMaker
  *
- * 	@author		Evan Johnson
- * 	@created	Apr 26, 2015
- * 	@version	1.0
+ * @package     MockMaker
+ * @author		Evan Johnson
+ * @created     Apr 26, 2015
+ * @version     1.0
  */
 
 namespace MockMaker\Worker;
@@ -20,9 +21,9 @@ class DirectoryWorker
 {
 
     /**
-     * Validate specified read directories.
+     * Validates specified read directories
      *
-     * @param   $dirs   array
+     * @param   array   $dirs   Specified read directories
      * @return  bool
      * @throws  MockMakerException
      */
@@ -43,12 +44,12 @@ class DirectoryWorker
     }
 
     /**
-     * Validate the specified write directory.
+     * Validates the specified write directory
      *
      * This will attempt to create the write directory
      * if it does not already exist.
      *
-     * @param   $dir    string
+     * @param   string  $dir    Write directory
      * @return  bool
      * @throws  MockMakerException
      */
@@ -69,12 +70,11 @@ class DirectoryWorker
     }
 
     /**
-     * Try to guess the project root path.
+     * Tries to guess the project root path
      *
-     * First attempt to find the 'vendor' directory in the file path,
-     * and return the path up to that point.
-     * If there is no 'vendor' directory, then we try to find it based
-     * on the directory structure of this file.
+     * First attempts to find the 'vendor' directory in the file path,
+     * and return the path up to that point. If there is no 'vendor'
+     * directory then try based on the directory structure of this file.
      *
      * @return  string
      */

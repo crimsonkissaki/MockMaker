@@ -1,11 +1,12 @@
 <?php
 
 /**
- * 	ArgumentDataWorker
+ * ArgumentDataWorker
  *
- * 	@author		Evan Johnson
- * 	@created	Apr 29, 2015
- * 	@version	1.0
+ * @package     MockMaker
+ * @author		Evan Johnson
+ * @created     Apr 29, 2015
+ * @version     1.0
  */
 
 namespace MockMaker\Worker;
@@ -17,9 +18,9 @@ class ArgumentDataWorker
 {
 
     /**
-     * Generate an array of ArgumentData objects.
+     * Generates an array of ArgumentData objects
      *
-     * @param	$method     \ReflectionMethod
+     * @param	\ReflectionMethod   $method     Method's ReflectionMethod instance
      * @return  array
      */
     public function generateArgumentObjects(\ReflectionMethod $method)
@@ -39,9 +40,9 @@ class ArgumentDataWorker
     }
 
     /**
-     * Get the details for a single method argument
+     * Gets the details for a single method argument
      *
-     * @param	$argument	\ReflectionParameter
+     * @param	\ReflectionParameter    $argument   Argument's ReflectionParameter instance
      * @return	ArgumentData
      */
     private function getArgumentDetails(\ReflectionParameter $argument)
@@ -66,13 +67,13 @@ class ArgumentDataWorker
     }
 
     /**
-     * Get the argument data type.
+     * Gets the argument data type
      *
      * Returns same data types as PHP's gettype() method:
      *  'boolean', 'integer', 'double', 'string', 'array',
      *  'object', 'resource', 'NULL', 'unknown type'
      *
-     * @param	$argument	\ReflectionParameter
+     * @param	\ReflectionParameter    $argument   Argument's ReflectionParameter instance
      * @return	string
      */
     private function getArgumentType(\ReflectionParameter $argument)
@@ -94,9 +95,9 @@ class ArgumentDataWorker
     }
 
     /**
-     * Get the typehinted arguments class data.
+     * Gets the typehinted arguments class data
      *
-     * @param   $toString   string  \ReflectionArgument __toString() value.
+     * @param   string  $toString   \ReflectionArgument __toString() value
      * @return  array
      */
     private function getDefaultValueClassData($toString)

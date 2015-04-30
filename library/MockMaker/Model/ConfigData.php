@@ -1,11 +1,14 @@
 <?php
 
 /**
- * 	ConfigData
+ * ConfigData
  *
- * 	@author		Evan Johnson
- * 	@created	Apr 22, 2015
- * 	@version	1.0
+ * MockMaker configuration data class
+ *
+ * @package     MockMaker
+ * @author		Evan Johnson
+ * @created     Apr 22, 2015
+ * @version     1.0
  */
 
 namespace MockMaker\Model;
@@ -16,78 +19,77 @@ class ConfigData
 {
 
     /**
-     * Set whether or not to read the directory recursively.
+     * Read the directory recursively or not
      *
      * @var	bool
      */
     private $recursiveRead = false;
 
     /**
-     * Overwrite existing files or not?
+     * Overwrite existing files or not
      *
      * @var	bool
      */
     private $overwriteExistingFiles = false;
 
     /**
-     * Directories to scan for files that need mocks generated.
+     * Directories to scan for files to mock
      *
      * @var	array
      */
     private $readDirectories = [ ];
 
     /**
-     * Directory to write generated mock files.
+     * Directory to write generated mock files
      *
      * @var	string
      */
     private $writeDirectory;
 
     /**
-     * All files indicated by user or in read directories.
+     * All files indicated by user or in read directories
      *
      * @var	array
      */
     private $allDetectedFiles = [ ];
 
     /**
-     * Array of files to generate mocks for.
+     * Array of files to generate mocks for
      *
      * @var	array
      */
     private $filesToMock = [ ];
 
     /**
-     * Regex pattern to use to exclude files from mocking.
+     * Regex pattern used to exclude files
      *
      * @var	string
      */
     private $excludeFileRegex;
 
     /**
-     * Regex pattern to use to include files for mocking.
+     * Regex pattern uses to include files
      *
      * @var	string
      */
     private $includeFileRegex;
 
     /**
-     * Whether to mimick the read directory file structure
-     * in the write directory.
+     * Mimick the read directory file tree in the write directory or not
      *
      * @var	bool
      */
     private $preserveDirectoryStructure = true;
 
     /**
-     * The root directory path for your project.
+     * Project root directory path
      *
      * @var	string
      */
     private $projectRootPath;
 
     /**
-     * Get whether to read the directory recursively.
+     * Gets if the read directory should be recursively scanned
      *
      * @return	bool
      */
@@ -97,7 +99,7 @@ class ConfigData
     }
 
     /**
-     * Get whether or not to overwrite existing files.
+     * Gets if files are to be overwritten
      *
      * @return	bool
      */
@@ -107,7 +109,7 @@ class ConfigData
     }
 
     /**
-     * Get directory names to scan for files to mock.
+     * Gets directory names to scan for files
      *
      * @return	string
      */
@@ -117,7 +119,7 @@ class ConfigData
     }
 
     /**
-     * Get directory name to save generated mock files in.
+     * Gets directory name to save generated mock files
      *
      * @return	string
      */
@@ -127,7 +129,7 @@ class ConfigData
     }
 
     /**
-     * Get an array all files indicated by user or in read directories.
+      Gets all files indicated by user or in read directories
      *
      * @return	array
      */
@@ -137,7 +139,7 @@ class ConfigData
     }
 
     /**
-     * Get array of files that need mocks generated.
+     * Gets array of files to be mocked
      *
      * @return	array
      */
@@ -147,7 +149,7 @@ class ConfigData
     }
 
     /**
-     * Get the exclude file regex string.
+     * Gets exclude file regex string
      *
      * @return	string
      */
@@ -157,7 +159,7 @@ class ConfigData
     }
 
     /**
-     * Get the include file regex string.
+     * Gets include file regex string
      *
      * @return	string
      */
@@ -167,8 +169,7 @@ class ConfigData
     }
 
     /**
-     * Get whether to mimick the read directory file structure
-     * in the write directory.
+     * Gets if read directory file structure should be used in write directory
      *
      * @return	bool
      */
@@ -178,7 +179,7 @@ class ConfigData
     }
 
     /**
-     * Get the project's root directory path.
+     * Gets project's root directory path
      *
      * @return	string
      */
@@ -188,9 +189,10 @@ class ConfigData
     }
 
     /**
-     * Set whether to read the directory recursively.
+     * Sets if read directory is to be scanned recursively
      *
-     * @param	$recursiveRead	bool
+     * @param	bool    $recursiveRead  Parse read directory recursively
+     * @return  void
      */
     public function setRecursiveRead($recursiveRead)
     {
@@ -198,9 +200,10 @@ class ConfigData
     }
 
     /**
-     * Set whether or not to overwrite existing files.
+     * Sets if existing files are to be overwritten
      *
-     * @param	$overwriteExistingFiles		bool
+     * @param	bool    $overwriteExistingFiles		Overwrite existing files
+     * @return  void
      */
     public function setOverwriteExistingFiles($overwriteExistingFiles)
     {
@@ -208,9 +211,10 @@ class ConfigData
     }
 
     /**
-     * Set directory name(s) to scan for files to mock.
+     * Sets directories to scan for files to mock
      *
-     * @param	$readDirectories	mixed
+     * @param	string|array    $readDirectories	Directories to scan
+     * @return  void
      */
     public function setReadDirectories($readDirectories)
     {
@@ -219,9 +223,10 @@ class ConfigData
     }
 
     /**
-     * Add a single or array of directories to parse for files.
+     * Adds (single|array of) directories to parse for files
      *
-     * @param	$readDirectories	mixed	Single or array of directories.
+     * @param	string|array    $readDirectories	Directories to scan for files to mock
+     * @return  void
      */
     public function addReadDirectories($readDirectories)
     {
@@ -234,9 +239,10 @@ class ConfigData
     }
 
     /**
-     * Set directory name to save generated mock files in.
+     * Sets directory name to save generated mock files in
      *
-     * @param	$writeDirectory	string
+     * @param	string  $writeDirectory     Directory to save mock files in
+     * @return  void
      */
     public function setWriteDirectory($writeDirectory)
     {
@@ -244,20 +250,22 @@ class ConfigData
     }
 
     /**
-     * Set an array all files indicated by user or in read directories.
+     * Sets files indicated by user or in read directories
      *
-     * @param   $allDetectedFiles   array
+     * @param   string|array   $allDetectedFiles   File(s) detected as possible mocking candidates
+     * @return  void
      */
     public function setAllDetectedFiles($allDetectedFiles)
     {
-        $this->allDetectedFiles = $allDetectedFiles;
+        $files = is_array($allDetectedFiles) ? $allDetectedFiles : array( $allDetectedFiles );
+        $this->allDetectedFiles = $files;
     }
 
     /**
-     * Add either a single file or an array
-     * of files to the "all detected files" array.
+     * Adds files to to the detected file list
      *
-     * @param	$files	mixed
+     * @param	string|array    $files	File(s) to add to allDetectedFiles
+     * @return  void
      */
     public function addFilesToAllDetectedFiles($files)
     {
@@ -269,9 +277,10 @@ class ConfigData
     }
 
     /**
-     * Set an array of individual files to generate mocks for.
+     * Sets the files to generate mocks for
      *
-     * @param	$filesToMock	mixed
+     * @param	string|array    $filesToMock	Files to be mocked
+     * @return  void
      */
     public function setFilesToMock($filesToMock)
     {
@@ -280,10 +289,10 @@ class ConfigData
     }
 
     /**
-     * Add either a single file or an array
-     * of files to the "files to mock" array.
+     * Adds files to the list of files to be mocked
      *
-     * @param	$files	mixed
+     * @param	string|array    $files	File(s) to add to list of files to be mocked
+     * @return  void
      */
     public function addFilesToMock($files)
     {
@@ -295,9 +304,10 @@ class ConfigData
     }
 
     /**
-     * Set the ignore file filter regex string.
+     * Sets the ignore file filter regex string
      *
-     * @param	$excludeFileRegex   string	Regex string used to exclude files.
+     * @param	$excludeFileRegex   string	Regex string used to exclude files
+     * @return  void
      */
     public function setExcludeFileRegex($excludeFileRegex)
     {
@@ -305,9 +315,10 @@ class ConfigData
     }
 
     /**
-     * Set the include file regex string.
+     * Sets the include file regex string
      *
-     * @param	$includeFileRegex	string	Regex string used to include files.
+     * @param	$includeFileRegex	string	Regex string used to include files
+     * @return  void
      */
     public function setIncludeFileRegex($includeFileRegex)
     {
@@ -315,10 +326,10 @@ class ConfigData
     }
 
     /**
-     * Set whether to mimick the read directory file structure
-     * in the write directory.
+     * Sets whether to mimick read directory file structure in write directory
      *
-     * @param	$preserveDirectoryStructure	bool	Mirror read directory structure in write directory.
+     * @param	$preserveDirectoryStructure	bool	Mirror read directory structure in write directory
+     * @return  void
      */
     public function setPreserveDirectoryStructure($preserveDirectoryStructure)
     {
@@ -326,9 +337,10 @@ class ConfigData
     }
 
     /**
-     * Set the project's root directory path.
+     * Sets the project's root directory path
      *
-     * @param	$projectRootPath	string	Path to your project's root directory.
+     * @param	$projectRootPath	string	Path to your project's root directory
+     * @return  void
      */
     public function setProjectRootPath($projectRootPath)
     {

@@ -1,11 +1,12 @@
 <?php
 
 /**
- * 	PropertyDataWorker
+ * PropertyDataWorker
  *
- * 	@author		Evan Johnson
- * 	@created	Apr 28, 2015
- * 	@version	1.0
+ * @package     MockMaker
+ * @author		Evan Johnson
+ * @created	    Apr 28, 2015
+ * @version	    1.0
  */
 
 namespace MockMaker\Worker;
@@ -17,29 +18,30 @@ class PropertyDataWorker
 {
 
     /**
-     * Instance of the class we're mocking.
+     * Instance of the mocked class
      *
      * @var object
      */
     private $classInstance;
 
     /**
-     * \ReflectionClass instance of the class we're mocking.
+     * \ReflectionClass instance of the mocked class
      *
      * @var \ReflectionClass
      */
     private $reflectionClass;
 
     /**
-     * Array of the class's methods in MethodData form.
+     * Array of the class's methods in MethodData form
      *
      * @var array
      */
     private $methods = [ ];
 
     /**
-     * Associative array of PropertyData objects in visibility => array( properties ) format.
+     * Associative array of PropertyData objects
      *
+     * Format is 'visibility' => array()
      * array(
      *   'public' => array( ... ),
      *   'private' => array( ... ),
@@ -50,10 +52,10 @@ class PropertyDataWorker
     private $classPropertyObjects = [ ];
 
     /**
-     * Generate an array of PropertyData objects for a class.
+     * Generates an array of PropertyData objects for a class
      *
-     * @param   $class      \ReflectionClass    Reflection of the class to be mocked.
-     * @param   $methods    array               Array of MethodData objects.
+     * @param   \ReflectionClass    $class      ReflectionClass instance of the class to be mocked
+     * @param   array               $methods    Array of MethodData objects.
      * @return  array
      */
     public function generatePropertyObjects(\ReflectionClass $class, $methods)
@@ -69,9 +71,9 @@ class PropertyDataWorker
     }
 
     /**
-     * Get class properties by visibility.
+     * Gets class properties by visibility
      *
-     * @param   $class  \ReflectionClass
+     * @param   \ReflectionClass    $class  ReflectionClass instance of class to be mocked
      * @return  array
      */
     private function getClassPropertiesByVisibility(\ReflectionClass $class)
@@ -86,9 +88,9 @@ class PropertyDataWorker
     }
 
     /**
-     * Get an array of PropertyData objects for the class properties.
+     * Gets an array of PropertyData objects for the class's properties
      *
-     * @param   $classProperties     array  Array of \ReflectionProperties
+     * @param   array   $classProperties    Array of \ReflectionProperties
      * @return  array
      */
     private function getClassPropertiesDetails($classProperties)
@@ -104,13 +106,13 @@ class PropertyDataWorker
     }
 
     /**
-     * Get details for an array of properties.
+     * Gets details for an array of properties
      *
-     * Constants are a problem here since they're set as an associative array, not numeric.
-     * So we have to use 'as key => value' instead of 'as $property'
+     * Constants are a problem here since they're set as an associative array
+     * and not numeric, so 'as key => value' works while 'as $property' does not.
      *
-     * @param   $visibility     string
-     * @param   $properties     array   Array of \ReflectionProperties
+     * @param   string  $visibility     Visibility scope of properties
+     * @param   array   $properties     Array of \ReflectionProperties objects
      * @return  array
      */
     private function getPropertiesDetails($visibility, $properties)
@@ -124,11 +126,17 @@ class PropertyDataWorker
     }
 
     /**
-     * Get details for a single class property.
+     * Gets details for a single class property
      *
-     * @param	$visibility     string		Public/private/protected/static/etc
-     * @param	$key	        mixed		String or int array key
-     * @param	$value	        mixed		String or \ReflectionProperty object
+     * Looping through an array of all class properties returned by
+     * a \ReflectionClass's getProperties() method returns is interesting
+     * because 'constant' properties are returned as an associative array
+     * of 'name' => 'value', while every other visibility level is returned
+     * as a numerically indexed array of 'N' => \ReflectionProperty objects.
+     *
+     * @param	string          $visibility     Property visibility
+     * @param	string|int      $key	        Property name or a numeric index
+     * @param	string|object   $value	        Property value or \ReflectionProperty object
      * @return  PropertyData
      */
     private function getPropertyDetails($visibility, $key, $value)
@@ -151,10 +159,15 @@ class PropertyDataWorker
     }
 
     /**
-     * Get the default value for a property, if any.
+     * Gets the default value for a property, if any
      *
-     * @param   $visibility     string      Public/Private/Protected
-     * @param   $value          mixed       String (if const) or \ReflectionProperty
+     * 'Constant' properties just need the value string returned.
+     * All other visibility levels are a \ReflectionProperty object
+     * whose getValue() method requires an actual instance of the
+     * owning class to determine the default value.
+     *
+     * @param   string          $visibility     Property visibility
+     * @param   string|object   $value          String or \ReflectionProperty object
      * @return  string
      */
     private function getPropertyDefaultValue($visibility, $value)
@@ -170,15 +183,15 @@ class PropertyDataWorker
     }
 
     /**
-     * Get the name of a property's setter, if one exists.
+     * Gets the name of a property's setter, if one exists
      *
      * This method has to make the assumption that a property's
-     * setter will be named after it. E.g. a property called "totalCount"
+     * setter will be named after it, e.g. a property called "totalCount"
      * has a setter with the name "setTotalCount".
      *
-     * @param	$name	        string	Property name
-     * @param   $classMethods   array   Property methods
-     * @return	mixed
+     * @param	string  $name	        Property name
+     * @param   array   $classMethods   Array of MethodData objects
+     * @return	array
      */
     private function findPropertySetterIfExists($name, $classMethods)
     {
@@ -196,9 +209,13 @@ class PropertyDataWorker
     }
 
     /**
-     * Get class data for an object default value
+     * Gets class data for default values that are objects
      *
-     * @param   $defaultValue   object
+     * This method consumes the return value of a \ReflectionProperty
+     * object's getValue() method, and if the default value is an object
+     * getValue() returns an instance of that object.
+     *
+     * @param   object  $defaultValue   Instance of a default value object
      * @return  array
      */
     private function getDefaultValueClassData($defaultValue)

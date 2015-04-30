@@ -1,13 +1,14 @@
 <?php
 
 /**
- * 	FileDataWorker
+ * FileDataWorker
  *
- *  This class handles processing operations for the FileData model.
+ * This class handles processing operations for the FileData model.
  *
- * 	@author		Evan Johnson
- * 	@created	Apr 28, 2015
- * 	@version	1.0
+ * @package     MockMaker
+ * @author		Evan Johnson
+ * @created	    Apr 28, 2015
+ * @version	    1.0
  */
 
 namespace MockMaker\Worker;
@@ -19,10 +20,10 @@ class FileDataWorker
 {
 
     /**
-     * Create & populate a new FileData object.
+     * Creates & populates a new FileData object
      *
-     * @param   $file           string
-     * @param   $config         ConfigData
+     * @param   string      $file       Fully qualified file path of file to be mocked
+     * @param   ConfigData  $config     MockMakerConfig object
      * @return  FileData
      */
     public function generateNewObject($file, ConfigData $config)
@@ -36,9 +37,9 @@ class FileDataWorker
     }
 
     /**
-     * Get the simple file name from a fully qualified file path.
+     * Gets the simple file name from a fully qualified file path
      *
-     * @param   $file   string
+     * @param   string  $file   Fully qualified file path of file to be mocked
      * @return  string
      */
     private function getFileName($file)

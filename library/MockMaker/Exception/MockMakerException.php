@@ -1,13 +1,14 @@
 <?php
 
 /**
- * 	MockMakerException
+ * MockMakerException
  *
- * 	Exception class specific for MockMaker
+ * Exception class specific for MockMaker
  *
- * 	@author		Evan Johnson
- * 	@created	Apr 18, 2015
- * 	@version	1.0
+ * @package     MockMaker
+ * @author		Evan Johnson
+ * @created     Apr 18, 2015
+ * @version     1.0
  */
 
 namespace MockMaker\Exception;
@@ -16,12 +17,12 @@ class MockMakerException extends \Exception
 {
 
     /**
-     * Construct a new MockMakerException
+     * Constructs a new MockMakerException
      *
-     * @param	$message	string
-     * @param	$code		int
-     * @param	$previous	\Exception
-     * @throws	\InvalidArgumentException
+     * @param	string      $message	Exception string
+     * @param	int         $code		Code nunber
+     * @param	\Exception  $previous	Previous \Exception
+     * @return  MockMakerException
      */
     public function __construct($message, $code = 0, \Exception $previous = null)
     {

@@ -1,13 +1,14 @@
 <?php
 
 /**
- * 	ClassData
+ * ClassData
  *
- *  Class model that holds all class-specific information.
+ * Class model that holds all class-specific information.
  *
- * 	@author		Evan Johnson
- * 	@created	Apr 28, 2015
- * 	@version	1.0
+ * @package     MockMaker
+ * @author		Evan Johnson
+ * @created     Apr 28, 2015
+ * @version     1.0
  */
 
 namespace MockMaker\Model;
@@ -16,42 +17,42 @@ class ClassData
 {
 
     /**
-     * Class namespace
+     * Mocked class namespace
      *
      * @var string
      */
     private $classNamespace;
 
     /**
-     * Class name
+     * Mocked class name
      *
      * @var string
      */
     private $className;
 
     /**
-     * Reflection class instance.
+     * Mocked class \ReflectionClass instance.
      *
      * @var \ReflectionClass
      */
     private $reflectionClass;
 
     /**
-     * Is this a concrete/abstract/interface/final class
+     * Is mocked class concrete/abstract/interface/final
      *
      * @var string
      */
     private $classType = 'concrete';
 
     /**
-     * Class use statements.
+     * Mocked class use statements
      *
      * @var array
      */
     private $useStatements = [ ];
 
     /**
-     * Associative array of any classes implemented by the target class, if any.
+     * Associative array of mocked class's implemented classes
      *
      * implements = array(
      *   array(
@@ -66,7 +67,7 @@ class ClassData
     private $implements = [ ];
 
     /**
-     * Associative array of the class extended by the target class, if any.
+     * Associative array of mocked class's extended class
      *
      * extends = array(
      *   'className' => class,
@@ -78,28 +79,28 @@ class ClassData
     private $extends = [ ];
 
     /**
-     * Does the class have a constructor.
+     * Does the mocked class have a constructor
      *
      * @var bool
      */
     private $hasConstructor = false;
 
     /**
-     * Array of MethodData objects.
+     * Mocked class's method details in array of MethodData objects
      *
      * @var array
      */
     private $methods = [ ];
 
     /**
-     * Array of PropertyData objects.
+     * Mocked class's property details in array of PropertyData objects
      *
      * @var array
      */
     private $properties = [ ];
 
     /**
-     * Get the class's namespace.
+     * Gets the mocked class's namespace
      *
      * @return  string
      */
@@ -109,7 +110,7 @@ class ClassData
     }
 
     /**
-     * Get the class's name.
+     * Gets the mocked class's name
      *
      * @return  string
      */
@@ -119,7 +120,7 @@ class ClassData
     }
 
     /**
-     * Get the reflection class instance.
+     * Get the mocked class's ReflectionClass instance
      *
      * @return  \ReflectionClass
      */
@@ -129,7 +130,7 @@ class ClassData
     }
 
     /**
-     * Get the class type - concrete/abstract/interface/final.
+     * Gets the mocked class's type
      *
      * @return  string
      */
@@ -139,7 +140,7 @@ class ClassData
     }
 
     /**
-     * Get the class's use statements.
+     * Gets the mocked class's use statements
      *
      * @return array
      */
@@ -149,7 +150,7 @@ class ClassData
     }
 
     /**
-     * Get an array of classes the class implements.
+     * Gets the mocked class's implemented classes
      *
      * @return  array
      */
@@ -159,7 +160,7 @@ class ClassData
     }
 
     /**
-     * Get an array of classes the class extends.
+     * Gets the mocked class's extended class
      *
      * @return  array
      */
@@ -169,7 +170,7 @@ class ClassData
     }
 
     /**
-     * Get if the class has a constructor.
+     * Gets if the mocked class has a constructor
      *
      * @return  bool
      */
@@ -179,7 +180,7 @@ class ClassData
     }
 
     /**
-     * Get the array of MethodData objects
+     * Gets the mocked class's MethodData objects
      *
      * @return  array
      */
@@ -189,7 +190,7 @@ class ClassData
     }
 
     /**
-     * Get the array of PropertyData objects
+     * Gets the mocked class's PropertyData objects
      *
      * @return  array
      */
@@ -199,9 +200,9 @@ class ClassData
     }
 
     /**
-     * Set the class's name space.
+     * Sets the mocked class's name space
      *
-     * @param   $classNamespace     string
+     * @param   string      $classNamespace     Target class's namespace
      * @return  ClassData
      */
     public function setClassNamespace($classNamespace)
@@ -212,9 +213,9 @@ class ClassData
     }
 
     /**
-     * Set the class's name.
+     * Sets the mocked class's name
      *
-     * @param   $className     string
+     * @param   string      $className     Target class's name
      * @return  ClassData
      */
     public function setClassName($className)
@@ -225,9 +226,9 @@ class ClassData
     }
 
     /**
-     * Set the reflection class instance.
+     * Sets the mocked class's ReflectionClass instance
      *
-     * @param   $reflectionClass    \ReflectionClass
+     * @param   \ReflectionClass    $reflectionClass    Reflection class
      * @return  ClassData
      */
     public function setReflectionClass(\ReflectionClass $reflectionClass)
@@ -238,9 +239,11 @@ class ClassData
     }
 
     /**
-     * Set the class type - concrete/abstract/interface/final.
+     * Sets the mocked class's type
      *
-     * @param   $classType  string
+     * Valid values are concrete, abstract, interface, final.
+     *
+     * @param   string      $classType  Class type
      * @return  ClassData
      */
     public function setClassType($classType)
@@ -251,9 +254,9 @@ class ClassData
     }
 
     /**
-     * Set the class's use statements.
+     * Sets  the mocked class's use statements
      *
-     * @param   $useStatements  array
+     * @param   array       $useStatements  Array of use statements in target class file
      * @return  ClassData
      */
     public function setUseStatements($useStatements)
@@ -264,9 +267,9 @@ class ClassData
     }
 
     /**
-     * Add a single or array of use statements to useStatements.
+     * Adds (single|array of) use statements to useStatements
      *
-     * @param   $useStatements  mixed
+     * @param   mixed       $useStatements      Use statements
      * @return  ClassData
      */
     public function addUseStatements($useStatements)
@@ -281,9 +284,9 @@ class ClassData
     }
 
     /**
-     * Set an array of classes the class implements.
+     * Sets the array of classes the class implements
      *
-     * @param   $implements  array
+     * @param   array       $implements     Classes the target class implements
      * @return  ClassData
      */
     public function setImplements($implements)
@@ -294,9 +297,9 @@ class ClassData
     }
 
     /**
-     * Add (single|array of) classes the class implements.
+     * Adds (single|array of) classes the class implements
      *
-     * @param   $implements  mixed
+     * @param   string|array    $implements  Classes the target class implements
      * @return  ClassData
      */
     public function addImplements($implements)
@@ -311,9 +314,9 @@ class ClassData
     }
 
     /**
-     * Set an array of classes the class extends.
+     * Sets the class the mocked class extends
      *
-     * @param   $extends    array
+     * @param   string      $extends    Class the target class extends
      * @return  ClassData
      */
     public function setExtends($extends)
@@ -324,9 +327,9 @@ class ClassData
     }
 
     /**
-     * Set if the class has a constructor.
+     * Sets if the class has a constructor
      *
-     * @param   $hasConstructor bool
+     * @param   bool        $hasConstructor     Does the class have a constructor
      * @return  ClassData
      */
     public function setHasConstructor($hasConstructor)
@@ -337,22 +340,23 @@ class ClassData
     }
 
     /**
-     * Set the array of MethodData objects
+     * Sets the array of MethodData objects
      *
-     * @param   $methods    array
+     * @param   object|array       $methods    MethodData objects
      * @return  ClassData
      */
     public function setMethods($methods)
     {
-        $this->methods = $methods;
+        $objs = is_array($methods) ? $methods : array( $methods );
+        $this->methods = $objs;
 
         return $this;
     }
 
     /**
-     * Add (single|array of) MethodData objects to methods array.
+     * Adds (single|array of) MethodData objects to methods array
      *
-     * @param   $methods    mixed
+     * @param   object|array    $methods    MethodData objects
      * @return  ClassData
      */
     public function addMethods($methods)
@@ -367,22 +371,23 @@ class ClassData
     }
 
     /**
-     * Set the array of PropertyData objects
+     * Sets the array of PropertyData objects
      *
-     * @param   $properties     array
+     * @param   object|array       $properties     PropertyData objects
      * @return  ClassData
      */
     public function setProperties($properties)
     {
-        $this->properties = $properties;
+        $objs = is_array($properties) ? $properties : array( $properties );
+        $this->properties = $objs;
 
         return $this;
     }
 
     /**
-     * Add (single|array of) PropertyData objects to properties array.
+     * Add (single|array of) PropertyData objects to properties array
      *
-     * @param   $properties     mixed
+     * @param   object|array    $properties     PropertyData objects
      * @return  ClassData
      */
     public function addProperties($properties)

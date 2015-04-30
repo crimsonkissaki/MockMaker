@@ -1,13 +1,14 @@
 <?php
 
 /**
- * 	MockMakerErrors
+ * MockMakerErrors
  *
- * 	Error messages for MockMaker
+ * Error messages for MockMaker
  *
- * 	@author		Evan Johnson
- * 	@created	Apr 19, 2015
- * 	@version	1.0
+ * @package     MockMaker
+ * @author		Evan Johnson
+ * @created     Apr 19, 2015
+ * @version     1.0
  */
 
 namespace MockMaker\Exception;
@@ -39,14 +40,13 @@ class MockMakerErrors
     const INVALID_SOURCE_FILE_MSG = "Unable to read file '%file%'.";
 
     /**
-     * Generate a message code.
-     * Allows insertion of custom values into the standardized notification messages.
+     * Generates a formatted message string
      *  
-     * @param	$locationId		string	Location id
-     * @param	$code			string	Message code to use.
-     * @param	$params			array	Optional params to insert into message text
+     * @param	string      $locationId		Location id
+     * @param	string      $code			Message code to use
+     * @param	array       $params			Optional params to insert into message text
+     * @return	string
      * @throws	InvalidArgumentException
-     * @return	array
      */
     public static function generateMessage($code, $params = [ ])
     {

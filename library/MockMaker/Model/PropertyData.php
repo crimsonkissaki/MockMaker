@@ -1,13 +1,14 @@
 <?php
 
 /**
- * 	PropertyData
+ * PropertyData
  *
- *  Class that holds all information for a property.
+ * Class that holds all information for a class property
  *
- * 	@author		Evan Johnson
- * 	@created	Apr 28, 2015
- * 	@version	1.0
+ * @package     MockMaker
+ * @author		Evan Johnson
+ * @created     Apr 28, 2015
+ * @version     1.0
  */
 
 namespace MockMaker\Model;
@@ -16,14 +17,16 @@ class PropertyData
 {
 
     /**
-     * Name of the property.
+     * Name of the property
      *
      * @var string
      */
     public $name;
 
     /**
-     * Visibility of the property: public/public/protected
+     * Visibility of the property
+     *
+     * Values are public, public, protected.
      *
      * @var string
      */
@@ -37,28 +40,28 @@ class PropertyData
     public $isStatic;
 
     /**
-     * Default property value, if any.
+     * Default property value, if any
      *
      * @var mixed
      */
     public $defaultValue;
 
     /**
-     * Data type of the property.
+     * Data type of the property
      *
      * @var string
      */
     public $dataType;
 
     /**
-     * Object name of object property types.
+     * Class name of object property types
      *
      * @var string
      */
     public $className;
 
     /**
-     * Object namespace of object property types.
+     * Class namespace of object property types
      *
      * @var string
      */

@@ -1,13 +1,14 @@
 <?php
 
 /**
- * 	TokenWorker
+ * TokenWorker
  *
- *  Uses tokens to get information about files.
+ * Uses PHP tokens to get information about files.
  *
- * 	@author		Evan Johnson
- * 	@created	Apr 28, 2015
- * 	@version	1.0
+ * @package     MockMaker
+ * @author		Evan Johnson
+ * @created	    Apr 28, 2015
+ * @version	    1.0
  */
 
 namespace MockMaker\Worker;
@@ -16,13 +17,13 @@ class TokenWorker
 {
 
     /**
-     * Use PHP tokens to parse a file for its use statements.
+     * Uses PHP tokens to parse a file for use statements
      *
      * Token format for use statements is:
      * use MockMaker\Entities\PropertyWorkerEntity;
      * T_USE(342) T_WHITESPACE(377) T_STRING(308) T_NS_SEPARATOR(386) T_STRING(308) T_NS_SEPARATOR(386) T_STRING(308);
      *
-     * @param   $file   string
+     * @param   string  $file   File to scan for use statement tokens
      * @return  array
      */
     public function getUseStatementsWithTokens($file)
@@ -52,11 +53,10 @@ class TokenWorker
     }
 
     /**
-     * Use an array of start/end token keys to slice out sections of the full
-     * php file token array and compile them into an array of strings.
+     * Slices specified series of tokens from a full file token list
      *
-     * @param   $tokens         array
-     * @param   $fileTokens     array
+     * @param   array   $tokens         Start/Stop token keys
+     * @param   array   $fileTokens     File token array
      * @return  array
      */
     private function compileTokenIdsIntoString($tokens, $fileTokens)
@@ -73,9 +73,9 @@ class TokenWorker
     }
 
     /**
-     * Compile a slice of PHP tokens into a string.
+     * Compiles slice of PHP tokens into a string
      *
-     * @param   $tokens     array
+     * @param   array   $tokens     Tokens to combine into single string
      * @return  string
      */
     private function compileString($tokens)

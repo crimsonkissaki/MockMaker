@@ -1,18 +1,19 @@
 <?php
 
 /**
- * 	FileNameWorker
+ * FileNameWorker
  *
- *  File operations for MockMaker
+ * File operations for MockMaker
  *
- * 	@author		Evan Johnson
- * 	@created	Apr 26, 2015
- * 	@version	1.0
+ * @package     MockMaker
+ * @author		Evan Johnson
+ * @created	    Apr 26, 2015
+ * @version	    1.0
  */
 
 namespace MockMaker\Worker;
 
-use MockMaker\Model\ConfigData as Config;
+use MockMaker\Model\ConfigData;
 use MockMaker\Exception\MockMakerException as MMException;
 use MockMaker\Exception\MockMakerErrors as MMErrors;
 use MockMaker\Helper\TestHelper;
@@ -21,10 +22,10 @@ class FileNameWorker
 {
 
     /**
-     * Iterate over all provided directories and get all files.
+     * Iterates over all provided directories and get all files
      *
-     * @param   $allReadDirs    array
-     * @param   $recursively    bool
+     * @param   array   $allReadDirs    array   Read directories
+     * @param   bool    $recursively    bool    Recursively scan directories or not
      * @return  array
      */
     public function getAllFilesFromReadDirectories($allReadDirs, $recursively = false)
@@ -50,9 +51,9 @@ class FileNameWorker
     }
 
     /**
-     * Validate all provided files.
+     * Validates all manually provided files
      *
-     * @param   $files      array   Array of files to mock.
+     * @param   array   $files      Files to mock
      * @return  bool
      * @throws  MockMakerException
      */
@@ -69,45 +70,41 @@ class FileNameWorker
     }
 
     /**
-     * Return the results of the provided regex patterns on target files.
+     * Returns the results of the provided regex patterns on target files
      *
-     * @param   $config     Config
+     * @param   ConfigData  $config     ConfigData object
      * @return  array
      */
-    public function testRegexPatterns(Config $config)
+    public function testRegexPatterns(ConfigData $config)
     {
         $files = $config->getAllDetectedFiles();
         return array(
-            'include' => $this->getIncludeFiles($files,
-                $config->getIncludeFileRegex()),
-            'exclude' => $this->getExcludeFiles($files,
-                $config->getExcludeFileRegex()),
+            'include' => $this->getIncludeFiles($files, $config->getIncludeFileRegex()),
+            'exclude' => $this->getExcludeFiles($files, $config->getExcludeFileRegex()),
             'workable' => $this->filterFilesWithRegex($config),
         );
     }
 
     /**
-     * Remove any files that don't pass regex validation.
+     * Removes any files that don't pass regex validation
      *
-     * @param   $config     Config
+     * @param   ConfigData  $config     ConfigData object
      * @return  array
      */
     public function filterFilesWithRegex(Config $config)
     {
-        $include = $this->getIncludeFiles($config->getAllDetectedFiles(),
-            $config->getIncludeFileRegex());
-        $exclude = $this->getExcludeFiles($config->getAllDetectedFiles(),
-            $config->getExcludeFileRegex());
+        $include = $this->getIncludeFiles($config->getAllDetectedFiles(), $config->getIncludeFileRegex());
+        $exclude = $this->getExcludeFiles($config->getAllDetectedFiles(), $config->getExcludeFileRegex());
         $validFiles = array_values(array_diff($include, $exclude));
 
         return $validFiles;
     }
 
     /**
-     * Get files that are to be included in the mocking set.
+     * Gets files that are to be included in the mocking set
      *
-     * @param   $files  array
-     * @param   $regex  string
+     * @param   array   $files  Manually specified or read directory files
+     * @param   string  $regex  Include regex string
      * @return  array
      */
     private function getIncludeFiles($files, $regex)
@@ -121,10 +118,10 @@ class FileNameWorker
     }
 
     /**
-     * Get files that are to be excluded in the mocking set.
+     * Gets files that are to be excluded in the mocking set
      *
-     * @param   $files  array
-     * @param   $regex  string
+     * @param   array   $files  Manually specified or read directory files
+     * @param   string  $regex  Exclude regex string
      * @return  array
      */
     private function getExcludeFiles($files, $regex)
@@ -138,11 +135,10 @@ class FileNameWorker
     }
 
     /**
-     * Iterate over an array of files and return filenames that match
-     * a specified regex pattern.
+     * Returns files from an array that match a regex pattern
      *
-     * @param   $files  array
-     * @param   $regex  string
+     * @param   array   $files  Files to filter
+     * @param   string  $regex  Regex to use on file names
      * @return  array
      * @throws  MockMakerException
      */
@@ -154,18 +150,17 @@ class FileNameWorker
                 $matches = $this->getMatchingFiles($files, $regex);
             }
         } catch (\Exception $e) {
-            throw new MMException(MMErrors::generateMessage(MMErrors::INVALID_REGEX,
-                array( 'regex' => $regex )));
+            throw new MMException(MMErrors::generateMessage(MMErrors::INVALID_REGEX, array( 'regex' => $regex )));
         }
 
         return $matches;
     }
 
     /**
-     * Iterate over all files and check for matches on php files.
+     * Returns php files that match a regex pattern
      *
-     * @param   $files  array
-     * @param   $regex  string
+     * @param   array   $files  Files to filter
+     * @param   string  $regex  Regex to use on file names
      * @return  array
      */
     private function getMatchingFiles($files, $regex)
@@ -175,8 +170,7 @@ class FileNameWorker
             if (substr($file, -4) !== '.php') {
                 continue;
             }
-            $fileName = rtrim(join('', array_slice(explode('/', $file), -1)),
-                '.php');
+            $fileName = rtrim(join('', array_slice(explode('/', $file), -1)), '.php');
             if (preg_match($regex, $fileName) === 1) {
                 $matches[] = $file;
             }

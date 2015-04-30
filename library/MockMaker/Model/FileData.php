@@ -1,14 +1,15 @@
 <?php
 
 /**
- * 	FileData
+ * FileData
  *
- *  Holds all file information we need to create the mock file and
- *  will be passed to the code generator classes later on.
+ * Holds all file information we need to create the mock file and
+ * will be passed to the code generator classes later on
  *
- * 	@author		Evan Johnson
- * 	@created	Apr 28, 2015
- * 	@version	1.0
+ * @package     MockMaker
+ * @author		Evan Johnson
+ * @created     Apr 28, 2015
+ * @version     1.0
  */
 
 namespace MockMaker\Model;
@@ -26,7 +27,7 @@ class FileData
     private $fullFilePath;
 
     /**
-     * Simple file name, e.g. "Customer.php".
+     * Simple file name, e.g. "Customer.php"
      *
      * @var type
      */
@@ -47,7 +48,7 @@ class FileData
     private $classData;
 
     /**
-     * Get the file's full path.
+     * Gets the file's full path
      *
      * @return string
      */
@@ -57,7 +58,7 @@ class FileData
     }
 
     /**
-     * Get the file's name.
+     * Gets the file's name
      *
      * @return string
      */
@@ -67,7 +68,7 @@ class FileData
     }
 
     /**
-     * Get the path to the project root directory.
+     * Gets the path to the project root directory
      *
      * @return  string
      */
@@ -77,7 +78,7 @@ class FileData
     }
 
     /**
-     * Get the file's ClassData object.
+     * Gets the file's ClassData object
      *
      * @return string
      */
@@ -87,7 +88,7 @@ class FileData
     }
 
     /**
-     * Set the file's full path.
+     * Sets the file's full path
      *
      * @param   $fullFilePath   string
      * @return  FileData
@@ -100,7 +101,7 @@ class FileData
     }
 
     /**
-     * Set the file's name.
+     * Sets the file's name
      *
      * @param   $fileName   string
      * @return  FileData
@@ -113,7 +114,7 @@ class FileData
     }
 
     /**
-     * Set the path to the project root directory.
+     * Sets the path to the project root directory
      *
      * @param   $projectRootPath    string
      */
@@ -123,7 +124,7 @@ class FileData
     }
 
     /**
-     * Set the file's ClassData object
+     * Sets the file's ClassData object
      *
      * @param   $classData  ClassData
      * @return  FileData

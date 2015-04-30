@@ -1,11 +1,14 @@
 <?php
 
 /**
- * 	MockMaker
+ * MockMaker
  *
- * 	@author		Evan Johnson
- * 	@created	Apr 24, 2015
- * 	@version	1.0
+ * Simple generation of seeder mock files for entities and classes
+ *
+ * @package     MockMaker
+ * @author		Evan Johnson
+ * @created	    Apr 24, 2015
+ * @version     1.0
  */
 
 namespace MockMaker;
@@ -22,28 +25,28 @@ class MockMaker
 {
 
     /**
-     * MockMaker configuration class.
+     * MockMaker configuration class
      *
      * @var ConfigData
      */
     private $config;
 
     /**
-     * Class that handles directory operations.
+     * Class that handles directory operations
      *
      * @var DirectoryWorker
      */
     private $dirWorker;
 
     /**
-     * Class that handles file name operations.
+     * Class that handles file name operations
      *
      * @var FileWorker
      */
     private $fileNameWorker;
 
     /**
-     * Class that handles actual processing of each target file.
+     * Class that handles actual processing of each target file
      *
      * @var FileProcessorWorker
      */
@@ -60,37 +63,7 @@ class MockMaker
     }
 
     /**
-     * Get the directory worker class
-     *
-     * @return  DirectoryWorker
-     */
-    public function getDirWorker()
-    {
-        return $this->dirWorker;
-    }
-
-    /**
-     * Get the file worker class
-     *
-     * @return  FileWorker
-     */
-    public function getFileWorker()
-    {
-        return $this->fileNameWorker;
-    }
-
-    /**
-     * Get the file processor worker class
-     *
-     * @return  FileProcessorWorker
-     */
-    public function getFileProcessorWorker()
-    {
-        return $this->fileProcessorWorker;
-    }
-
-    /**
-     * Create a new MockMaker instance.
+     * Create a new MockMaker instance
      *
      * @return	MockMaker
      */
@@ -103,12 +76,11 @@ class MockMaker
     }
 
     /**
-     * Set your project's root directory path.
+     * Sets the project's root directory path
      *
-     * MockMaker will do its best to guess this based on class namespaces,
-     * but you can set it manually if it's having problems.
+     * This can be set manually if MockMaker's best guess for root path is wrong
      *
-     * @param	$projectRootPath   string	Project root directory path.
+     * @param	string      $projectRootPath   Project root directory path
      * @return	MockMaker
      */
     public function setProjectRootPath($projectRootPath)
@@ -119,12 +91,12 @@ class MockMaker
     }
 
     /**
-     * Add one or an array of files to the list of files to be generated.
+     * Adds file(s) to the mocking list
      *
-     * Any files specified here will be merged with files found in the
-     * read directory specified in the getFilesFrom() method.
+     * Files specified here will be merged with files found in the
+     * read directory specified in the getFilesFrom() method
      *
-     * @param	$files	mixed	Single or array of file names to parse.
+     * @param	string|array    $files	File names to parse
      * @return	MockMaker
      */
     public function mockFiles($files)
@@ -135,12 +107,12 @@ class MockMaker
     }
 
     /**
-     * Set a single or array of directories to scan for files to mock.
+     * Sets directories to scan for files to mock
      *
      * Any files returned from these directories will be merged with files
-     * specified through the mockFiles() method.
+     * specified through the mockFiles() method
      *
-     * @param	$readDirectory	mixed	Single or array of directories to scan.
+     * @param	string|array    $readDirectory	Directories to scan
      * @return	MockMaker
      */
     public function getFilesFrom($readDirectory)
@@ -151,27 +123,26 @@ class MockMaker
     }
 
     /**
-     * Parse the read directory recursively.
+     * Tells MockMaker to recursively parse read directories
      *
-     * Default MockMaker setting is FALSE.
+     * This overrides the default MockMaker setting of false
      *
-     * @param	$recursively	bool	Default true.
      * @return	MockMaker
      */
-    public function recursively($recursively = true)
+    public function recursively()
     {
-        $this->config->setRecursiveRead($recursively);
+        $this->config->setRecursiveRead(true);
 
         return $this;
     }
 
     /**
-     * Set a directory to save generated mock files in.
+     * Sets a directory to save generated mock files in
      *
-     * If you do not specify a write directory, MockMaker will return
-     * the generated code as a string.
+     * If this is not specified MockMaker will return the generated
+     * code as a string.
      *
-     * @param	$writeDirectory	string	Directory to save output files in.
+     * @param	string  	$writeDirectory     Directory to save output files in
      * @return	MockMaker
      */
     public function saveFilesTo($writeDirectory)
@@ -182,10 +153,10 @@ class MockMaker
     }
 
     /**
-     * Tell MockMaker to ignore the read directory's file structure and
-     * save all generated files into the same directory.
+     * Tells MockMaker to ignore read directory's file structure and
+     * save all generated files into the same directory
      *
-     * Default MockMaker setting is TRUE.
+     * Default MockMaker setting is TRUE
      *
      * @return	MockMaker
      */
@@ -197,11 +168,10 @@ class MockMaker
     }
 
     /**
-     * Set whether or not to overwrite existing files.
+     * Tells MockMaker to overwrite existing mock files
      *
-     * Default MockMaker setting is FALSE.
+     * Default MockMaker setting is FALSE
      *
-     * @param	$overwriteExistingFiles		bool
      * @return	MockMaker
      */
     public function overwriteExistingFiles()
@@ -212,11 +182,11 @@ class MockMaker
     }
 
     /**
-     * Define a regex pattern used to EXCLUDE files based on the file name.
+     * Sets a regex pattern used to EXCLUDE files
      *
-     * YOU DO NOT NEED TO INCLUDE THE FILE EXTENSION IN THE REGEX STRING
+     * Pattern is compared against the file name, sans extension.
      *
-     * @param	$excludeRegex   string	Regex pattern.
+     * @param	string      $excludeRegex   Regex pattern
      * @return	MockMaker
      */
     public function excludeFilesWithFormat($excludeRegex)
@@ -227,11 +197,11 @@ class MockMaker
     }
 
     /**
-     * Define a regex pattern used to INCLUDE files based on the file name.
+     * Sets a regex pattern used to INCLUDE files
      *
-     * YOU DO NOT NEED TO INCLUDE THE FILE EXTENSION IN THE REGEX STRING
+     * Pattern is compared against the file name, sans extension.
      *
-     * @param	$includeRegex	string	Regex pattern.
+     * @param	string      $includeRegex	Regex pattern
      * @return	MockMaker
      */
     public function includeFilesWithFormat($includeRegex)
@@ -244,8 +214,10 @@ class MockMaker
     /**
      * NOT YET IMPLEMENTED
      *
-     * Tell MockMaker to also generate basic unit tests for the mock files.
-     * Tests will only verify the mock returns a valid class instance.
+     * Tells MockMaker to generate basic unit tests for the mock files
+     *
+     * Generated unit test files will only verify that the mock is returning
+     * a valid instance of the mocked class.
      *
      * Default MockMaker setting is FALSE
      *
@@ -259,12 +231,12 @@ class MockMaker
     /**
      * NOT YET IMPLEMENTED
      *
-     * Directory you want MockMaker to save unit test files for the mocks.
+     * Sets the directory where unit test files will be saved
      *
-     * If you do not specify a unit test directory, MockMaker will return
-     * the generated unit test code as a string.
+     * If no directory has been specified the unit test code will be returned
+     * with the mock file code.
      *
-     * @param   $unitTestDirectory  string
+     * @param   string      $unitTestDirectory  Directory to save unit test files in
      * @return  MockMaker
      */
     public function saveUnitTestsTo($unitTestDirectory)
@@ -273,7 +245,7 @@ class MockMaker
     }
 
     /**
-     * Use to verify MockMaker's settings before you kick things off for real.
+     * Returns the MockMaker config settings
      *
      * @return	ConfigData
      */
@@ -285,10 +257,11 @@ class MockMaker
     }
 
     /**
-     * Test (in|ex)clude regex patterns against any spefified files or
-     * files found in specified read directories.
+     * Tests (in|ex)clude regex patterns
      *
-     * Returns an associative array of [include],[exclude],[workable] files.
+     * The regex patterns will be tested against any files found in the
+     * read directories or specified manually and the results returned in
+     * an associative array of [include],[exclude],[workable] files.
      *
      * @return	array
      */
@@ -300,10 +273,10 @@ class MockMaker
     }
 
     /**
-     * Iterate over each workable file and generate mock code for it.
+     * Generates mocks for any valid target files
      *
      * If a write directory has been specified, the code will be saved
-     * there. Otherwise it will be returned as a string.
+     * there, otherwise it will be returned as a string.
      *
      * -- WARNING -- Abstract/Interface classes cannot be mocked!
      *
@@ -322,7 +295,7 @@ class MockMaker
     }
 
     /**
-     * Do the final set up we need before processing can begin.
+     * Performs final set up required before processing
      *
      * @return  bool
      */
@@ -337,7 +310,7 @@ class MockMaker
     }
 
     /**
-     * Get every single file that's user specified or in the read directories.
+     * Combines all files from the read directories with the user specified ones
      *
      * @return  array
      */
@@ -350,7 +323,7 @@ class MockMaker
     }
 
     /**
-     * Scan the specified directories for any files.
+     * Scans the specified directories for any files
      *
      * @return  array
      */
@@ -368,8 +341,7 @@ class MockMaker
     }
 
     /**
-     * Filter and validate the allDetectedFiles() array and return the
-     * files we need to actually process.
+     * Returns files that need to be processed
      *
      * @return  array
      */

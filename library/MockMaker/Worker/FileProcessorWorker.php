@@ -1,13 +1,14 @@
 <?php
 
 /**
- * 	FileProcessorWorker
+ * FileProcessorWorker
  *
- *  Processes each file found by MockMaker.
+ * Processes each file found by MockMaker
  *
- * 	@author		Evan Johnson
- * 	@created	Apr 28, 2015
- * 	@version	1.0
+ * @package     MockMaker
+ * @author		Evan Johnson
+ * @created     Apr 28, 2015
+ * @version     1.0
  */
 
 namespace MockMaker\Worker;
@@ -29,21 +30,21 @@ class FileProcessorWorker
     private $config;
 
     /**
-     * Class that handles processing for the FileData models.
+     * Class that handles processing for the FileData models
      *
      * @var FileDataWorker
      */
     private $fileDataWorker;
 
     /**
-     * Array of FileData classes.
+     * Array of FileData classes
      *
      * @var array
      */
     private $fileData = [ ];
 
     /**
-     * Get the config file.
+     * Get the config file
      *
      * @return type
      */
@@ -53,7 +54,7 @@ class FileProcessorWorker
     }
 
     /**
-     * Get the FileDataWorker class instance.
+     * Gets the FileDataWorker object
      *
      * @return  FileDataWorker
      */
@@ -63,7 +64,7 @@ class FileProcessorWorker
     }
 
     /**
-     * Get the mock maker files.
+     * Gets the FileData objects
      *
      * @return  array
      */
@@ -73,19 +74,22 @@ class FileProcessorWorker
     }
 
     /**
-     * Set the mock maker files array.
+     * Sets the array of FileData objects
      *
-     * @param   $fileData     array
+     * @param   object|array   $fileData    FileData objects
+     * @return  void
      */
     public function setFileData($fileData)
     {
-        $this->fileData = $fileData;
+        $objs = is_array($fileData) ? $fileData : array( $fileData );
+        $this->fileData = $objs;
     }
 
     /**
-     * Add single or array of FileData objects to fileData.
+     * Adds (single|array of) FileData objects to fileData
      *
-     * @param   $fileData     mixed
+     * @param   object|array    $fileData   FileData objects
+     * @return  void
      */
     public function addFileData($fileData)
     {
@@ -97,9 +101,10 @@ class FileProcessorWorker
     }
 
     /**
-     * Set the config file.
+     * Sets the config file
      *
-     * @param   $config   ConfigData
+     * @param   ConfigData  $config     ConfigData object
+     * @return  void
      */
     public function setConfig(ConfigData $config)
     {
@@ -107,7 +112,9 @@ class FileProcessorWorker
     }
 
     /**
-     * Instantiate a new FileProcessorWorker object.
+     * Instantiates a new FileProcessorWorker object
+     *
+     * @return  FileDataWorker
      */
     public function __construct()
     {
@@ -115,7 +122,7 @@ class FileProcessorWorker
     }
 
     /**
-     * Kick off file processing.
+     * Initiates file processing
      *
      * @return  string
      */
@@ -129,8 +136,6 @@ class FileProcessorWorker
                     $generatedCode[$key] = '';
                 }
             } catch (\Exception $e) {
-                //$msg = $e->getTraceAsString() . "\n\n" . $e->getMessage();
-                //TestHelper::dbug($msg, "Fatal MockMaker Exception:");
                 TestHelper::dbug($e->getMessage(), "Fatal MockMaker Exception:");
                 continue;
             }
@@ -141,10 +146,10 @@ class FileProcessorWorker
     }
 
     /**
-     * Process a single file for mocking.
+     * Processes a single file for mocking
      *
-     * @param   $file       string
-     * @param   $config     ConfigData
+     * @param   string      $file       File name to mock
+     * @param   ConfigData  $config     ConfigData object
      * @return  FileData
      */
     private function processFile($file, ConfigData $config)
@@ -159,10 +164,10 @@ class FileProcessorWorker
     }
 
     /**
-     * Create a new FileData object.
+     * Creates a new FileData object
      *
-     * @param   $file           string
-     * @param   $config         ConfigData
+     * @param   string      $file       File name to mock
+     * @param   ConfigData  $config     ConfigData object
      * @return  FileData
      */
     private function generateFileDataObject($file, $config)

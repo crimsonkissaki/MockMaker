@@ -1,13 +1,14 @@
 <?php
 
 /**
- * 	StringFormatterWorker
+ * StringFormatterWorker
  *
- * 	Used by various classes to format strings with delineated values.
+ * Used by various classes to format strings with delineated values.
  *
- * 	@author		Evan Johnson
- * 	@created	Apr 20, 2015
- * 	@version	1.0
+ * @package     MockMaker
+ * @author		Evan Johnson
+ * @created	    Apr 20, 2015
+ * @version	    1.0
  */
 
 namespace MockMaker\Worker;
@@ -16,13 +17,16 @@ class StringFormatterWorker
 {
 
     /**
-     * Interpolate an associative array of values into a string.
-     * Placeholders in string must === the array keys.
+     * Interpolates an associative array of values into a string
      *
-     * @param	string	$str
-     * @param	array	$vars
-     * @param	string	$char
+     * Looks for sub strings in $str that match a format of
+     * $char . $key . $char
+     *
+     * @param	string	$str    String to insert data into
+     * @param	array	$vars   Substring values and data
+     * @param	string	$char   Delimiter character
      * @return	string
+     * @static
      */
     public static function vsprintf2($str = false, $vars = [ ], $char = '%')
     {
@@ -43,10 +47,13 @@ class StringFormatterWorker
     }
 
     /**
-     * Format (single|array of) directory paths.
+     * Formats directory paths
      *
-     * @param   $paths  array
-     * @return  mixed
+     * trim()s whitespace and appends a forward slash.
+     *
+     * @param   string|array   $paths  Directory paths to format
+     * @return  string|array
+     * @static
      */
     public static function formatDirectoryPaths($paths)
     {
@@ -62,10 +69,11 @@ class StringFormatterWorker
     }
 
     /**
-     * Format a directory path.
+     * Formats a directory path
      *
-     * @param   $path   string
+     * @param   string  $path  Directory path to format
      * @return  string
+     * @static
      */
     public static function formatDirectoryPath($path)
     {
