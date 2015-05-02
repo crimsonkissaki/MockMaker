@@ -20,6 +20,8 @@ MockMaker:
 
     re-include custom name format for mock class
 
+    use setters of properties to check for additional typehints to set property default values
+
 FileGenerator:
 
     If files are found in a sub-directory, save them to the same sub-directory
