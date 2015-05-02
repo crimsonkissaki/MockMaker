@@ -31,6 +31,31 @@ class DirectoryWorkerTest extends \PHPUnit_Framework_TestCase
         $this->entitiesDir = $this->rootDir . '/tests/MockMaker/Entities/';
     }
 
+        public function test_getAllFilesFromReadDirectories()
+    {
+        $actual = $this->worker->getAllFilesFromReadDirectories(array( $this->entitiesDir ));
+
+        $this->assertEquals(7, count($actual));
+    }
+
+    public function test_getAllFilesFromReadDirectories_recursively()
+    {
+        $actual = $this->worker->getAllFilesFromReadDirectories(array( $this->entitiesDir ), true);
+
+        $this->assertEquals(9, count($actual));
+    }
+
+    public function test_getAllFilesFromReadDirectories_withMultipleDirectories()
+    {
+        $dirsArr = array(
+            $this->entitiesDir,
+            $this->entitiesDir . 'SubEntities',
+        );
+        $actual = $this->worker->getAllFilesFromReadDirectories($dirsArr);
+
+        $this->assertEquals(9, count($actual));
+    }
+
     /**
      * @expectedException MockMaker\Exception\MockMakerException
      */

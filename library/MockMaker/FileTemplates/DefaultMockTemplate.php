@@ -28,20 +28,31 @@ class {$dataPoints['ClassMockName']}
 {
 
     /**
-     * Minimum required properties for generating a valid {$dataPoints['ClassName']} mock file
+     * Returns array of minimum required properties for generating
+     * a valid {$dataPoints['ClassName']} mock file
      *
-     * Associative array of {$dataPoints['ClassName']}'s elements which allows for simple customization
-     * of how the class mock is hydrated.
+     * This associative array format of {$dataPoints['ClassName']}'s elements
+     * allows for simple customization of how the class mock is hydrated.
      *
-     * If the 'setter' element of a property array is either not present or set to boolean false,
-     * MockMaker assumes the setter is in the standard 'setPropertyName' format.
+     * It's best to remove any properties that are not absolutely necessary for
+     * instantiating a new {$dataPoints['ClassName']} object. However,
+     * it is still possible to ignore any of these on an at-will basis when
+     * creating a new mock if the property is used enough that you want to
+     * leave it in here to save work. See getMock() documentation for details.
      *
-     * @var array
+     * Since MockMaker already does a best guess attempt at detecting setters and
+     * inserts them here if it finds one, if the 'setter' element of this array is
+     * '' or boolean false MockMaker will assume the property has no setter
+     * and needs to be manipulated through reflection.
+     *
+     * @return  array
      */
-    public static \$mandatoryProperties = array(
+    public static function getMandatoryProperties()
+    {
+        return array(
 {$dataPoints['PropertiesAndSettersArray']}
-        // format: 'propertyName' => array( 'setter' => 'setterMethodName', 'default' => 'defaultValue' ),
-    );
+        );
+    }
 
     /**
      * Customized generation of mock {$dataPoints['ClassName']} objects
@@ -66,10 +77,9 @@ class {$dataPoints['ClassMockName']}
      */
     public static function getMock(\$properties = null, \$ignore = null)
     {
+        \$defaults = self::getMandatoryProperties();
         \$mock = new {$dataPoints['ClassName']}();
-        if( reflection ) {
         \$reflection = new \ReflectionClass('{$dataPoints['ClassPath']}');
-        }
 
 {$dataPoints['SetterCode']}
 {$dataPoints['ReflectionCode']}

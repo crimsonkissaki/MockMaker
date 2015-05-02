@@ -33,7 +33,7 @@ class FileWorker
         foreach ($files as $file) {
             if (!is_readable($file)) {
                 throw new MockMakerException(
-                    MockMakerErrors::generateMessage(MockMakerErrors::INVALID_SOURCE_FILE, array('file' => "'{$file}'"))
+                    MockMakerErrors::generateMessage(MockMakerErrors::INVALID_SOURCE_FILE, array('file' => $file))
                 );
             }
         }

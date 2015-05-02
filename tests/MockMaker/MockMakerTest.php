@@ -34,9 +34,9 @@ class MockMakerTest extends \PHPUnit_Framework_TestCase
     public function test_workflow()
     {
         $actual = $this->mockMaker
-            ->getFilesFrom($this->entitiesDir)
+            //->getFilesFrom($this->entitiesDir)
+            //->recursively()
             ->mockTheseFiles($this->entitiesDir . 'TestEntity.php')
-            ->recursively()
             ->excludeFilesWithFormat('/^Method/')
             //->saveMockFilesIn($this->rootDir.'/tests/reports/')
             ->createMocks();
