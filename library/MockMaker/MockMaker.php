@@ -332,8 +332,6 @@ class MockMaker
     /**
      * Combines all files from the read directories with the user specified ones
      *
-     * TODO: move to DirectoryWorker
-     *
      * @return  array
      */
     private function getAllPossibleFilesToBeWorked()
