@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 	FileDataWorkerTest
+ * 	MockMakerFileDataWorkerTest
  *
  * 	@author		Evan Johnson
  * 	@created	Apr 28, 2015
@@ -10,13 +10,13 @@
 
 namespace MockMaker\Worker;
 
-use MockMaker\Worker\FileDataWorker;
+use MockMaker\Worker\MockMakerFileDataWorker;
 use MockMaker\Model\ConfigData;
 
-class FileDataWorkerTest extends \PHPUnit_Framework_TestCase
+class MockMakerFileDataWorkerTest extends \PHPUnit_Framework_TestCase
 {
 
-    // @var $worker FileDataWorker
+    // @var $worker MockMakerFileDataWorker
     public $worker;
     // @var $config ConfigData
     public $config;
@@ -24,20 +24,20 @@ class FileDataWorkerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->worker = new FileDataWorker();
+        $this->worker = new MockMakerFileDataWorker();
         $this->config = new ConfigData();
     }
 
     public function test_generateNewObject_returnsCorrectFullFilePath()
     {
         $actual = $this->worker->generateNewObject($this->file, $this->config);
-        $this->assertEquals($this->file, $actual->getFullFilePath());
+        $this->assertEquals($this->file, $actual->getSourceFileFullPath());
     }
 
     public function test_generateNewObject_returnsCorrectFileName()
     {
         $actual = $this->worker->generateNewObject($this->file, $this->config);
-        $this->assertEquals('SimpleEntity.php', $actual->getFileName());
+        $this->assertEquals('SimpleEntity.php', $actual->getSourceFileName());
     }
 
 }

@@ -31,14 +31,16 @@ class MockMakerTest extends \PHPUnit_Framework_TestCase
     /**
      * Used for testing workflow.
      */
-    public function _test_workflow()
+    public function test_workflow()
     {
         $actual = $this->mockMaker
             ->getFilesFrom($this->entitiesDir)
+            ->mockTheseFiles($this->entitiesDir . 'TestEntity.php')
             ->recursively()
             ->excludeFilesWithFormat('/^Method/')
+            //->saveMockFilesIn($this->rootDir.'/tests/reports/')
             ->createMocks();
-        //->verifySettings();
+            //->verifySettings();
 
         TestHelper::dbug($actual, __METHOD__, true);
     }
@@ -55,7 +57,7 @@ class MockMakerTest extends \PHPUnit_Framework_TestCase
 
     public function test_mockFiles_addsFiles()
     {
-        $this->mockMaker->mockFiles($this->entitiesDir . 'SimpleEntity.php');
+        $this->mockMaker->mockTheseFiles($this->entitiesDir . 'SimpleEntity.php');
         $this->assertEquals(1, count($this->mockMaker->getConfig()->getAllDetectedFiles()));
     }
 
@@ -76,8 +78,8 @@ class MockMakerTest extends \PHPUnit_Framework_TestCase
 
     public function test_saveFilesTo()
     {
-        $this->mockMaker->saveFilesTo($this->entitiesDir);
-        $this->assertEquals($this->entitiesDir, $this->mockMaker->getConfig()->getWriteDirectory());
+        $this->mockMaker->saveMockFilesIn($this->entitiesDir);
+        $this->assertEquals($this->entitiesDir, $this->mockMaker->getConfig()->getMockWriteDirectory());
     }
 
     public function test_ignoreDirectoryStructure()

@@ -5,10 +5,10 @@
  *
  * Class that holds all information for a method
  *
- * @package     MockMaker
- * @author		Evan Johnson
- * @created     Apr 28, 2015
- * @version     1.0
+ * @package       MockMaker
+ * @author        Evan Johnson
+ * @created       Apr 28, 2015
+ * @version       1.0
  */
 
 namespace MockMaker\Model;
@@ -44,6 +44,6 @@ class MethodData
      *
      * @var array
      */
-    public $arguments = [ ];
+    public $arguments = [];
 
 }

@@ -110,15 +110,15 @@ class ConfigDataTest extends \PHPUnit_Framework_TestCase
     public function test_setWriteDirectory_trimsCorrectly()
     {
         $root = dirname(dirname(__FILE__));
-        $this->config->setWriteDirectory(" {$root} ");
-        $this->assertEquals($root . "/", $this->config->getWriteDirectory());
+        $this->config->setMockWriteDirectory(" {$root} ");
+        $this->assertEquals($root . "/", $this->config->getMockWriteDirectory());
     }
 
     public function test_setWriteDirectory_addsTrailingSlashIfNonePresent()
     {
         $root = dirname(dirname(__FILE__));
-        $this->config->setWriteDirectory($root);
-        $this->assertEquals($root . "/", $this->config->getWriteDirectory());
+        $this->config->setMockWriteDirectory($root);
+        $this->assertEquals($root . "/", $this->config->getMockWriteDirectory());
     }
 
     public function test_setProjectRootPath_TrimsCorrectly()

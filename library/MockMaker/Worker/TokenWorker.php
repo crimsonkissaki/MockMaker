@@ -5,10 +5,10 @@
  *
  * Uses PHP tokens to get information about files.
  *
- * @package     MockMaker
- * @author		Evan Johnson
- * @created	    Apr 28, 2015
- * @version	    1.0
+ * @package        MockMaker
+ * @author         Evan Johnson
+ * @created        Apr 28, 2015
+ * @version        1.0
  */
 
 namespace MockMaker\Worker;
@@ -23,13 +23,13 @@ class TokenWorker
      * use MockMaker\Entities\PropertyWorkerEntity;
      * T_USE(342) T_WHITESPACE(377) T_STRING(308) T_NS_SEPARATOR(386) T_STRING(308) T_NS_SEPARATOR(386) T_STRING(308);
      *
-     * @param   string  $file   File to scan for use statement tokens
+     * @param   string $file File to scan for use statement tokens
      * @return  array
      */
     public function getUseStatementsWithTokens($file)
     {
         $fileTokens = token_get_all(file_get_contents($file));
-        $useTokens = [ ];
+        $useTokens = [];
         $useTokenKey = 0;
         $foundUseToken = false;
         foreach ($fileTokens as $key => $token) {
@@ -55,13 +55,13 @@ class TokenWorker
     /**
      * Slices specified series of tokens from a full file token list
      *
-     * @param   array   $tokens         Start/Stop token keys
-     * @param   array   $fileTokens     File token array
+     * @param   array $tokens     Start/Stop token keys
+     * @param   array $fileTokens File token array
      * @return  array
      */
     private function compileTokenIdsIntoString($tokens, $fileTokens)
     {
-        $strings = [ ];
+        $strings = [];
         foreach ($tokens as $k => $token) {
             $offset = $token->startKey;
             $length = ($token->endKey - $token->startKey) + 1;
@@ -75,7 +75,7 @@ class TokenWorker
     /**
      * Compiles slice of PHP tokens into a string
      *
-     * @param   array   $tokens     Tokens to combine into single string
+     * @param   array $tokens Tokens to combine into single string
      * @return  string
      */
     private function compileString($tokens)
@@ -91,5 +91,4 @@ class TokenWorker
 
         return $string;
     }
-
 }

@@ -11,8 +11,8 @@
 namespace MockMaker\Worker;
 
 use MockMaker\Worker\ClassDataWorker;
-use MockMaker\Worker\FileDataWorker;
-use MockMaker\Model\FileData;
+use MockMaker\Worker\MockMakerFileDataWorker;
+use MockMaker\Model\MockMakerFileData;
 use MockMaker\Model\ConfigData;
 use MockMaker\Helper\TestHelper;
 use MockMaker\Entities;
@@ -22,7 +22,7 @@ class ClassDataWorkerTest extends \PHPUnit_Framework_TestCase
 
     // @var $worker ClassDataWorker
     public $worker;
-    // @var $fileObj FileData
+    // @var $fileObj MockMakerFileData
     public $fileObj;
     // @var $config ConfigData
     public $config;
@@ -32,7 +32,7 @@ class ClassDataWorkerTest extends \PHPUnit_Framework_TestCase
     {
         $this->config = new ConfigData();
         $this->config->setProjectRootPath('/Applications/XAMPP/xamppfiles/htdocs/mockmaker/');
-        $fileWorker = new FileDataWorker();
+        $fileWorker = new MockMakerFileDataWorker();
         $this->fileObj = $fileWorker->generateNewObject($this->fileName, $this->config);
         $this->worker = new ClassDataWorker();
     }

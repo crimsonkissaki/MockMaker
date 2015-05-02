@@ -18,6 +18,8 @@ MockMaker:
 
     allow for multiple (in|ex)clude regex strings?
 
+    re-include custom name format for mock class
+
 FileGenerator:
 
     If files are found in a sub-directory, save them to the same sub-directory

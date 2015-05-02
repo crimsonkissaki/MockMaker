@@ -12,7 +12,7 @@
 
 namespace MockMaker\Entities;
 
-use Minion\MockMakerBundle\Tests\Resources\Entities\SimpleEntity;
+use MockMaker\Entities\SimpleEntity;
 
 class MethodWorkerEntity
 {

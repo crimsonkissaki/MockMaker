@@ -5,10 +5,10 @@
  *
  * Error messages for MockMaker
  *
- * @package     MockMaker
- * @author		Evan Johnson
- * @created     Apr 19, 2015
- * @version     1.0
+ * @package       MockMaker
+ * @author        Evan Johnson
+ * @created       Apr 19, 2015
+ * @version       1.0
  */
 
 namespace MockMaker\Exception;
@@ -42,13 +42,14 @@ class MockMakerErrors
     /**
      * Generates a formatted message string
      *  
-     * @param	string      $locationId		Location id
-     * @param	string      $code			Message code to use
-     * @param	array       $params			Optional params to insert into message text
-     * @return	string
-     * @throws	InvalidArgumentException
+     *
+     * @param    string $locationId Location id
+     * @param    string $code       Message code to use
+     * @param    array  $params     Optional params to insert into message text
+     * @return    string
+     * @throws    InvalidArgumentException
      */
-    public static function generateMessage($code, $params = [ ])
+    public static function generateMessage($code, $params = [])
     {
         $class = __CLASS__;
         if (is_null(constant("$class::$code"))) {
@@ -57,5 +58,4 @@ class MockMakerErrors
 
         return StringFormatterWorker::vsprintf2(constant("$class::{$code}"), $params);
     }
-
 }

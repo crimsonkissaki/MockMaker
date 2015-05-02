@@ -5,15 +5,19 @@
  *
  * MockMaker configuration data class
  *
- * @package     MockMaker
- * @author		Evan Johnson
- * @created     Apr 22, 2015
- * @version     1.0
+ * @package       MockMaker
+ * @author        Evan Johnson
+ * @created       Apr 22, 2015
+ * @version       1.0
  */
 
 namespace MockMaker\Model;
 
 use MockMaker\Worker\StringFormatterWorker as Formatter;
+use MockMaker\Worker\AbstractCodeWorker;
+use MockMaker\Worker\CodeWorker;
+use MockMaker\Worker\DirectoryWorker;
+use MockMaker\Worker\FileWorker;
 
 class ConfigData
 {
@@ -21,77 +25,84 @@ class ConfigData
     /**
      * Read the directory recursively or not
      *
-     * @var	bool
+     * @var    bool
      */
     private $recursiveRead = false;
 
     /**
      * Overwrite existing files or not
      *
-     * @var	bool
+     * @var    bool
      */
     private $overwriteExistingFiles = false;
 
     /**
      * Directories to scan for files to mock
      *
-     * @var	array
+     * @var    array
      */
-    private $readDirectories = [ ];
+    private $readDirectories = [];
 
     /**
      * Directory to write generated mock files
      *
-     * @var	string
+     * @var    string
      */
-    private $writeDirectory;
+    private $mockWriteDirectory;
 
     /**
      * All files indicated by user or in read directories
      *
-     * @var	array
+     * @var    array
      */
-    private $allDetectedFiles = [ ];
+    private $allDetectedFiles = [];
 
     /**
      * Array of files to generate mocks for
      *
-     * @var	array
+     * @var    array
      */
-    private $filesToMock = [ ];
+    private $filesToMock = [];
 
     /**
      * Regex pattern used to exclude files
      *
-     * @var	string
+     * @var    string
      */
     private $excludeFileRegex;
 
     /**
      * Regex pattern uses to include files
      *
-     * @var	string
+     * @var    string
      */
     private $includeFileRegex;
 
     /**
      * Mimick the read directory file tree in the write directory or not
      *
-     * @var	bool
+     * @var    bool
      */
     private $preserveDirectoryStructure = true;
 
     /**
      * Project root directory path
      *
-     * @var	string
+     * @var    string
      */
     private $projectRootPath;
 
     /**
+     * Class that transforms DataFile objects into mock code
+     *
+     * @var AbstractCodeWorker
+     */
+    private $codeWorker;
+
+    /**
      * Gets if the read directory should be recursively scanned
      *
-     * @return	bool
+     * @return    bool
      */
     public function getRecursiveRead()
     {
@@ -101,7 +112,7 @@ class ConfigData
     /**
      * Gets if files are to be overwritten
      *
-     * @return	bool
+     * @return    bool
      */
     public function getOverwriteExistingFiles()
     {
@@ -111,7 +122,7 @@ class ConfigData
     /**
      * Gets directory names to scan for files
      *
-     * @return	string
+     * @return    string
      */
     public function getReadDirectories()
     {
@@ -121,17 +132,17 @@ class ConfigData
     /**
      * Gets directory name to save generated mock files
      *
-     * @return	string
+     * @return    string
      */
-    public function getWriteDirectory()
+    public function getMockWriteDirectory()
     {
-        return $this->writeDirectory;
+        return $this->mockWriteDirectory;
     }
 
     /**
-      Gets all files indicated by user or in read directories
+     * Gets all files indicated by user or in read directories
      *
-     * @return	array
+     * @return    array
      */
     public function getAllDetectedFiles()
     {
@@ -141,7 +152,7 @@ class ConfigData
     /**
      * Gets array of files to be mocked
      *
-     * @return	array
+     * @return    array
      */
     public function getFilesToMock()
     {
@@ -151,7 +162,7 @@ class ConfigData
     /**
      * Gets exclude file regex string
      *
-     * @return	string
+     * @return    string
      */
     public function getExcludeFileRegex()
     {
@@ -161,7 +172,7 @@ class ConfigData
     /**
      * Gets include file regex string
      *
-     * @return	string
+     * @return    string
      */
     public function getIncludeFileRegex()
     {
@@ -171,7 +182,7 @@ class ConfigData
     /**
      * Gets if read directory file structure should be used in write directory
      *
-     * @return	bool
+     * @return    bool
      */
     public function getPreserveDirectoryStructure()
     {
@@ -181,7 +192,7 @@ class ConfigData
     /**
      * Gets project's root directory path
      *
-     * @return	string
+     * @return    string
      */
     public function getProjectRootPath()
     {
@@ -189,9 +200,22 @@ class ConfigData
     }
 
     /**
+     * Get the code working class
+     *
+     * If no custom class has been defined, the default class
+     * will be the CodeWorker class.
+     *
+     * @return AbstractCodeWorker
+     */
+    public function getCodeWorker()
+    {
+        return ($this->codeWorker) ? $this->codeWorker : new CodeWorker();
+    }
+
+    /**
      * Sets if read directory is to be scanned recursively
      *
-     * @param	bool    $recursiveRead  Parse read directory recursively
+     * @param    bool $recursiveRead Parse read directory recursively
      * @return  void
      */
     public function setRecursiveRead($recursiveRead)
@@ -202,7 +226,7 @@ class ConfigData
     /**
      * Sets if existing files are to be overwritten
      *
-     * @param	bool    $overwriteExistingFiles		Overwrite existing files
+     * @param    bool $overwriteExistingFiles Overwrite existing files
      * @return  void
      */
     public function setOverwriteExistingFiles($overwriteExistingFiles)
@@ -213,18 +237,19 @@ class ConfigData
     /**
      * Sets directories to scan for files to mock
      *
-     * @param	array    $readDirectories	Directories to scan
+     * @param    array $readDirectories Directories to scan
      * @return  void
      */
     public function setReadDirectories(array $readDirectories)
     {
+        DirectoryWorker::validateReadDirs($readDirectories);
         $this->readDirectories = Formatter::formatDirectoryPaths($readDirectories);
     }
 
     /**
      * Adds (single|array of) directories to parse for files
      *
-     * @param	string|array    $readDirectories	Directories to scan for files to mock
+     * @param    string|array $readDirectories Directories to scan for files to mock
      * @return  void
      */
     public function addReadDirectories($readDirectories)
@@ -240,18 +265,19 @@ class ConfigData
     /**
      * Sets directory name to save generated mock files in
      *
-     * @param	string  $writeDirectory     Directory to save mock files in
+     * @param    string $mockWriteDirectory Directory to save mock files in
      * @return  void
      */
-    public function setWriteDirectory($writeDirectory)
+    public function setMockWriteDirectory($mockWriteDirectory)
     {
-        $this->writeDirectory = Formatter::formatDirectoryPath($writeDirectory);
+        DirectoryWorker::validateWriteDir($mockWriteDirectory);
+        $this->mockWriteDirectory = Formatter::formatDirectoryPath($mockWriteDirectory);
     }
 
     /**
      * Sets files indicated by user or in read directories
      *
-     * @param   array   $allDetectedFiles   File(s) detected as possible mocking candidates
+     * @param   array $allDetectedFiles File(s) detected as possible mocking candidates
      * @return  void
      */
     public function setAllDetectedFiles(array $allDetectedFiles)
@@ -262,7 +288,7 @@ class ConfigData
     /**
      * Adds files to to the detected file list
      *
-     * @param	string|array    $files	File(s) to add to allDetectedFiles
+     * @param    string|array $files File(s) to add to allDetectedFiles
      * @return  void
      */
     public function addFilesToAllDetectedFiles($files)
@@ -277,18 +303,19 @@ class ConfigData
     /**
      * Sets the files to generate mocks for
      *
-     * @param	string|array    $filesToMock	Files to be mocked
+     * @param    string|array $filesToMock Files to be mocked
      * @return  void
      */
     public function setFilesToMock(array $filesToMock)
     {
+        FileWorker::validateFiles($filesToMock);
         $this->filesToMock = $filesToMock;
     }
 
     /**
      * Adds files to the list of files to be mocked
      *
-     * @param	string|array    $files	File(s) to add to list of files to be mocked
+     * @param    string|array $files File(s) to add to list of files to be mocked
      * @return  void
      */
     public function addFilesToMock($files)
@@ -303,7 +330,7 @@ class ConfigData
     /**
      * Sets the ignore file filter regex string
      *
-     * @param	$excludeFileRegex   string	Regex string used to exclude files
+     * @param    $excludeFileRegex   string    Regex string used to exclude files
      * @return  void
      */
     public function setExcludeFileRegex($excludeFileRegex)
@@ -314,7 +341,7 @@ class ConfigData
     /**
      * Sets the include file regex string
      *
-     * @param	$includeFileRegex	string	Regex string used to include files
+     * @param    $includeFileRegex    string    Regex string used to include files
      * @return  void
      */
     public function setIncludeFileRegex($includeFileRegex)
@@ -325,7 +352,7 @@ class ConfigData
     /**
      * Sets whether to mimick read directory file structure in write directory
      *
-     * @param	$preserveDirectoryStructure	bool	Mirror read directory structure in write directory
+     * @param    $preserveDirectoryStructure    bool    Mirror read directory structure in write directory
      * @return  void
      */
     public function setPreserveDirectoryStructure($preserveDirectoryStructure)
@@ -336,7 +363,7 @@ class ConfigData
     /**
      * Sets the project's root directory path
      *
-     * @param	$projectRootPath	string	Path to your project's root directory
+     * @param    $projectRootPath    string    Path to your project's root directory
      * @return  void
      */
     public function setProjectRootPath($projectRootPath)
@@ -344,4 +371,13 @@ class ConfigData
         $this->projectRootPath = Formatter::formatDirectoryPath($projectRootPath);
     }
 
+    /**
+     * Set a custom class to process the mock code.
+     *
+     * @param AbstractCodeWorker $codeWorker
+     */
+    public function setCodeWorker(AbstractCodeWorker $codeWorker)
+    {
+        $this->codeWorker = $codeWorker;
+    }
 }

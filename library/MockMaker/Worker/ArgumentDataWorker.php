@@ -3,10 +3,10 @@
 /**
  * ArgumentDataWorker
  *
- * @package     MockMaker
- * @author		Evan Johnson
- * @created     Apr 29, 2015
- * @version     1.0
+ * @package       MockMaker
+ * @author        Evan Johnson
+ * @created       Apr 29, 2015
+ * @version       1.0
  */
 
 namespace MockMaker\Worker;
@@ -20,12 +20,12 @@ class ArgumentDataWorker
     /**
      * Generates an array of ArgumentData objects
      *
-     * @param	\ReflectionMethod   $method     Method's ReflectionMethod instance
+     * @param    \ReflectionMethod $method Method's ReflectionMethod instance
      * @return  array
      */
     public function generateArgumentObjects(\ReflectionMethod $method)
     {
-        $details = [ ];
+        $details = [];
         $arguments = $method->getParameters();
 
         if (empty($arguments)) {
@@ -42,8 +42,8 @@ class ArgumentDataWorker
     /**
      * Gets the details for a single method argument
      *
-     * @param	\ReflectionParameter    $argument   Argument's ReflectionParameter instance
-     * @return	ArgumentData
+     * @param    \ReflectionParameter $argument Argument's ReflectionParameter instance
+     * @return    ArgumentData
      */
     private function getArgumentDetails(\ReflectionParameter $argument)
     {
@@ -73,8 +73,8 @@ class ArgumentDataWorker
      *  'boolean', 'integer', 'double', 'string', 'array',
      *  'object', 'resource', 'NULL', 'unknown type'
      *
-     * @param	\ReflectionParameter    $argument   Argument's ReflectionParameter instance
-     * @return	string
+     * @param    \ReflectionParameter $argument Argument's ReflectionParameter instance
+     * @return    string
      */
     private function getArgumentType(\ReflectionParameter $argument)
     {
@@ -97,17 +97,17 @@ class ArgumentDataWorker
     /**
      * Gets the typehinted arguments class data
      *
-     * @param   string  $toString   \ReflectionArgument __toString() value
+     * @param   string $toString \ReflectionArgument __toString() value
      * @return  array
      */
     private function getDefaultValueClassData($toString)
     {
-        $data = array( 'className' => '', 'classNamespace' => '' );
+        $data = array('className' => '', 'classNamespace' => '');
         $regex = '/^.*\<\w+?> ([\w\\\\]+?) +.*$/';
         preg_match($regex, $toString, $matches);
         if (isset($matches[1])) {
             $className = $matches[1];
-            if (($pos = strrpos($className, '\\') ) === false) {
+            if (($pos = strrpos($className, '\\')) === false) {
                 $data['className'] = "\\{$className}";
                 $data['classNamespace'] = "";
             } else {
@@ -118,5 +118,4 @@ class ArgumentDataWorker
 
         return $data;
     }
-
 }

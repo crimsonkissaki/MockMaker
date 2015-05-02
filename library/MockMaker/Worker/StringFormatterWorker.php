@@ -5,10 +5,10 @@
  *
  * Used by various classes to format strings with delineated values.
  *
- * @package     MockMaker
- * @author		Evan Johnson
- * @created	    Apr 20, 2015
- * @version	    1.0
+ * @package        MockMaker
+ * @author         Evan Johnson
+ * @created        Apr 20, 2015
+ * @version        1.0
  */
 
 namespace MockMaker\Worker;
@@ -22,13 +22,12 @@ class StringFormatterWorker
      * Looks for sub strings in $str that match a format of
      * $char . $key . $char
      *
-     * @param	string	$str    String to insert data into
-     * @param	array	$vars   Substring values and data
-     * @param	string	$char   Delimiter character
-     * @return	string
-     * @static
+     * @param    string $str  String to insert data into
+     * @param    array  $vars Substring values and data
+     * @param    string $char Delimiter character
+     * @return    string
      */
-    public static function vsprintf2($str = false, $vars = [ ], $char = '%')
+    public static function vsprintf2($str = false, $vars = [], $char = '%')
     {
         if (!$str) {
             return '';
@@ -51,17 +50,17 @@ class StringFormatterWorker
      *
      * trim()s whitespace and appends a forward slash.
      *
-     * @param   string|array   $paths  Directory paths to format
+     * @param   string|array $paths Directory paths to format
      * @return  string|array
-     * @static
      */
     public static function formatDirectoryPaths($paths)
     {
         if (is_array($paths)) {
-            $fixed = [ ];
+            $fixed = [];
             foreach ($paths as $key => $path) {
                 $fixed[$key] = self::formatDirectoryPath($path);
             }
+
             return $fixed;
         } else {
             return self::formatDirectoryPath($paths);
@@ -71,9 +70,8 @@ class StringFormatterWorker
     /**
      * Formats a directory path
      *
-     * @param   string  $path  Directory path to format
+     * @param   string $path Directory path to format
      * @return  string
-     * @static
      */
     public static function formatDirectoryPath($path)
     {
@@ -84,5 +82,4 @@ class StringFormatterWorker
 
         return $fixedPath;
     }
-
 }

@@ -5,17 +5,17 @@
  *
  * Performs directory related operations for MockMaker
  *
- * @package     MockMaker
- * @author		Evan Johnson
- * @created     Apr 26, 2015
- * @version     1.0
+ * @package       MockMaker
+ * @author        Evan Johnson
+ * @created       Apr 26, 2015
+ * @version       1.0
  */
 
 namespace MockMaker\Worker;
 
 use MockMaker\Model\ConfigData as Config;
-use MockMaker\Exception\MockMakerException as MMException;
-use MockMaker\Exception\MockMakerErrors as MMErrors;
+use MockMaker\Exception\MockMakerException;
+use MockMaker\Exception\MockMakerErrors;
 
 class DirectoryWorker
 {
@@ -23,20 +23,23 @@ class DirectoryWorker
     /**
      * Validates specified read directories
      *
-     * @param   array   $dirs   Specified read directories
+     * @param   array $dirs Specified read directories
      * @return  bool
      * @throws  MockMakerException
      */
-    public function validateReadDirs($dirs)
+    public static function validateReadDirs($dirs)
     {
         foreach ($dirs as $k => $dir) {
             if (!is_dir($dir)) {
-                throw new MMException(MMErrors::generateMessage(MMErrors::READ_DIR_NOT_EXIST,
-                    array( 'dir' => "'{$dir}'" )));
+                throw new MockMakerException(
+                    MockMakerErrors::generateMessage(MockMakerErrors::READ_DIR_NOT_EXIST, array('dir' => "'{$dir}'"))
+                );
             }
             if (!is_readable($dir)) {
-                throw new MMException(MMErrors::generateMessage(MMErrors::READ_DIR_INVALID_PERMISSIONS,
-                    array( 'dir' => "'{$dir}'" )));
+                throw new MockMakerException(
+                    MockMakerErrors::generateMessage(MockMakerErrors::READ_DIR_INVALID_PERMISSIONS,
+                        array('dir' => "'{$dir}'"))
+                );
             }
         }
 
@@ -49,21 +52,27 @@ class DirectoryWorker
      * This will attempt to create the write directory
      * if it does not already exist.
      *
-     * @param   string  $dir    Write directory
+     * @param   string $dir Write directory
      * @return  bool
      * @throws  MockMakerException
      */
-    public function validateWriteDir($dir)
+    public static function validateWriteDir($dir)
     {
+        if(!$dir) {
+            return false;
+        }
         if (!is_dir($dir)) {
             if (!mkdir($dir, 0777)) {
-                throw new MMException(MMErrors::generateMessage(MMErrors::WRITE_DIR_NOT_EXIST,
-                    array( 'dir' => "'{$dir}'" )));
+                throw new MockMakerException(
+                    MockMakerErrors::generateMessage(MockMakerErrors::WRITE_DIR_NOT_EXIST, array('dir' => "'{$dir}'"))
+                );
             }
         }
         if (!is_writeable($dir)) {
-            throw new MMException(MMErrors::generateMessage(MMErrors::WRITE_DIR_INVALID_PERMISSIONS,
-                array( 'dir' => "'{$dir}'" )));
+            throw new MockMakerException(
+                MockMakerErrors::generateMessage(MockMakerErrors::WRITE_DIR_INVALID_PERMISSIONS,
+                    array('dir' => "'{$dir}'"))
+            );
         }
 
         return true;
@@ -88,4 +97,33 @@ class DirectoryWorker
         return dirname(dirname(dirname(dirname(__FILE__)))) . '/';
     }
 
+    /**
+     * Gets all files found in any specified read directories
+     *
+     * @param   array $allReadDirs array   Read directories
+     * @param   bool  $recurse     bool    Recursively scan directories or not
+     * @return  array
+     */
+    public function getAllFilesFromReadDirectories($allReadDirs, $recurse = false)
+    {
+        if (empty($allReadDirs)) {
+            return [];
+        }
+        $dirs = [];
+        $files = [];
+        foreach ($allReadDirs as $dir) {
+            $dirs[] = (!$recurse) ? new \DirectoryIterator($dir) : new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir));
+        }
+        foreach ($dirs as $k => $dir) {
+            foreach ($dir as $file) {
+                if (!$file->isDir() && $file->getExtension() === 'php') {
+                    $files[] = $file->getPathname();
+                }
+            }
+        }
+
+        return $files;
+    }
+
 }
+

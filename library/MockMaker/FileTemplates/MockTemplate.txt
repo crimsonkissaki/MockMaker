@@ -52,7 +52,6 @@ class %ClassMockName%
      * 'mandatoryProperties' array.
      *
      * @return	%ClassName%
-     * @static
      */
     public static function getMock($properties = null, $ignore = null)
     {
