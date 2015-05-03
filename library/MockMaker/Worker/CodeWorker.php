@@ -123,25 +123,18 @@ class CodeWorker extends AbstractCodeWorker
      */
     protected function generateMockCodeFromMockMakerFileDataObject(MockMakerFileData $mmFileData)
     {
-        /**
-         * These data points will have to be generated somehow
-         */
         $class = $mmFileData->getClassData();
         $today = new \DateTime('now');
         $date = $today->format('Y-m-d');
         $dataPoints = array(
             'ClassName'                 => $class->getClassName(),
             'CreatedDate'               => $date,
-            // TODO: generate a list of all use statements that are needed here
-            // to include all children classes in the entity?
-            // either do that here or i can do that later on while i'm generating
-            // the mandatory properties array
-            'NameSpace'                 => $class->getClassNamespace(),
-            'UseStatements'             => implode(PHP_EOL, $class->getUseStatements()),
             'ClassMockName'             => StringFormatterWorker::vsprintf2('%ClassName%Mock',
                 array('ClassName' => $class->getClassName())),
-            'PropertiesAndSettersArray' => $this->generateArrayOfMandatoryProperties($mmFileData),
+            'NameSpace'                 => $class->getClassNamespace(),
+            'UseStatements'             => $this->getAllNamespaces($mmFileData),
             'ClassPath'                 => $class->getClassNamespace() . "\\" . $class->getClassName(),
+            'PropertiesAndSettersArray' => $this->generateArrayOfMandatoryProperties($mmFileData),
             'SetterCode'                => $this->generateSetterCode($mmFileData),
             'ReflectionCode'            => $this->generateNoSetterCode($mmFileData),
         );
@@ -157,6 +150,76 @@ class CodeWorker extends AbstractCodeWorker
         // since both methods work well for inserting data, i guess it depends on how long each one takes?
 
         return $code;
+    }
+
+    /**
+     * Gets namespaces for all classes used by the mocked class
+     *
+     * To help out with generating mocks, we're gathering the namespaces
+     * that are used in typehinting as well as the ones declared at the
+     * top of the file.
+     *
+     * @param   MockMakerFileData $mmFileData
+     * @return  string
+     */
+    protected function getAllNamespaces(MockMakerFileData $mmFileData)
+    {
+        $classUse = $mmFileData->getClassData()->getUseStatements();
+        $propUse = $this->getUseStatementsFromClassProperties($mmFileData->getClassData()->getProperties());
+        $methodUse = $this->getUseStatementsFromClassMethods($mmFileData->getClassData()->getMethods());
+        $statements = array_merge( $classUse, $propUse, $methodUse );
+
+        return join(PHP_EOL, array_unique($statements));
+    }
+
+    /**
+     * Extracts use statements from class properties
+     *
+     * @param   array   $classProperties
+     * @return  array
+     */
+    protected function getUseStatementsFromClassProperties($classProperties)
+    {
+        $statements = [];
+        foreach($classProperties as $visibility => $properties) {
+            if(!empty($properties) ) {
+                foreach($properties as $property) {
+                    if($property->dataType === 'object') {
+                        $nameSpace = ($property->classNamespace) ? $property->classNamespace."\\" : "";
+                        array_push($statements, "use {$nameSpace}{$property->className};");
+                    }
+                }
+            }
+        }
+
+        return $statements;
+    }
+
+    /**
+     * Extracts use statements from class methods
+     *
+     * @param   array   $classMethods
+     * @return  array
+     */
+    protected function getUseStatementsFromClassMethods($classMethods)
+    {
+        $statements = [];
+        foreach($classMethods as $visibility => $methods) {
+            if(!empty($methods) ) {
+                foreach($methods as $method) {
+                    if(!empty($method->arguments)) {
+                        foreach($method->arguments as $argument) {
+                            if($argument->dataType === 'object') {
+                                $nameSpace = ($argument->classNamespace) ? $argument->classNamespace."\\" : "";
+                                array_push($statements, "use {$nameSpace}{$argument->className};");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $statements;
     }
 
     /**

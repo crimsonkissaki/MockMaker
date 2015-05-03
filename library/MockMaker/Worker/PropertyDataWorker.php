@@ -224,7 +224,7 @@ class PropertyDataWorker
     {
         $className = get_class($defaultValue);
         if (($pos = strrpos($className, '\\')) === false) {
-            $data['className'] = "\\{$className}";
+            $data['className'] = $className;
             $data['classNamespace'] = "";
         } else {
             $data['className'] = substr($className, $pos + 1);
