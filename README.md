@@ -48,12 +48,13 @@ Through Composer:
 
 I've tried to include enough configuration options to cover a good majority of use cases.
 
-MockMaker is configured through human-readable settings that should make sense to just about everyone. Hopefully.
+MockMaker is configured through human-readable settings that should make sense
+to just about everyone. Hopefully.
 
 MockMaker supports method chaining, so virtually all of them can be stacked up.
-
-Exceptions to this are the `verifySettings()`, `testRegexPatterns()`, and `createMocks()` methods
-since they are for returning actual results based on configuration settings.
+Exceptions to this are the `verifySettings()`, `testRegexPatterns()`, and
+`createMocks()` methods since they are for returning actual results based on
+configuration settings.
 
 Create a new MockMaker instance.
 ```php
@@ -201,7 +202,7 @@ This setup allows for special cases of entities that have _conditional_ properti
 
 _When store-brand generic works the same._
 
-If you just an object with pre-populated default values using the minimum required properties for viability:
+If you just need an object with pre-populated default values using the minimum required properties for viability:
 
 ```php
 use Path\To\EntityMock;
