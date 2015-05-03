@@ -13,6 +13,7 @@
 namespace MockMaker\Worker;
 
 use MockMaker\MockMaker;
+use MockMaker\Model\MethodData;
 use MockMaker\Model\MockMakerFileData;
 use MockMaker\Model\PropertyData;
 use MockMaker\Worker\StringFormatterWorker;
@@ -135,7 +136,12 @@ class CodeWorker extends AbstractCodeWorker
             'UseStatements'             => $this->getAllNamespaces($mmFileData),
             'ClassPath'                 => $class->getClassNamespace() . "\\" . $class->getClassName(),
             'PropertiesAndSettersArray' => $this->generateArrayOfMandatoryProperties($mmFileData),
-            'SetterCode'                => $this->generateSetterCode($mmFileData),
+            /**
+             * TODO: need to figure out how to dynamically iterate over the properties sent in
+             * and set them with either the default value from the mandatory array or the passed
+             * in value, or null depending.
+             */
+            'SetterCode'                => $this->generateCodeForSetterMethods($mmFileData),
             'ReflectionCode'            => $this->generateNoSetterCode($mmFileData),
         );
 
@@ -167,7 +173,7 @@ class CodeWorker extends AbstractCodeWorker
         $classUse = $mmFileData->getClassData()->getUseStatements();
         $propUse = $this->getUseStatementsFromClassProperties($mmFileData->getClassData()->getProperties());
         $methodUse = $this->getUseStatementsFromClassMethods($mmFileData->getClassData()->getMethods());
-        $statements = array_merge( $classUse, $propUse, $methodUse );
+        $statements = array_merge($classUse, $propUse, $methodUse);
 
         return join(PHP_EOL, array_unique($statements));
     }
@@ -175,17 +181,17 @@ class CodeWorker extends AbstractCodeWorker
     /**
      * Extracts use statements from class properties
      *
-     * @param   array   $classProperties
+     * @param   array $classProperties
      * @return  array
      */
     protected function getUseStatementsFromClassProperties($classProperties)
     {
         $statements = [];
-        foreach($classProperties as $visibility => $properties) {
-            if(!empty($properties) ) {
-                foreach($properties as $property) {
-                    if($property->dataType === 'object') {
-                        $nameSpace = ($property->classNamespace) ? $property->classNamespace."\\" : "";
+        foreach ($classProperties as $visibility => $properties) {
+            if (!empty($properties)) {
+                foreach ($properties as $property) {
+                    if ($property->dataType === 'object') {
+                        $nameSpace = ($property->classNamespace) ? $property->classNamespace . "\\" : "";
                         array_push($statements, "use {$nameSpace}{$property->className};");
                     }
                 }
@@ -198,19 +204,19 @@ class CodeWorker extends AbstractCodeWorker
     /**
      * Extracts use statements from class methods
      *
-     * @param   array   $classMethods
+     * @param   array $classMethods
      * @return  array
      */
     protected function getUseStatementsFromClassMethods($classMethods)
     {
         $statements = [];
-        foreach($classMethods as $visibility => $methods) {
-            if(!empty($methods) ) {
-                foreach($methods as $method) {
-                    if(!empty($method->arguments)) {
-                        foreach($method->arguments as $argument) {
-                            if($argument->dataType === 'object') {
-                                $nameSpace = ($argument->classNamespace) ? $argument->classNamespace."\\" : "";
+        foreach ($classMethods as $visibility => $methods) {
+            if (!empty($methods)) {
+                foreach ($methods as $method) {
+                    if (!empty($method->arguments)) {
+                        foreach ($method->arguments as $argument) {
+                            if ($argument->dataType === 'object') {
+                                $nameSpace = ($argument->classNamespace) ? $argument->classNamespace . "\\" : "";
                                 array_push($statements, "use {$nameSpace}{$argument->className};");
                             }
                         }
@@ -225,44 +231,40 @@ class CodeWorker extends AbstractCodeWorker
     /**
      * Generates the array values for the mandatoryProperties array
      *
-     * @param   MockMakerFileData   $mmFileData
+     * @param   MockMakerFileData $mmFileData
      * @return  string
      */
     protected function generateArrayOfMandatoryProperties(MockMakerFileData $mmFileData)
     {
         $classProperties = $mmFileData->getClassData()->getProperties();
         $code = '';
-        foreach($classProperties as $visibility => $properties) {
-            if(!empty($visibility) ) {
-                $code .= $this->generateMandatoryPropertiesInVisibility( $visibility, $properties);
+        foreach ($classProperties as $visibility => $properties) {
+            if (!empty($visibility)) {
+                $code .= $this->generateMandatoryPropertiesInVisibility($properties);
             }
         }
 
-        return rtrim( $code, PHP_EOL );
+        return rtrim($code, PHP_EOL);
     }
 
     /**
      * Gets the mandatory properties code for an array of PropertyData classes
      * in a particular visibility.
      *
-     * @param   string  $visibility
-     * @param   array   $properties
+     * @param   array $properties
      * @return  string
      */
-    protected function generateMandatoryPropertiesInVisibility($visibility, $properties)
+    protected function generateMandatoryPropertiesInVisibility($properties)
     {
         $code = '';
         $template = "           '%Property%' => array( 'setter' => '%Setter%', 'default' => %DefaultValue% )," . PHP_EOL;
-        foreach( $properties as $k => $property) {
+        foreach ($properties as $k => $property) {
             $args = array(
-                'Property' => $property->name,
-                'Setter' => $property->setter,
-                //'DefaultValue' => $this->generateDefaultValueForMandatoryProperties($property),
+                'Property'     => $property->name,
+                'Setter'       => $property->setter,
                 'DefaultValue' => $this->generateDefaultValueString($property),
             );
             $code .= StringFormatterWorker::vsprintf2($template, $args);
-            //$code .= "      '{$property->name}' => array( 'setter' => '{$property->setter}',";
-            //$code .= " 'default' => '{property->defaultValue}' )," . PHP_EOL;
         }
 
         return $code;
@@ -271,14 +273,12 @@ class CodeWorker extends AbstractCodeWorker
     /**
      * Generate the default value code for a single property|argument
      *
-     * @param	$object ArgumentDetails or PropertyDetails object
-     * @return	string
+     * @param    $object ArgumentDetails or PropertyDetails object
+     * @return    string
      */
-    private function generateDefaultValueString($object)
+    protected function generateDefaultValueString($object)
     {
         if ($object->dataType === 'object') {
-            // TODO: add class of object to use statements?
-            //return $object->className . " \$" . lcfirst($object->name);
             return "new {$object->className}()";
         }
         if (!empty($object->defaultValue)) {
@@ -294,16 +294,16 @@ class CodeWorker extends AbstractCodeWorker
     /**
      * Quick format for argument values.
      *
-     * @param	$type	string
-     * @param	$arg	string
-     * @return	string
+     * @param    $type    string
+     * @param    $arg     string
+     * @return    string
      */
     protected function formatValueForArgs($type, $arg)
     {
         if ($type === 'string') {
             return "'{$arg}'";
         }
-        if (in_array($type, array( 'integer', 'double' ))) {
+        if (in_array($type, array('integer', 'double'))) {
             return $arg;
         }
 
@@ -313,23 +313,109 @@ class CodeWorker extends AbstractCodeWorker
     /**
      * Generates the code properties with setters
      *
-     * @param   MockMakerFileData   $mmFileData
+     * @param   MockMakerFileData $mmFileData
      * @return  string
      */
-    protected function generateSetterCode(MockMakerFileData $mmFileData)
+    protected function generateCodeForSetterMethods(MockMakerFileData $mmFileData)
     {
-        return '        // the setter method code';
+        $code = '';
+        $classMethods = $mmFileData->getClassData()->getMethods();
+        foreach ($classMethods as $visibility => $methods) {
+            if (!empty($methods)) {
+                $code .= $this->generateSetterMethodsCode($methods);
+            }
+        }
+
+        return $code;
+    }
+
+    /**
+     * Generates setter methods code for a visibility
+     *
+     * @param   array $methods
+     * @return  string
+     */
+    protected function generateSetterMethodsCode($methods)
+    {
+        $code = '';
+        foreach ($methods as $k => $method) {
+            if ($method->isSetter) {
+                $code .= $this->generateSetterCode($method);
+            }
+        }
+
+        return $code;
+    }
+
+    /**
+     * Generates the setter code for a single method
+     *
+     * @param   MethodData $method
+     * @return  string
+     */
+    protected function generateSetterCode(MethodData $method)
+    {
+        $code = '';
+        $argStr = $this->generateSetterArgumentString($method);
+        if (in_array($method->visibility, array('private', 'protected'))) {
+            $code .= "		\$r_{$method->name} = \$reflection->getMethod( '{$method->name}' );" . PHP_EOL;
+            $code .= "		\$r_{$method->name}->setAccessible( TRUE );" . PHP_EOL;
+            $code .= "		\$r_{$method->name}->invoke( \$mock, {$argStr} );" . PHP_EOL;
+        } else {
+            $code .= "		\$mock->{$method->name}( {$argStr} );" . PHP_EOL;
+        }
+
+        return $code;
+    }
+
+    /**
+     * Generates the argument string for a setter method
+     *
+     * @param    MethodData $method
+     * @return    string
+     */
+    protected function generateSetterArgumentString(MethodData $method)
+    {
+        if (empty($method->arguments)) {
+            return "''";
+        }
+        foreach ($method->arguments as $k => $arg) {
+            $argArr[] = $this->generateArgStr($arg);
+        }
+
+        return join(', ', $argArr);
+    }
+
+    /**
+     * Generate the code for a single argument
+     *
+     * @param    $details    ArgumentDetails or PropertyDetails object
+     * @return    string
+     */
+    protected function generateArgStr($details)
+    {
+        if ($details->dataType === 'object') {
+            return "{$details->className} \${$details->name}";
+        }
+        if (!empty($details->defaultValue)) {
+            return $this->formatValueForArgs($details->type, $details->defaultValue);
+        }
+        if ((isset($details->allowsNull) && $details->allowsNull) || (isset($details->type) && $details->type)) {
+            return 'NULL';
+        }
+
+        return "'_'";
     }
 
     /**
      * Generates the code properties that do not have setters
      *
-     * @param   MockMakerFileData   $mmFileData
+     * @param   MockMakerFileData $mmFileData
      * @return  string
      */
     protected function generateNoSetterCode(MockMakerFileData $mmFileData)
     {
-        return '        // non-setter method code via reflection';
+        return __METHOD__;
     }
 
     /**
