@@ -1,3 +1,0 @@
-minion_mock_maker_homepage:
-    path:     /hello/{name}
-    defaults: { _controller: MinionMockMakerBundle:Default:index }
