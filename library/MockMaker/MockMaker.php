@@ -13,13 +13,10 @@
 
 namespace MockMaker;
 
-require dirname(dirname(dirname(__FILE__))) . '/vendor/autoload.php';
-
 use MockMaker\Model\ConfigData;
 use MockMaker\Worker\DirectoryWorker;
 use MockMaker\Worker\FileWorker;
 use MockMaker\Worker\FileProcessorWorker;
-use MockMaker\TestHelper;
 
 class MockMaker
 {
