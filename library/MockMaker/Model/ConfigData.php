@@ -23,6 +23,13 @@ class ConfigData
 {
 
     /**
+     * Project root directory path
+     *
+     * @var    string
+     */
+    private $projectRootPath;
+
+     /**
      * Read the directory recursively or not
      *
      * @var    bool
@@ -37,32 +44,18 @@ class ConfigData
     private $overwriteExistingFiles = false;
 
     /**
+     * Mimick the read directory file tree in the write directory or not
+     *
+     * @var    bool
+     */
+    private $preserveDirectoryStructure = true;
+
+    /**
      * Directories to scan for files to mock
      *
      * @var    array
      */
     private $readDirectories = [];
-
-    /**
-     * Directory to write generated mock files
-     *
-     * @var    string
-     */
-    private $mockWriteDirectory;
-
-    /**
-     * All files indicated by user or in read directories
-     *
-     * @var    array
-     */
-    private $allDetectedFiles = [];
-
-    /**
-     * Array of files to generate mocks for
-     *
-     * @var    array
-     */
-    private $filesToMock = [];
 
     /**
      * Regex pattern used to exclude files
@@ -79,18 +72,53 @@ class ConfigData
     private $includeFileRegex;
 
     /**
-     * Mimick the read directory file tree in the write directory or not
-     *
-     * @var    bool
-     */
-    private $preserveDirectoryStructure = true;
-
-    /**
-     * Project root directory path
+     * Directory to write generated mock files
      *
      * @var    string
      */
-    private $projectRootPath;
+    private $mockWriteDirectory;
+
+    /**
+     * Template for mock file names
+     *
+     * @var string;
+     */
+    private $mockFileNameFormat = '%FileName%Mock';
+
+    /**
+     * The base namespace used for mock files
+     *
+     * @var string
+     */
+    private $mockFileBaseNamespace;
+
+    /**
+     * Whether or not to create basic unit tests for mock files
+     *
+     * @var bool
+     */
+    private $generateMockUnitTests = false;
+
+    /**
+     * Directory to write generated mock unit test files
+     *
+     * @var    string
+     */
+    private $mockUnitTestWriteDirectory;
+
+    /**
+     * All files indicated by user or in read directories
+     *
+     * @var    array
+     */
+    private $allDetectedFiles = [];
+
+    /**
+     * Array of files to generate mocks for
+     *
+     * @var    array
+     */
+    private $filesToMock = [];
 
     /**
      * Class that transforms DataFile objects into mock code
@@ -197,6 +225,46 @@ class ConfigData
     public function getProjectRootPath()
     {
         return $this->projectRootPath;
+    }
+
+    /**
+     * Gets the file format for mock file names
+     *
+     * @return string
+     */
+    public function getMockFileNameFormat()
+    {
+        return $this->mockFileNameFormat;
+    }
+
+    /**
+     * Gets the base namespace to be used in generated mocks
+     *
+     * @return string
+     */
+    public function getMockFileBaseNamespace()
+    {
+        return $this->mockFileBaseNamespace;
+    }
+
+    /**
+     * Gets whether or not to generate basic unit tests for mocks
+     *
+     * @return boolean
+     */
+    public function getGenerateMockUnitTests()
+    {
+        return $this->generateMockUnitTests;
+    }
+
+    /**
+     * Gets the directory to save mock unit tests in
+     *
+     * @return string
+     */
+    public function getMockUnitTestWriteDirectory()
+    {
+        return $this->mockUnitTestWriteDirectory;
     }
 
     /**
@@ -369,6 +437,49 @@ class ConfigData
     public function setProjectRootPath($projectRootPath)
     {
         $this->projectRootPath = Formatter::formatDirectoryPath($projectRootPath);
+    }
+
+    /**
+     * Sets the base namespace to be used when creating mock files
+     *
+     * If this is not set, MockMaker will make a best-guess.
+     *
+     * @param string $mockFileBaseNamespace
+     */
+    public function setMockFileBaseNamespace($mockFileBaseNamespace)
+    {
+        $this->mockFileBaseNamespace = $mockFileBaseNamespace;
+    }
+
+    /**
+     * Sets whether or not to generate basic unit tests for mocks
+     *
+     * @param   boolean $generateMockUnitTests
+     */
+    public function setGenerateMockUnitTests($generateMockUnitTests)
+    {
+        $this->generateMockUnitTests = $generateMockUnitTests;
+    }
+
+    /**
+     * Sets the directory to save mock unit tests in
+     *
+     * @param string $mockUnitTestWriteDirectory
+     */
+    public function setMockUnitTestWriteDirectory($mockUnitTestWriteDirectory)
+    {
+        DirectoryWorker::validateWriteDir($mockUnitTestWriteDirectory);
+        $this->mockUnitTestWriteDirectory = $mockUnitTestWriteDirectory;
+    }
+
+    /**
+     * Sets the base mock file name format used when creating mock files
+     *
+     * @param string $mockFileNameFormat
+     */
+    public function setMockFileNameFormat($mockFileNameFormat)
+    {
+        $this->mockFileNameFormat = $mockFileNameFormat;
     }
 
     /**

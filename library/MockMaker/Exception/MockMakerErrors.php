@@ -23,6 +23,8 @@ class MockMakerErrors
     const WRITE_DIR_NOT_EXIST_MSG = "Write directory (%dir%) does not exist.";
     const WRITE_DIR_INVALID_PERMISSIONS = "WRITE_DIR_INVALID_PERMISSIONS_MSG";
     const WRITE_DIR_INVALID_PERMISSIONS_MSG = "Write directory (%dir%) has insufficient permissions for writing.";
+    const WRITE_DIR_CANNOT_CREATE = "WRITE_DIR_CANNOT_CREATE_MSG";
+    const WRITE_DIR_CANNOT_CREATE_MSG = "Unable to create non-existent write directory (%dir%).";
     const READ_DIR_NOT_EXIST = "READ_DIR_NOT_EXIST_MSG";
     const READ_DIR_NOT_EXIST_MSG = "Read directory (%dir%) does not exist.";
     const READ_DIR_INVALID_PERMISSIONS = "READ_DIR_INVALID_PERMISSIONS_MSG";

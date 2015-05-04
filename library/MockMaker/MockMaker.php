@@ -232,6 +232,50 @@ class MockMaker
     }
 
     /**
+     * Sets a format for mock file names to be saved with
+     *
+     * Use %FileName% somewhere in a string to denote where you want the
+     * name of the original file to appear in the mock name.
+     *
+     * E.g. if your file is 'MyEntity.php', and your format is
+     * 'Mock%FileName%Entity', the resulting file will be named
+     * 'MockMyEntityEntity.php'.
+     *
+     * By default, MockMaker will save mocks under the format of
+     * '%FileName%Mock'.
+     *
+     * @param   string  $format
+     * @return  MockMaker
+     */
+    public function saveMocksWithFileNameFormat($format)
+    {
+        $this->config->setMockFileNameFormat($format);
+
+        return $this;
+    }
+
+    /**
+     * Sets a 'base' namespace for mocks
+     *
+     * This is used when generating mock code. MockMaker can make
+     * a best-guess attempt at generating this for you, but it's
+     * difficult to be psychic and get it right. Basically, whatever
+     * the valid namespace should be for Whatever\Save\Path\You\Picked
+     * should be set here. It will be used for both top-level 'read dir'
+     * classes, and appended to for sub-level classes detected during
+     * a recursive read.
+     *
+     * @param   string  $namespace
+     * @return  MockMaker
+     */
+    public function useBaseNamespaceForMocks($namespace)
+    {
+        $this->config->setMockFileBaseNamespace($namespace);
+
+        return $this;
+    }
+
+    /**
      * NOT YET IMPLEMENTED
      *
      * Tells MockMaker to generate basic unit tests for the mock files
@@ -244,6 +288,8 @@ class MockMaker
      * @return    MockMaker
     public function generateMockUnitTests()
      * {
+     * $this->config->setGenerateMockUnitTests(true);
+     *
      * return $this;
      * }
      */
@@ -259,9 +305,11 @@ class MockMaker
      * @param   string $unitTestDirectory Directory to save unit test files in
      * @return  MockMaker
     public function saveUnitTestsTo($unitTestDirectory)
-     *                                    {
-     *                                    return $this;
-     *                                    }
+     * {
+     * $this->config->setMockUnitTestWriteDirectory($unitTestDirectory);
+     *
+     * return $this;
+     * }
      */
 
     /**

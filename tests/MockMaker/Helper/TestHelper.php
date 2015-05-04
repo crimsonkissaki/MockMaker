@@ -10,11 +10,18 @@
 
 namespace MockMaker\Helper;
 
-use Doctrine\Common\Util\Debug;
-use Doctrine\Common\Persistence\Proxy;
-
 class TestHelper
 {
+
+    /**
+     * Returns the path to the root directory
+     *
+     * @return  string
+     */
+    public static function getRootDir()
+    {
+        return dirname(dirname(dirname(dirname(__FILE__)))) . '/';
+    }
 
     /**
      * Use to output variables to terminal or browser
@@ -52,10 +59,6 @@ class TestHelper
                 echo 'NULL';
                 break;
             case (is_object($var)):
-                if ($var instanceof Proxy) {
-                    Debug::dump($var, 1);
-                    break;
-                }
                 if ($var instanceof \Exception) {
                     echo $var->getTraceAsString();
                     break;

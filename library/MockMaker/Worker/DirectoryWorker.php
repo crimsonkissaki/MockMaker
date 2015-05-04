@@ -64,7 +64,7 @@ class DirectoryWorker
         if (!is_dir($dir)) {
             if (!mkdir($dir, 0777)) {
                 throw new MockMakerException(
-                    MockMakerErrors::generateMessage(MockMakerErrors::WRITE_DIR_NOT_EXIST, array('dir' => "'{$dir}'"))
+                    MockMakerErrors::generateMessage(MockMakerErrors::WRITE_DIR_CANNOT_CREATE, array('dir' => $dir))
                 );
             }
         }

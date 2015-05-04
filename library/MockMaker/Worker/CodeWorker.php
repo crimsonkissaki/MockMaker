@@ -18,6 +18,7 @@ use MockMaker\Model\MockMakerFileData;
 use MockMaker\Model\PropertyData;
 use MockMaker\Worker\StringFormatterWorker;
 use MockMaker\Worker\AbstractCodeWorker;
+use MockMaker\Worker\DirectoryWorker;
 use MockMaker\Helper\TestHelper;
 
 class CodeWorker extends AbstractCodeWorker
@@ -130,8 +131,8 @@ class CodeWorker extends AbstractCodeWorker
         $dataPoints = array(
             'ClassName'                 => $class->getClassName(),
             'CreatedDate'               => $date,
-            'ClassMockName'             => StringFormatterWorker::vsprintf2('%ClassName%Mock',
-                array('ClassName' => $class->getClassName())),
+            'ClassMockName'             => StringFormatterWorker::vsprintf2($mmFileData->getMockFileNameFormat(),
+                array('FileName' => $class->getClassName())),
             'NameSpace'                 => $mmFileData->getMockFileNamespace(),
             'UseStatements'             => $this->generateUseStatements($mmFileData),
             'ClassPath'                 => $class->getClassNamespace() . "\\" . $class->getClassName(),
@@ -381,26 +382,20 @@ class CodeWorker extends AbstractCodeWorker
     protected function createMockFileIfRequested(MockMakerFileData $mmFileData, $code)
     {
         if ($mmFileData->getMockWriteDirectory()) {
-            $filePath = $mmFileData->getMockWriteDirectory() . $mmFileData->getClassData()->getClassName() . 'Mock.php';
+            $filePath = $mmFileData->getMockFileSavePath();
 
-            echo "-> original file path: {$mmFileData->getSourceFileFullPath()}\n";
-            echo "-> original class namespace: {$mmFileData->getClassData()->getClassNamespace()}\n";
-            echo "-> new file save path: {$filePath}\n";
-            echo "-> file path from worker: {$mmFileData->getMockWriteDirectory()}\n";
-            echo "-> full file save path from worker: {$mmFileData->getMockFileSavePath()}\n";
-            echo "\n";
-
-            TestHelper::dbug($mmFileData, "file data", true);
-            //echo "filepath for $mmFileData->get"
-            /*
             if (!$mmFileData->getOverwriteExistingFiles() && file_exists($filePath)) {
                 return false;
             }
+
+            // ensure that the directory we're attempting to write to exists
+            $writeDir = substr($filePath, 0, strrpos($filePath, '/'));
+            DirectoryWorker::validateWriteDir($writeDir);
+
             $writeResults = file_put_contents($filePath, $code);
             if (!$writeResults) {
                 throw new \Exception("error writing code to file");
             }
-            */
 
             return true;
         }

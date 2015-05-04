@@ -20,6 +20,13 @@ class MockMakerFileData
 {
 
     /**
+     * Path to the project root directory
+     *
+     * @var string
+     */
+    private $projectRootPath;
+
+    /**
      * Fully qualified file path & name
      *
      * @var string
@@ -32,6 +39,34 @@ class MockMakerFileData
      * @var string
      */
     private $sourceFileName;
+
+    /**
+     * Path to the mock file write directory
+     *
+     * @var string
+     */
+    private $mockWriteDirectory;
+
+    /**
+     * Overwrite existing files or not
+     *
+     * @var bool
+     */
+    private $overwriteExistingFiles;
+
+    /**
+     * Mock file base namespace
+     *
+     * @var string
+     */
+    private $mockFileBaseNamespace;
+
+    /**
+     * File name format for mock file
+     *
+     * @var string
+     */
+    private $mockFileNameFormat;
 
     /**
      * File name of mock file
@@ -48,32 +83,11 @@ class MockMakerFileData
     private $mockFileNamespace;
 
     /**
-     * Path to the project root directory
-     *
-     * @var string
-     */
-    private $projectRootPath;
-
-    /**
-     * Path to the mock file write directory
-     *
-     * @var string
-     */
-    private $mockWriteDirectory;
-
-    /**
      * Full path to save mock file
      *
      * @var string
      */
     private $mockFileSavePath;
-
-    /**
-     * Overwrite existing files or not
-     *
-     * @var bool
-     */
-    private $overwriteExistingFiles;
 
     /**
      * ClassData data object
@@ -100,6 +114,16 @@ class MockMakerFileData
     public function getSourceFileName()
     {
         return $this->sourceFileName;
+    }
+
+    /**
+     * Gets the mock file name format
+     *
+     * @return string
+     */
+    public function getMockFileNameFormat()
+    {
+        return $this->mockFileNameFormat;
     }
 
     /**
@@ -153,6 +177,16 @@ class MockMakerFileData
     }
 
     /**
+     * Gets the user defined mock file base namespace
+     *
+     * @return string
+     */
+    public function getMockFileBaseNamespace()
+    {
+        return $this->mockFileBaseNamespace;
+    }
+
+    /**
      * Gets whether or not to overwrite existing mock files
      *
      * @return bool
@@ -193,6 +227,19 @@ class MockMakerFileData
     public function setSourceFileName($sourceFileName)
     {
         $this->sourceFileName = $sourceFileName;
+
+        return $this;
+    }
+
+    /**
+     * Sets the mock file name format
+     *
+     * @param   string      $mockFileNameFormat
+     * @return  MockMakerFileData
+     */
+    public function setMockFileNameFormat($mockFileNameFormat)
+    {
+        $this->mockFileNameFormat = $mockFileNameFormat;
 
         return $this;
     }
@@ -258,6 +305,19 @@ class MockMakerFileData
     public function setMockFileSavePath($mockFileSavePath)
     {
         $this->mockFileSavePath = $mockFileSavePath;
+
+        return $this;
+    }
+
+    /**
+     * Sets the user defined mock file base namespace
+     *
+     * @param   string  $mockFileBaseNamespace
+     * @return  MockMakerFileData
+     */
+    public function setMockFileBaseNamespace($mockFileBaseNamespace)
+    {
+        $this->mockFileBaseNamespace = $mockFileBaseNamespace;
 
         return $this;
     }
