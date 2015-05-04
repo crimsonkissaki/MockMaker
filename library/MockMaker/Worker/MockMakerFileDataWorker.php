@@ -149,7 +149,7 @@ class MockMakerFileDataWorker
             // this is only really required if we're reading a directory for files
             $readDirs = $config->getReadDirectories();
 
-            if(empty($readDirs) ) { return $mockFilePath; }
+            if(empty($readDirs) || !$config->getPreserveDirectoryStructure() ) { return $mockFilePath; }
 
             $targetOriginDir = false;
             foreach( $readDirs as $k => $readDir ) {
