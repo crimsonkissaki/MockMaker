@@ -77,6 +77,14 @@ class {$dataPoints['ClassMockName']}
      */
     public static function getMock(\$properties = [], \$ignore = [])
     {
+        // fix for properties that are not passed in with values
+        // and need to be assigned a null default
+        foreach(\$properties as \$key => \$value ) {
+            if(is_int(\$key)) {
+                \$properties[\$value] = null;
+                unset(\$properties[\$key]);
+            }
+        }
         \$defaults = self::getMandatoryProperties();
         \$mock = new {$dataPoints['ClassName']}();
         \$reflection = new \ReflectionClass('{$dataPoints['ClassPath']}');

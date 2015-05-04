@@ -169,13 +169,13 @@ the mock classes it generates, but that depends on having access to Composer.
 If the automatic namespaces are not right, you can specify a 'base namespace'
 here.
 
-If you're reading files from a directory with sub-directories, MockMaker should
+If you're recursively reading files from a directory with sub-directories, MockMaker should
 be able to adjust the namespace accordingly.
 
 _If you don't use PSR-4 or PSR-0 namespaces, you're gonna have a bad time._
 ```php
 // @param   string  $namespace  Base namespace to use for mocks
-$mocks->useBaseNamespaceForMocks($codeWorker);
+$mocks->useBaseNamespaceForMocks($namespace);
 ```
 
 Returns an object with the results of your MockMaker configuration  settings.
@@ -194,7 +194,7 @@ Returns an associative array of files that are filtered out by your regex patter
 $mocks->testRegexPatterns();
 ```
 
-Create the mock files.
+Generate the mock file code, and either return it or write it to files.
 ```php
 // @return  string
 $mocks->createMocks();
