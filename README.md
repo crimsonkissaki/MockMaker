@@ -43,7 +43,16 @@ but I needed to get this up and available for testing with pulling into Composer
 Through Composer:
 
 ```bin
-    composer require-dev mockmaker/mockmaker
+    composer require-dev crimsonkissaki/mockmaker:dev-master
+```
+
+*NOTE* You will have to update your composer.json file with a repository entry for this github repo as I have not yet uploaded the repo to packagist. I will do so when I'm happy that it will work on most use-cases.
+
+```json
+        {
+            "type": "vcs",
+            "url": "https://github.com/crimsonkissaki/MockMaker.git"
+        }
 ```
 
 ## MockMaker Configuration & Usage:
@@ -298,8 +307,10 @@ When the mock is returned, any properties defined in the `$ignore` array will be
 ## Known Bugs & Issues
 
  * Classes with `__construct()` arguments will probably cause MockMaker to barf. I'm working on a fix using Mockery.
- * Custom CodeWorkers and Templates haven't been fully tested.
+ * Custom CodeWorkers and MockFileTemplates haven't been fully tested.
+ * Currently not working on packagist, as I haven't uploaded it to them yet. Still testing phase for now.
 
 ## Future Improvements:
 
  * Adding in automatic generation of basic UnitTests for mocks, so you know when you have it set up properly.
+ * Automatic creation of a 'MockManager' file that allows you to pull in mocks through a single class.
