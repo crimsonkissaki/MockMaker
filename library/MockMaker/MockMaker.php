@@ -353,9 +353,9 @@ class MockMaker
         /* @var $fileProcessorWorker FileProcessorWorker */
         $fileProcessorWorker = new FileProcessorWorker($this->config);
         $mockMakerFileDataArray = $fileProcessorWorker->processFiles();
-        $mockData = $this->config->getCodeWorker()->generateCodeFromMockMakerFileDataObjects($mockMakerFileDataArray);
+        $mockCode = $this->config->getCodeWorker()->generateCodeFromMockMakerFileDataObjects($mockMakerFileDataArray);
 
-        return $mockData;
+        return $mockCode;
     }
 
     /**

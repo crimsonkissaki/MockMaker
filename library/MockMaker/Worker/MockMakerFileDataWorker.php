@@ -90,9 +90,11 @@ class MockMakerFileDataWorker
      */
     private function generateMockFileNamespace($mockFileSavePath, ConfigData $config)
     {
-        $trimmedPath = rtrim(str_replace($config->getProjectRootPath(), '', $config->getMockWriteDirectory()), '/');
+        $mockDirectory = ($config->getMockWriteDirectory())
+            ? $config->getMockWriteDirectory()
+            : $this->removeLastNameFromPath($mockFileSavePath);
         // WAG of last resort
-        $wagNamespace = str_replace('/', '\\', $trimmedPath);
+        $wagNamespace = str_replace('/', '\\', str_replace($config->getProjectRootPath(), '', $mockDirectory));
 
         if( $config->getMockFileBaseNamespace() ) {
             return $this->determineNamespaceWithBaseNamespace($mockFileSavePath, $config->getMockFileBaseNamespace());
@@ -141,9 +143,11 @@ class MockMakerFileDataWorker
      */
     private function determineMockFileSavePath($targetFile, ConfigData $config)
     {
+        $fileName = $this->getFileName($targetFile);
+        $mockFileName = $this->generateMockFileName($fileName, $config->getMockFileNameFormat());
+        $targetFilePath = $this->removeLastNameFromPath($targetFile);
+
         if($config->getMockWriteDirectory()) {
-            $fileName = $this->getFileName($targetFile);
-            $mockFileName = $this->generateMockFileName($fileName, $config->getMockFileNameFormat());
             $mockFilePath = $config->getMockWriteDirectory() . $mockFileName;
 
             // this is only really required if we're reading a directory for files
@@ -162,7 +166,6 @@ class MockMakerFileDataWorker
 
             // ok, now we know the origin directory for this file we're working on
             // we need to find the relative path to the file from this base file
-            $targetFilePath = $this->removeLastNameFromPath($targetFile);
             $relativeTargetFilePath = ($targetFilePath.'/' === $targetOriginDir)
                 ? '' : str_replace( $targetOriginDir, '', $targetFilePath);
             $mockFilePath = $config->getMockWriteDirectory()
@@ -171,6 +174,9 @@ class MockMakerFileDataWorker
 
             return $mockFilePath;
         }
+
+        // no read directory specified - best guess
+        return $targetFilePath . $mockFileName;
     }
 
     /**

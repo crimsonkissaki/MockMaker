@@ -108,7 +108,6 @@ class CodeWorker extends AbstractCodeWorker
     public function generateCodeFromMockMakerFileDataObjects($mockMakerFileDataObjects)
     {
         foreach ($mockMakerFileDataObjects as $mmFileData) {
-            //TestHelper::dbug($mmFileData, "file data", true);
             $code = $this->generateMockCodeFromMockMakerFileDataObject($mmFileData);
             $this->addMockCode($code);
             $this->createMockFileIfRequested($mmFileData, $code);
@@ -140,15 +139,8 @@ class CodeWorker extends AbstractCodeWorker
             'MockVisibilityArrays'      => $this->generateMockVisibilityArrays($mmFileData),
         );
 
-        // this works fine, both with fgc and include
-        //$mockCodeTemplate = file_get_contents($this->getMockTemplate());
-        //$mockCodeTemplate = include($this->getMockTemplate());
-        //$code = StringFormatterWorker::vsprintf2($mockCodeTemplate, $dataPoints);
-
         // this works too
         $code = include($this->getMockTemplate());
-
-        // since both methods work well for inserting data, i guess it depends on how long each one takes?
 
         return $code;
     }
