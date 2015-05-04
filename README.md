@@ -34,6 +34,9 @@ At its core, MockMaker takes a list of files and/or directories and generates mo
 
 Flexible and extendable, the seed code can be altered to suit your particular project with relative ease, so after the initial setup you can re-run MockMaker for any new entities that get added in, or existing entities that change with little to no fuss. What's more, once MockMaker has made your files it's done. You don't have to include it in your code base and can use the generated files like any other project class.
 
+Please be aware, I consider MockMaker to be in Beta stage. There is still some functionality that is not completely working,
+but I needed to get this up and available for testing with pulling into Composer.
+
 
 ## Installation:
 
@@ -134,6 +137,8 @@ _This will be applied to any files obtained through `mockTheseFiles()` or `getFi
 $mocks->includeFilesWithFormat($regex);
 ```
 
+**Warning!** Not yet working!
+
 MockMaker has a default mock template I created that has worked well in a majority of my testing.
 
 _If you have a special flavour you would like to use instead, place it here. Please refer to
@@ -142,6 +147,8 @@ the README in the `Template` directory for instructions._
 // @param   string  $template   Fully qualified path to template file
 $mocks->useThisMockTemplate($template);
 ```
+
+**Warning!** Not yet working!
 
 MockMaker has a default `CodeWorker` class that processes various things to generate the data
 that is inserted into the `DefaultMockTemplate` file.
@@ -286,3 +293,13 @@ $mock = EntityMock::getMock( $properties, $ignore );
 ```
 
 When the mock is returned, any properties defined in the `$ignore` array will be ... ignored. Even if they're in the defaults array or passed in with the `$properties` array, nothing will happen to them.
+
+
+## Known Bugs & Issues
+
+ * Classes with `__construct()` arguments will probably cause MockMaker to barf. I'm working on a fix using Mockery.
+ * Custom CodeWorkers and Templates haven't been fully tested.
+
+## Future Improvements:
+
+ * Adding in automatic generation of basic UnitTests for mocks, so you know when you have it set up properly.
