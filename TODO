@@ -16,14 +16,9 @@ MockMaker:
 
     allow for multiple (in|ex)clude regex strings?
 
-    re-include custom name format for mock class
-
     use setters of properties to check for additional typehints to set property default values
 
 FileGenerator:
-
-    If files are found in a sub-directory, save them to the same sub-directory
-    - allow preserveTree override
 
     Is it possible to automatically include mock calls for known classes?
     - this might require analyzing the ORM annotations ...
@@ -42,14 +37,12 @@ ArgumentWorker:
         php >= 5.6
             isVariadic()	-> function sum(...$numbers) {} -> elipsis indicated method overloading
 
-
-
 BUGS:
-
-    static file assignments in default method are enclosed in quotes
-
-    all public methods are making it in, not just setters (is it '/^set/' ?)
 
     add a check for setter methods that don't have an associated property
     - put them in, but comment them out
     - might need to change the method worker to ensure it DOES have a property
+    
+    mkdir() operations that fail return NO good error messages
+    
+    test to be sure that 'ignoreDirectoryStructure()' works as intended
