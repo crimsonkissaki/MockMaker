@@ -69,7 +69,7 @@ class MockMakerFileDataWorker
      */
     private function generateMockFileName($fileName, $nameFormat)
     {
-        $args = array('FileName' => rtrim($fileName, '.php'));
+        $args = array('FileName' => str_replace('.php', '', $fileName));
 
         return StringFormatterWorker::vsprintf2($nameFormat, $args) . '.php';
     }

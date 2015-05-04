@@ -145,7 +145,7 @@ class FileWorker
             if (substr($file, -4) !== '.php') {
                 continue;
             }
-            $fileName = rtrim(join('', array_slice(explode('/', $file), -1)), '.php');
+            $fileName =  str_replace('.php', '', join('', array_slice(explode('/', $file), -1)));
             if (preg_match($regex, $fileName) === 1) {
                 $matches[] = $file;
             }

@@ -101,7 +101,6 @@ class ClassDataWorker
      */
     public function generateNewObject(MockMakerFileData $fileObj)
     {
-
         $className = $this->determineClassName($fileObj);
         $classNamespace = $this->getClassNamespace($fileObj);
         $reflectionClass = $this->getReflectionClassInstance("{$classNamespace}\\{$className}");
@@ -138,7 +137,7 @@ class ClassDataWorker
      */
     private function determineClassName(MockMakerFileData $fileObj)
     {
-        return rtrim($fileObj->getSourceFileName(), '.php');
+        return str_replace('.php', '', $fileObj->getSourceFileName());
     }
 
     /**
@@ -196,7 +195,7 @@ class ClassDataWorker
         // simplify things by removing the root dir path from the file name
         $shortPath = str_replace($fileObj->getProjectRootPath(), '', $fileObj->getSourceFileFullPath());
         // remove extension and beginning / if present
-        $basePath = ltrim(rtrim($shortPath, '.php'), '/');
+        $basePath = ltrim(str_replace('.php', '', $shortPath), '/');
         // attempt to resolve PSR-0 and PSR-4 namespaces
         $classPath = str_replace(array(DIRECTORY_SEPARATOR, '_'), '\\', $basePath);
 
