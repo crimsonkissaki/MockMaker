@@ -41,6 +41,13 @@ class MockMakerFileData
     private $mockFileName;
 
     /**
+     * Namespace of the mock file
+     *
+     * @var string
+     */
+    private $mockFileNamespace;
+
+    /**
      * Path to the project root directory
      *
      * @var string
@@ -53,6 +60,20 @@ class MockMakerFileData
      * @var string
      */
     private $mockWriteDirectory;
+
+    /**
+     * Full path to save mock file
+     *
+     * @var string
+     */
+    private $mockFileSavePath;
+
+    /**
+     * Overwrite existing files or not
+     *
+     * @var bool
+     */
+    private $overwriteExistingFiles;
 
     /**
      * ClassData data object
@@ -92,6 +113,16 @@ class MockMakerFileData
     }
 
     /**
+     * Gets the mock file's namespace
+     *
+     * @return string
+     */
+    public function getMockFileNamespace()
+    {
+        return $this->mockFileNamespace;
+    }
+
+    /**
      * Gets the path to the project root directory
      *
      * @return  string
@@ -111,6 +142,25 @@ class MockMakerFileData
         return $this->mockWriteDirectory;
     }
 
+    /**
+     * Gets the full path for saving the mock file
+     *
+     * @return string
+     */
+    public function getMockFileSavePath()
+    {
+        return $this->mockFileSavePath;
+    }
+
+    /**
+     * Gets whether or not to overwrite existing mock files
+     *
+     * @return bool
+     */
+    public function getOverwriteExistingFiles()
+    {
+        return $this->overwriteExistingFiles;
+    }
     /**
      * Gets the file's ClassData object
      *
@@ -160,6 +210,19 @@ class MockMakerFileData
         return $this;
     }
 
+     /**
+     * Sets the mock file's namespace
+     *
+     * @param   string  $mockFileNamespace
+     * @return  MockMakerFileData
+     */
+    public function setMockFileNamespace($mockFileNamespace)
+    {
+        $this->mockFileNamespace = $mockFileNamespace;
+
+        return $this;
+    }
+
     /**
      * Sets the path to the project root directory
      *
@@ -182,6 +245,32 @@ class MockMakerFileData
     public function setMockWriteDirectory($mockWriteDirectory)
     {
         $this->mockWriteDirectory = $mockWriteDirectory;
+
+        return $this;
+    }
+
+    /**
+     * Sets the full path for saving the mock file
+     *
+     * @param   string
+     * @return  MockMakerFileData
+     */
+    public function setMockFileSavePath($mockFileSavePath)
+    {
+        $this->mockFileSavePath = $mockFileSavePath;
+
+        return $this;
+    }
+
+    /**
+     * Sets whether or not to overwrite existing mock files
+     *
+     * @param   bool
+     * @return  MockMakerFileData
+     */
+    public function setOverwriteExistingFiles($overwriteExistingFiles)
+    {
+        $this->overwriteExistingFiles = $overwriteExistingFiles;
 
         return $this;
     }

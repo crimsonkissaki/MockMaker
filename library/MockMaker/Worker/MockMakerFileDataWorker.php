@@ -16,6 +16,7 @@ namespace MockMaker\Worker;
 use MockMaker\Model\MockMakerFileData;
 use MockMaker\Model\ConfigData;
 use MockMaker\Worker\StringFormatterWorker;
+use MockMaker\Helper\TestHelper;
 
 class MockMakerFileDataWorker
 {
@@ -34,8 +35,11 @@ class MockMakerFileDataWorker
         $obj->setSourceFileFullPath($file)
             ->setSourceFileName($fileName)
             ->setMockFileName($this->generateMockFileName($fileName))
+            ->setMockFileNamespace($this->generateMockFileNamespace($config))
             ->setProjectRootPath($config->getProjectRootPath())
-            ->setMockWriteDirectory($config->getMockWriteDirectory());
+            ->setMockWriteDirectory($config->getMockWriteDirectory())
+            ->setMockFileSavePath($this->determineMockFileSavePath($file, $config))
+            ->setOverwriteExistingFiles($config->getOverwriteExistingFiles());
 
         return $obj;
     }
@@ -63,4 +67,33 @@ class MockMakerFileDataWorker
 
         return StringFormatterWorker::vsprintf2('%FileName%Mock.php', $args);
     }
+
+    /**
+     * Generates the mock file's namespace
+     *
+     * @param   ConfigData $config ConfigData object
+     * @return  string
+     */
+    private function generateMockFileNamespace(ConfigData $config)
+    {
+        $trimmedPath = rtrim(str_replace($config->getProjectRootPath(), '', $config->getMockWriteDirectory()), '/');
+        $namespace = str_replace('/', '\\', $trimmedPath);
+
+        return $namespace;
+    }
+
+    private function determineMockFileSavePath($file, ConfigData $config)
+    {
+        if($config->getMockWriteDirectory()) {
+            /**
+             * ok, so basically we have 2 root directories:
+             * the original file directory
+             * and the file save path directory
+             */
+            //$filePath = $config->getMockWriteDirectory() . $mmFileData->getClassData()->getClassName() . 'Mock.php';
+            return __METHOD__;
+        }
+    }
+
 }
+

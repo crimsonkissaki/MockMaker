@@ -38,7 +38,7 @@ class MockMakerTest extends \PHPUnit_Framework_TestCase
             //->recursively()
             ->mockTheseFiles($this->entitiesDir . 'TestEntity.php')
             //->excludeFilesWithFormat('/^Method/')
-            //->saveMockFilesIn($this->rootDir.'/tests/reports/')
+            ->saveMockFilesIn($this->rootDir.'/tests/reports/')
             ->createMocks();
             //->verifySettings();
 

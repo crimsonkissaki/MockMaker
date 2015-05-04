@@ -83,8 +83,8 @@ class PropertyDataWorker
         $classProperties['private'] = $class->getProperties(\ReflectionProperty::IS_PRIVATE);
         $classProperties['protected'] = $class->getProperties(\ReflectionProperty::IS_PROTECTED);
         $classProperties['public'] = $class->getProperties(\ReflectionProperty::IS_PUBLIC);
+        $classProperties['static'] = $class->getProperties(\ReflectionProperty::IS_STATIC);
 
-        //$classProperties['static'] = $class->getProperties(\ReflectionProperty::IS_STATIC);
         return $classProperties;
     }
 
@@ -120,7 +120,15 @@ class PropertyDataWorker
     {
         $results = [];
         foreach ($properties as $key => $value) {
-            array_push($results, $this->getPropertyDetails($visibility, $key, $value));
+            // it causes problems down the line to have static
+            // properties set in the other visibilities
+            $prop = $this->getPropertyDetails($visibility, $key, $value);
+            if( $visibility !== 'static' && empty($prop->isStatic) ) {
+                array_push($results, $prop);
+            }
+            if( $visibility === 'static' ) {
+                array_push($results, $prop);
+            }
         }
 
         return $results;

@@ -50,39 +50,59 @@ class {$dataPoints['ClassMockName']}
     public static function getMandatoryProperties()
     {
         return array(
-{$dataPoints['PropertiesAndSettersArray']}
+{$dataPoints['PropertyDefaults']}
         );
     }
 
     /**
      * Customized generation of mock {$dataPoints['ClassName']} objects
      *
-     * @param	array|null  \$properties
-     * null (default): Returns a 'bare bones' mock. Any properties in the
-     * 'mandatoryProperties' array will be hydrated based on the defined
-     * 'setter' method and 'default' value.
-     *
-     * array: Associative array in 'property' => 'value' format.
+     * @param   array   \$properties
+     * Associative array in 'property' => 'value' format.
      * Returns a mock hydrated with given values for given properties.
      * Any properties specified in the 'mandatoryProperties' array that are
      * not supplied in the array will be hydrated based on the defined 'setter'
      * method and 'default' value.
      *
-     * @param	array|null  \$ignore
+     * An empty array returns a 'bare bones' mock. Any properties in the
+     * 'mandatoryProperties' array will be hydrated based on the defined
+     * 'setter' method and 'default' value.
+     *
+     * @param	array   \$ignore
      * Properties that you want getMock() to completely ignore while
      * hydrating the mock object. Overrides properties defined in the
      * 'mandatoryProperties' array.
      *
      * @return	{$dataPoints['ClassName']}
      */
-    public static function getMock(\$properties = null, \$ignore = null)
+    public static function getMock(\$properties = [], \$ignore = [])
     {
         \$defaults = self::getMandatoryProperties();
         \$mock = new {$dataPoints['ClassName']}();
         \$reflection = new \ReflectionClass('{$dataPoints['ClassPath']}');
 
-{$dataPoints['SetterCode']}
-{$dataPoints['ReflectionCode']}
+{$dataPoints['MockVisibilityArrays']}
+
+        foreach( \$defaults as \$property => \$default ) {
+            if(!in_array(\$property, \$ignore) ) {
+                \$value = (isset(\$properties[\$property])) ? \$properties[\$property] : \$defaults[\$property];
+                if(!in_array(\$property, \$constant)) {
+                    \$r_prop = \$reflection->getProperty(\$property);
+                    \$r_prop->setAccessible(true);
+                    \$r_prop->setValue(\$mock, \$value);
+                }
+            }
+        }
+
+        foreach( \$properties as \$property => \$value ) {
+            if(!in_array(\$property, \$ignore) ) {
+                if(!in_array(\$property, \$constant)) {
+                    \$r_prop = \$reflection->getProperty(\$property);
+                    \$r_prop->setAccessible(true);
+                    \$r_prop->setValue(\$mock, \$value);
+                }
+            }
+        }
 
         return \$mock;
     }
