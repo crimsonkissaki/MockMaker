@@ -1,6 +1,6 @@
 ## MockMaker
 
-An automated entity/class "mock" file seeder.
+An automated entity class "mock" file seeder.
 
 Whether you call them doubles, stubs, mocks, partials, fakes, or something else there are times when a mocking library such as PHPUnit's mockBuilder, Mockery, Prophecy, etc. just doesn't do exactly what you need or want. Sometimes you just _need_ a concrete class implementation to run through the unit test wringer or a full end to end functional unit test suite.
 
@@ -314,3 +314,13 @@ When the mock is returned, any properties defined in the `$ignore` array will be
 
  * Adding in automatic generation of basic UnitTests for mocks, so you know when you have it set up properly.
  * Automatic creation of a 'MockManager' file that allows you to pull in mocks through a single class.
+ * ORM awareness:
+   * Ability to parse ORM specific annotations for data type hints and class relationships.
+ * Resource aware "hereditary" mock generation (dependent on ORM feature):
+   * Entity properties that are links to other entities (children classes, relationships, etc) will have their default value set to the mock of that entity.
+   * If those mocked entities do not exist it will add them to a queue for mocking.
+ * Data seeder:
+   * Ability to connect to an existing DB and pull in N records for a generated "data seeder" file, which will allow you to pass in a parameter to a mock construct and get actual valid testing data pre-populated in your mock.
+     * E.g. if you want a CustomerEntity pre-populated with known-good DB data, you could pass in a 'property'=>'value' pair ('id'=>1), and it will return the entr(y|ies*) that match that criteria.
+     * *Multiple entries would only work for ArrayIterator-type (one-to-many) relationships.
+ * Possible integration with a "lorum ipsum" generator to auto-fill values for entity properties.
