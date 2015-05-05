@@ -324,3 +324,4 @@ When the mock is returned, any properties defined in the `$ignore` array will be
      * E.g. if you want a CustomerEntity pre-populated with known-good DB data, you could pass in a 'property'=>'value' pair ('id'=>1), and it will return the entr(y|ies*) that match that criteria.
      * *Multiple entries would only work for ArrayIterator-type (one-to-many) relationships.
  * Possible integration with a "lorum ipsum" generator to auto-fill values for entity properties.
+ * Entity Mapper: show relationships between various entities in nice human-readable format
