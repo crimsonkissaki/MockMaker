@@ -51,7 +51,7 @@ class CodeWorker extends AbstractCodeWorker
     public function getMockTemplate()
     {
         if (!$this->mockTemplate) {
-            return dirname(dirname(__FILE__)) . '/FileTemplates/DefaultMockTemplate.php';
+            return dirname(dirname(__FILE__)) . '/FileTemplates/DefaultMockTemplateStrings.php';
         }
 
         return $this->mockTemplate;
@@ -116,7 +116,9 @@ class CodeWorker extends AbstractCodeWorker
             );
         }
         foreach ($mockMakerFileDataObjects as $mmFileData) {
-            $code = $this->generateMockCodeFromMockMakerFileDataObject($mmFileData);
+            $code = '';
+            //$code = $this->generateMockCodeFromMockMakerFileDataObject($mmFileData);
+            $code .= $this->generateMockUnitTestCodeFromMockMakerFileDataObject($mmFileData);
             $this->addMockCode($code);
             $this->createMockFileIfRequested($mmFileData, $code);
         }
@@ -126,6 +128,8 @@ class CodeWorker extends AbstractCodeWorker
 
     /**
      * Generates mock code from a MockMakerFileData object
+     *
+     * TODO: I need to create a "MockFile" model to put in the FileData
      *
      * @param   MockMakerFileData $mmFileData
      * @return  string
@@ -147,10 +151,30 @@ class CodeWorker extends AbstractCodeWorker
             'MockVisibilityArrays' => $this->generateMockVisibilityArrays($mmFileData),
         );
 
-        // this works too
-        $code = include($this->getMockTemplate());
+        // throwing PHPUnit errors due to undefined variable: dataPoints
+        //$code = include($this->getMockTemplate());
+
+        $templateCode = include($this->getMockTemplate());
+        $code = StringFormatterWorker::vsprintf2($templateCode, $dataPoints);
 
         return $code;
+    }
+
+    /**
+     * Generates basic unit test code from a MockMakerFileData object
+     *
+     * TODO: before doing this I need to create a "UnitTestFile" model to put in the FileData
+     *
+     * @param   MockMakerFileData $mmFileData
+     * @return  string
+     */
+    protected function generateMockUnitTestCodeFromMockMakerFileDataObject(MockMakerFileData $mmFileData)
+    {
+        $unitTestCode = '';
+
+        TestHelper::dbug($mmFileData, __METHOD__, true);
+
+        return $unitTestCode;
     }
 
     /**

@@ -20,28 +20,31 @@ class MockMakerTest extends \PHPUnit_Framework_TestCase
     public $mockMaker;
     public $rootDir;
     public $entitiesDir;
+    public $unitTestsDir;
 
     public function setUp()
     {
         $this->mockMaker = new MockMaker();
         $this->rootDir = dirname(dirname(dirname(__FILE__)));
         $this->entitiesDir = $this->rootDir . '/tests/MockMaker/Entities/';
+        $this->unitTestsDir = $this->rootDir . '/tests/MockMaker/EntitiesUnitTests/';
     }
 
     /**
      * Used for testing workflow.
      */
-    public function _test_workflow()
+    public function test_workflow()
     {
         $actual = $this->mockMaker
-            ->getFilesFrom($this->entitiesDir)
-            ->recursively()
             ->mockTheseFiles($this->entitiesDir . 'TestEntity.php')
-            //->excludeFilesWithFormat('/^Method/')
+            //->getFilesFrom($this->entitiesDir)
+            //->recursively()
             ->saveMockFilesIn($this->rootDir.'/tests/MockMaker/Mocks/Entities')
-            ->saveMocksWithFileNameFormat('Mock_%FileName%')
+            //->excludeFilesWithFormat('/^Method/')
+            //->saveMocksWithFileNameFormat('Mock_%FileName%')
             //->overwriteExistingFiles()
             //->useBaseNamespaceForMocks('MockMaker\Mocks\Entities')
+            ->saveUnitTestsTo($this->unitTestsDir)
             ->createMocks();
             //->verifySettings();
 
@@ -187,6 +190,18 @@ class MockMakerTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals(sort($expected), sort($actual));
+    }
+
+    public function test_generateMockUnitTests()
+    {
+        $this->mockMaker->generateMockUnitTests();
+        $this->assertTrue($this->mockMaker->getConfig()->getGenerateMockUnitTests());
+    }
+
+    public function  test_saveUnitTestsTo()
+    {
+        $this->mockMaker->saveUnitTestsTo($this->unitTestsDir);
+        $this->assertEquals($this->unitTestsDir, $this->mockMaker->getConfig()->getMockUnitTestWriteDirectory());
     }
 
 }

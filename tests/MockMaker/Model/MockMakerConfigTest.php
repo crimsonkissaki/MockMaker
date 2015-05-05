@@ -11,7 +11,8 @@
 namespace MockMaker\Model;
 
 use MockMaker\Model\ConfigData;
-use MockMaker\TestHelper;
+use MockMaker\Helper\TestHelper;
+use MockMaker\Exception\MockMakerException;
 
 class ConfigDataTest extends \PHPUnit_Framework_TestCase
 {
@@ -39,11 +40,10 @@ class ConfigDataTest extends \PHPUnit_Framework_TestCase
         $files = array(
             $this->pathToEntities . 'SimpleEntity.php',
             $this->pathToEntities . 'MethodWorkerEntity.php',
-            $this->pathToEntities . 'PropertyWorkerEntity.php',
             $this->pathToEntities . 'TestEntity.php',
         );
         $this->config->addFilesToMock($files);
-        $this->assertEquals(4, count($this->config->getFilesToMock()));
+        $this->assertEquals(3, count($this->config->getFilesToMock()));
     }
 
     public function test_addFilesToAllDetectedFiles_addsSingleFileToList()
@@ -107,14 +107,15 @@ class ConfigDataTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $this->config->getReadDirectories());
     }
 
-    public function test_setWriteDirectory_trimsCorrectly()
+    // Cannot test setMockWriteDirectory for thrown exceptions on bad directories, since it makes them
+    public function test_setMockWriteDirectory_trimsCorrectly()
     {
         $root = dirname(dirname(__FILE__));
         $this->config->setMockWriteDirectory(" {$root} ");
         $this->assertEquals($root . "/", $this->config->getMockWriteDirectory());
     }
 
-    public function test_setWriteDirectory_addsTrailingSlashIfNonePresent()
+    public function test_setMockWriteDirectory_addsTrailingSlashIfNonePresent()
     {
         $root = dirname(dirname(__FILE__));
         $this->config->setMockWriteDirectory($root);
@@ -134,6 +135,33 @@ class ConfigDataTest extends \PHPUnit_Framework_TestCase
         $this->config->setProjectRootPath($root);
         $expected = $root . "/";
         $this->assertEquals($expected, $this->config->getProjectRootPath());
+    }
+
+    /**
+     * @expectedException MockMaker\Exception\MockMakerException
+     */
+    public function test_setReadDirectories_throwsExceptionForInvalidDir()
+    {
+        $badDir = array( dirname(__FILE__) . "notarealdir/" );
+        $this->config->setReadDirectories( $badDir );
+    }
+
+    public function test_setMockWriteDirectory_createsNonExistentDirectory()
+    {
+        $badDir = dirname(dirname(dirname(__FILE__))) . '/CreatedWriteDirectory';
+        $this->assertFalse(is_dir($badDir));
+        $this->config->setMockWriteDirectory($badDir);
+        $this->assertTrue(is_dir($badDir));
+        rmdir($badDir);
+    }
+
+    public function test_setMockUnitTestWriteDirectory_createsNonExistentDirectory()
+    {
+        $badDir = dirname(dirname(dirname(__FILE__))) . '/CreatedUnitTestWriteDirectory';
+        $this->assertFalse(is_dir($badDir));
+        $this->config->setMockWriteDirectory($badDir);
+        $this->assertTrue(is_dir($badDir));
+        rmdir($badDir);
     }
 
 }

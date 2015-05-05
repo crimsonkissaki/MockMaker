@@ -13,6 +13,8 @@
 
 namespace MockMaker;
 
+require dirname(dirname(dirname(__FILE__))) . '/vendor/autoload.php';
+
 use MockMaker\Model\ConfigData;
 use MockMaker\Worker\DirectoryWorker;
 use MockMaker\Worker\FileWorker;
@@ -277,25 +279,6 @@ class MockMaker
     /**
      * NOT YET IMPLEMENTED
      *
-     * Tells MockMaker to generate basic unit tests for the mock files
-     *
-     * Generated unit test files will only verify that the mock is returning
-     * a valid instance of the mocked class.
-     *
-     * Default MockMaker setting is FALSE
-     *
-     * @return    MockMaker
-    public function generateMockUnitTests()
-     * {
-     * $this->config->setGenerateMockUnitTests(true);
-     *
-     * return $this;
-     * }
-     */
-
-    /**
-     * NOT YET IMPLEMENTED
-     *
      * Sets the directory where unit test files will be saved
      *
      * If no directory has been specified the unit test code will be returned
@@ -303,13 +286,13 @@ class MockMaker
      *
      * @param   string $unitTestDirectory Directory to save unit test files in
      * @return  MockMaker
-    public function saveUnitTestsTo($unitTestDirectory)
-     *                                    {
-     *                                    $this->config->setMockUnitTestWriteDirectory($unitTestDirectory);
-     *
-     * return $this;
-     * }
      */
+    public function saveUnitTestsTo($unitTestDirectory)
+    {
+        $this->config->setMockUnitTestWriteDirectory($unitTestDirectory);
+
+        return $this;
+    }
 
     /**
      * Returns the MockMaker config settings

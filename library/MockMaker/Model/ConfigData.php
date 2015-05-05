@@ -29,7 +29,7 @@ class ConfigData
      */
     private $projectRootPath;
 
-     /**
+    /**
      * Read the directory recursively or not
      *
      * @var    bool
@@ -91,13 +91,6 @@ class ConfigData
      * @var string
      */
     private $mockFileBaseNamespace;
-
-    /**
-     * Whether or not to create basic unit tests for mock files
-     *
-     * @var bool
-     */
-    private $generateMockUnitTests = false;
 
     /**
      * Directory to write generated mock unit test files
@@ -248,16 +241,6 @@ class ConfigData
     }
 
     /**
-     * Gets whether or not to generate basic unit tests for mocks
-     *
-     * @return boolean
-     */
-    public function getGenerateMockUnitTests()
-    {
-        return $this->generateMockUnitTests;
-    }
-
-    /**
      * Gets the directory to save mock unit tests in
      *
      * @return string
@@ -305,8 +288,9 @@ class ConfigData
     /**
      * Sets directories to scan for files to mock
      *
-     * @param    array $readDirectories Directories to scan
+     * @param   array $readDirectories Directories to scan
      * @return  void
+     * @throws  MockMakerException
      */
     public function setReadDirectories(array $readDirectories)
     {
@@ -333,8 +317,9 @@ class ConfigData
     /**
      * Sets directory name to save generated mock files in
      *
-     * @param    string $mockWriteDirectory Directory to save mock files in
+     * @param   string $mockWriteDirectory Directory to save mock files in
      * @return  void
+     * @throws  MockMakerException
      */
     public function setMockWriteDirectory($mockWriteDirectory)
     {
@@ -383,7 +368,7 @@ class ConfigData
     /**
      * Adds files to the list of files to be mocked
      *
-     * @param    string|array $files File(s) to add to list of files to be mocked
+     * @param   string|array $files File(s) to add to list of files to be mocked
      * @return  void
      */
     public function addFilesToMock($files)
@@ -452,19 +437,10 @@ class ConfigData
     }
 
     /**
-     * Sets whether or not to generate basic unit tests for mocks
-     *
-     * @param   boolean $generateMockUnitTests
-     */
-    public function setGenerateMockUnitTests($generateMockUnitTests)
-    {
-        $this->generateMockUnitTests = $generateMockUnitTests;
-    }
-
-    /**
      * Sets the directory to save mock unit tests in
      *
-     * @param string $mockUnitTestWriteDirectory
+     * @param   string $mockUnitTestWriteDirectory
+     * @throws  MockMakerException
      */
     public function setMockUnitTestWriteDirectory($mockUnitTestWriteDirectory)
     {

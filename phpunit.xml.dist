@@ -4,31 +4,22 @@
 
     <testsuites>
         <testsuite name="MockMaker Test Suite">
-            <directory>./tests/MockMaker/</directory>
+            <directory>./tests/MockMaker</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">./library/MockMaker/</directory>
+            <directory suffix=".php">./library/MockMaker</directory>
+            <exclude>
+                <directory suffix=".php">./library/MockMaker/FileTemplates</directory>
+            </exclude>
         </whitelist>
-        <blacklist>
-            <directory>./library/MockMaker/FileTemplates</directory>
-        </blacklist>
     </filter>
 
     <logging>
-        <log type="coverage-html" target="./tests/reports/html" lowUpperBound="35" highLowerBound="70"/>
         <log type="coverage-clover" target="./tests/reports/coverage.xml"/>
-        <!--
-        <log type="coverage-text" target="php://stdout" showUncoveredFiles="false"/>
-        <log type="testdox-html" target="tests/reports/testdox.html"/>
-        <log type="coverage-php" target="tests/reports/coverage.serialized"/>
-        <log type="tap" target="tests/reports/logfile.tap"/>
-        <log type="junit" target="tests/reports/logfile.xml" logIncompleteSkipped="false"/>
-        <log type="json" target="tests/reports/logfile.json"/>
-        <log type="testdox-text" target="tests/reports/testdox.txt"/>
-        -->
+        <log type="coverage-html" target="./tests/reports/html" lowUpperBound="35" highLowerBound="70"/>
     </logging>
 
 </phpunit>
