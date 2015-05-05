@@ -13,6 +13,7 @@ MockMaker:
         - could look for use statements and combine that with type hints
 
     create unit tests for mocks?
+    - have UT include tests for related classes as mocks?
 
     allow for multiple (in|ex)clude regex strings?
 
@@ -46,3 +47,6 @@ BUGS:
     mkdir() operations that fail return NO good error messages
     
     test to be sure that 'ignoreDirectoryStructure()' works as intended
+
+    no good error checking when files return empty code strings
+    - why did a mock fail?
