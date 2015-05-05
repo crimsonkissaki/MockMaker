@@ -19,6 +19,9 @@ MockMaker:
 
     use setters of properties to check for additional typehints to set property default values
 
+    add custom use statements that will be included in mock files
+    - e.g. a custom debugger/mock manager
+
 FileGenerator:
 
     Is it possible to automatically include mock calls for known classes?
