@@ -19,6 +19,8 @@ use MockMaker\Model\PropertyData;
 use MockMaker\Worker\StringFormatterWorker;
 use MockMaker\Worker\AbstractCodeWorker;
 use MockMaker\Worker\DirectoryWorker;
+use MockMaker\Exception\MockMakerErrors;
+use MockMaker\Exception\MockMakerException;
 use MockMaker\Helper\TestHelper;
 
 class CodeWorker extends AbstractCodeWorker
@@ -104,9 +106,15 @@ class CodeWorker extends AbstractCodeWorker
      *
      * @param   array $mockMakerFileDataObjects
      * @return  array
+     * @throws  MockMakerException
      */
     public function generateCodeFromMockMakerFileDataObjects($mockMakerFileDataObjects)
     {
+        if (empty($mockMakerFileDataObjects)) {
+            throw new MockMakerException(
+                MockMakerErrors::generateMessage(MockMakerErrors::CODE_WORKER_NO_FILE_DATA, ['file' => 'unknown'])
+            );
+        }
         foreach ($mockMakerFileDataObjects as $mmFileData) {
             $code = $this->generateMockCodeFromMockMakerFileDataObject($mmFileData);
             $this->addMockCode($code);
@@ -128,15 +136,15 @@ class CodeWorker extends AbstractCodeWorker
         $today = new \DateTime('now');
         $date = $today->format('Y-m-d');
         $dataPoints = array(
-            'ClassName'                 => $class->getClassName(),
-            'CreatedDate'               => $date,
-            'ClassMockName'             => StringFormatterWorker::vsprintf2($mmFileData->getMockFileNameFormat(),
+            'ClassName'            => $class->getClassName(),
+            'CreatedDate'          => $date,
+            'ClassMockName'        => StringFormatterWorker::vsprintf2($mmFileData->getMockFileNameFormat(),
                 array('FileName' => $class->getClassName())),
-            'NameSpace'                 => $mmFileData->getMockFileNamespace(),
-            'UseStatements'             => $this->generateUseStatements($mmFileData),
-            'ClassPath'                 => $class->getClassNamespace() . "\\" . $class->getClassName(),
-            'PropertyDefaults'          => $this->generateArrayOfMandatoryProperties($mmFileData),
-            'MockVisibilityArrays'      => $this->generateMockVisibilityArrays($mmFileData),
+            'NameSpace'            => $mmFileData->getMockFileNamespace(),
+            'UseStatements'        => $this->generateUseStatements($mmFileData),
+            'ClassPath'            => $class->getClassNamespace() . "\\" . $class->getClassName(),
+            'PropertyDefaults'     => $this->generateArrayOfMandatoryProperties($mmFileData),
+            'MockVisibilityArrays' => $this->generateMockVisibilityArrays($mmFileData),
         );
 
         // this works too
@@ -303,7 +311,7 @@ class CodeWorker extends AbstractCodeWorker
     /**
      * Generates the mock visibility arrays
      *
-     * @param   MockMakerFileData   $mmFileData
+     * @param   MockMakerFileData $mmFileData
      * @return  string
      */
     protected function generateMockVisibilityArrays(MockMakerFileData $mmFileData)
@@ -322,15 +330,15 @@ class CodeWorker extends AbstractCodeWorker
      * scope properties. The rest can all be accessed using the same
      * reflection code.
      *
-     * @param   array   $classProperties
+     * @param   array $classProperties
      * @return  array
      */
     protected function generatePropertyArrays($classProperties)
     {
         $propVisStr = [];
-        if(!empty($classProperties['constant'])) {
+        if (!empty($classProperties['constant'])) {
             $visStr = "        \$constant = array(";
-            foreach($classProperties['constant'] as $k => $prop) {
+            foreach ($classProperties['constant'] as $k => $prop) {
                 $visStr .= "'{$prop->name}', ";
             }
             $visStr = rtrim($visStr, ', ') . ');';
@@ -395,3 +403,4 @@ class CodeWorker extends AbstractCodeWorker
         return false;
     }
 }
+

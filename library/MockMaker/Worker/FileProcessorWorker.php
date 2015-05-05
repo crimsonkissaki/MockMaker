@@ -13,6 +13,8 @@
 
 namespace MockMaker\Worker;
 
+use MockMaker\Exception\MockMakerErrors;
+use MockMaker\Exception\MockMakerException;
 use MockMaker\Model\ConfigData;
 use MockMaker\Model\MockMakerFileData;
 use MockMaker\Worker\MockMakerFileDataWorker;
@@ -122,8 +124,8 @@ class FileProcessorWorker
         foreach ($this->config->getFilesToMock() as $file) {
             try {
                 $this->processFile($file, $this->config);
-            } catch (\Exception $e) {
-                TestHelper::dbug($e->getMessage(), "Fatal MockMaker Exception:");
+            } catch (MockMakerException $e) {
+                echo "\nMockMakerException: {$e->getMessage()}\n";
                 continue;
             }
         }
@@ -137,12 +139,16 @@ class FileProcessorWorker
      * @param   string     $file   File name to mock
      * @param   ConfigData $config ConfigData object
      * @return  MockMakerFileData
+     * @throws  MockMakerException
      */
     private function processFile($file, ConfigData $config)
     {
         $fileData = $this->generateFileDataObject($file, $config);
         if (in_array($fileData->getClassData()->getClassType(), array('abstract', 'interface'))) {
-            return false;
+            $args = array('class' => $fileData->getClassData()->getClassName());
+            throw new MockMakerException(
+                MockMakerErrors::generateMessage(MockMakerErrors::INVALID_CLASS_TYPE, $args)
+            );
         }
         $this->addFileData($fileData);
 
@@ -166,3 +172,4 @@ class FileProcessorWorker
         return $fileData;
     }
 }
+

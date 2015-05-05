@@ -40,6 +40,12 @@ class MockMakerErrors
     // File Generator
     const INVALID_SOURCE_FILE = "INVALID_SOURCE_FILE_MSG";
     const INVALID_SOURCE_FILE_MSG = "Unable to read file '%file%'.";
+    // FileProcessorWorker
+    const INVALID_CLASS_TYPE = 'INVALID_CLASS_TYPE_MSG';
+    const INVALID_CLASS_TYPE_MSG = "Class '%class%' is either abstract or an interface and cannot be mocked.";
+    // CodeWorker
+    const CODE_WORKER_NO_FILE_DATA = 'CODE_WORKER_NO_FILE_DATA_MSG';
+    const CODE_WORKER_NO_FILE_DATA_MSG = "Error: No data for CodeWorker to process for file '%file%'.";
 
     /**
      * Generates a formatted message string
@@ -61,3 +67,4 @@ class MockMakerErrors
         return StringFormatterWorker::vsprintf2(constant("$class::{$code}"), $params);
     }
 }
+

@@ -17,6 +17,8 @@ use MockMaker\Model\ConfigData;
 use MockMaker\Worker\DirectoryWorker;
 use MockMaker\Worker\FileWorker;
 use MockMaker\Worker\FileProcessorWorker;
+use MockMaker\Helper\TestHelper;
+use MockMaker\Exception\MockMakerFatalException;
 
 class MockMaker
 {
@@ -241,7 +243,7 @@ class MockMaker
      * By default, MockMaker will save mocks under the format of
      * '%FileName%Mock'.
      *
-     * @param   string  $format
+     * @param   string $format
      * @return  MockMaker
      */
     public function saveMocksWithFileNameFormat($format)
@@ -262,7 +264,7 @@ class MockMaker
      * classes, and appended to for sub-level classes detected during
      * a recursive read.
      *
-     * @param   string  $namespace
+     * @param   string $namespace
      * @return  MockMaker
      */
     public function useBaseNamespaceForMocks($namespace)
@@ -302,8 +304,8 @@ class MockMaker
      * @param   string $unitTestDirectory Directory to save unit test files in
      * @return  MockMaker
     public function saveUnitTestsTo($unitTestDirectory)
-     * {
-     * $this->config->setMockUnitTestWriteDirectory($unitTestDirectory);
+     *                                    {
+     *                                    $this->config->setMockUnitTestWriteDirectory($unitTestDirectory);
      *
      * return $this;
      * }
@@ -316,9 +318,13 @@ class MockMaker
      */
     public function verifySettings()
     {
-        $this->performFinalSetup();
+        try {
+            $this->performFinalSetup();
 
-        return $this->config;
+            return $this->config;
+        } catch (MockMakerFatalException $e) {
+            echo "\n\nFatal MockMakerException: {$e->getMessage()}\n\n";
+        }
     }
 
     /**
@@ -332,9 +338,13 @@ class MockMaker
      */
     public function testRegexPatterns()
     {
-        $this->getAllPossibleFilesToBeWorked();
+        try {
+            $this->getAllPossibleFilesToBeWorked();
 
-        return $this->fileNameWorker->testRegexPatterns($this->config);
+            return $this->fileNameWorker->testRegexPatterns($this->config);
+        } catch (MockMakerFatalException $e) {
+            echo "\n\nFatal MockMakerException: {$e->getMessage()}\n\n";
+        }
     }
 
     /**
@@ -349,13 +359,19 @@ class MockMaker
      */
     public function createMocks()
     {
-        $this->performFinalSetup();
-        /* @var $fileProcessorWorker FileProcessorWorker */
-        $fileProcessorWorker = new FileProcessorWorker($this->config);
-        $mockMakerFileDataArray = $fileProcessorWorker->processFiles();
-        $mockCode = $this->config->getCodeWorker()->generateCodeFromMockMakerFileDataObjects($mockMakerFileDataArray);
+        try {
+            $this->performFinalSetup();
+            /* @var $fileProcessorWorker FileProcessorWorker */
+            $fileProcessorWorker = new FileProcessorWorker($this->config);
+            $mockMakerFileDataArray = $fileProcessorWorker->processFiles();
+            $mockCode = $this->config->getCodeWorker()->generateCodeFromMockMakerFileDataObjects($mockMakerFileDataArray);
 
-        return $mockCode;
+            return $mockCode;
+        } catch (MockMakerFatalException $e) {
+            echo "\n\nFatal MockMakerException: {$e->getMessage()}\n\n";
+        } catch (\Exception $e) {
+            echo "\n\nUncaught \\Exception: {$e->getMessage()}\n\n";
+        }
     }
 
     /**
@@ -381,10 +397,11 @@ class MockMaker
      */
     private function getAllPossibleFilesToBeWorked()
     {
-        $dirFiles = $this->dirWorker->getAllFilesFromReadDirectories($this->config->getReadDirectories(), $this->config->getRecursiveRead());
+        $dirFiles = $this->dirWorker->getAllFilesFromReadDirectories($this->config->getReadDirectories(),
+            $this->config->getRecursiveRead());
         $this->config->addFilesToAllDetectedFiles($dirFiles);
 
         return $this->config->getAllDetectedFiles();
     }
-
 }
+
