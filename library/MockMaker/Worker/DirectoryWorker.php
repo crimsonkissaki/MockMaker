@@ -58,7 +58,7 @@ class DirectoryWorker
      */
     public static function validateWriteDir($dir)
     {
-        if(!$dir) {
+        if (!$dir) {
             return false;
         }
         if (!is_dir($dir)) {
@@ -124,6 +124,5 @@ class DirectoryWorker
 
         return $files;
     }
-
 }
 
