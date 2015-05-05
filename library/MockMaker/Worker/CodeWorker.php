@@ -275,7 +275,7 @@ class CodeWorker extends AbstractCodeWorker
             return $this->formatValueForArgs($object->dataType, $object->defaultValue);
         }
         if ((isset($object->allowsNull) && $object->allowsNull) || (isset($object->dataType) && $object->dataType)) {
-            return 'NULL';
+            return 'null';
         }
 
         return "'_'";
