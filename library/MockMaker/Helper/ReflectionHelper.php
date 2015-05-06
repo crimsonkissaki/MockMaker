@@ -25,10 +25,10 @@ class ReflectionHelper
      *
      * Warning! Uses pass-by-reference!
      *
-     * @param    $objToChange          object    Object whose property you want to change.
-     * @param    $objToReflect         mixed    Object to use as a base for inspecting the property.
-     * @param    $property             string    Name of the property you want to change.
-     * @param    $value                string    Value to set the property to.
+     * @param    object     $objToChange          Object whose property you want to change.
+     * @param    object     $objToReflect         Object to use as a base for inspecting the property.
+     * @param    string     $property             Name of the property you want to change.
+     * @param    string     $value                Value to set the property to.
      */
     public static function setNonPublicValue(&$objToChange, $objToReflect, $property, $value)
     {
@@ -44,9 +44,9 @@ class ReflectionHelper
      *
      * $actual = $method->invoke( <class>, <param1>, [<param2>...] );
      *
-     * @param    $class             string    Class you want to access method in.
-     * @param    $methodName        string    Method you want to make public.
-     * @return    \ReflectionMethod
+     * @param    object|string      $class             Class you want to access method in.
+     * @param    string             $methodName        Method you want to make public.
+     * @return   \ReflectionMethod
      */
     public static function getAccessibleNonPublicMethod($class, $methodName)
     {

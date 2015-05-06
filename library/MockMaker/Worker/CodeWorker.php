@@ -13,10 +13,6 @@
 namespace MockMaker\Worker;
 
 use MockMaker\Model\MockMakerFileData;
-use MockMaker\Model\PropertyData;
-use MockMaker\Worker\StringFormatterWorker;
-use MockMaker\Worker\AbstractCodeWorker;
-use MockMaker\Worker\DirectoryWorker;
 use MockMaker\Exception\MockMakerErrors;
 use MockMaker\Exception\MockMakerException;
 use MockMaker\Helper\Debugger;

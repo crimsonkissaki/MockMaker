@@ -16,9 +16,6 @@ namespace MockMaker\Worker;
 use MockMaker\Exception\MockMakerErrors;
 use MockMaker\Exception\MockMakerException;
 use MockMaker\Model\ConfigData;
-use MockMaker\Model\MockMakerFileData;
-use MockMaker\Worker\MockMakerFileDataWorker;
-use MockMaker\Worker\ClassDataWorker;
 use MockMaker\Helper\TestHelper;
 
 class FileProcessorWorker
@@ -53,16 +50,6 @@ class FileProcessorWorker
     public function getConfig()
     {
         return $this->config;
-    }
-
-    /**
-     * Gets the MockMakerFileDataWorker object
-     *
-     * @return  MockMakerFileDataWorker
-     */
-    public function getFileDataWorker()
-    {
-        return $this->fileDataWorker;
     }
 
     /**

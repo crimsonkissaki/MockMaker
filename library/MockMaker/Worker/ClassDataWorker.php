@@ -15,9 +15,6 @@ namespace MockMaker\Worker;
 
 use MockMaker\Model\MockMakerFileData;
 use MockMaker\Model\ClassData;
-use MockMaker\Worker\PropertyDataWorker;
-use MockMaker\Worker\MethodDataWorker;
-use MockMaker\Worker\StringFormatterWorker;
 use MockMaker\Exception\MockMakerException;
 use MockMaker\Exception\MockMakerErrors;
 use MockMaker\Helper\TestHelper;

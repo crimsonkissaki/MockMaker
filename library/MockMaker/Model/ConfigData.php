@@ -45,7 +45,7 @@ class ConfigData
     private $overwriteExistingFiles = false;
 
     /**
-     * Mimick the read directory file tree in the write directory or not
+     * Mimic the read directory file tree in the write directory or not
      *
      * @var    bool
      */
