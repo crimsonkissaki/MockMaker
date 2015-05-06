@@ -11,7 +11,7 @@
 namespace MockMaker\Worker;
 
 use MockMaker\Worker\MethodDataWorker;
-use MockMaker\Helper\TestHelper;
+use MockMaker\TestHelper\TestHelper;
 
 class MethodDataWorkerTest extends \PHPUnit_Framework_TestCase
 {

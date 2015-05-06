@@ -11,7 +11,7 @@
 namespace MockMaker\Model;
 
 use MockMaker\Model\ConfigData;
-use MockMaker\Helper\TestHelper;
+use MockMaker\TestHelper\TestHelper;
 use MockMaker\Exception\MockMakerException;
 
 class ConfigDataTest extends \PHPUnit_Framework_TestCase
@@ -21,9 +21,11 @@ class ConfigDataTest extends \PHPUnit_Framework_TestCase
     public $config;
     public $pathToEntities;
     public $pathToGeneratedEntities;
+    public $rootDir;
 
     public function setUp()
     {
+        $this->rootDir = dirname(dirname(__FILE__)) . '/';
         $this->config = new ConfigData();
         $this->pathToEntities = dirname(dirname(__FILE__)) . '/Entities/';
     }
@@ -107,35 +109,62 @@ class ConfigDataTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $this->config->getReadDirectories());
     }
 
+    /**
+     * @expectedException MockMaker\Exception\MockMakerException
+     */
+    public function test_addReadDirectories_throwsExceptionIfBadDirectoryIsInArrayArg()
+    {
+        $dirs = array(
+            $this->rootDir,
+            $this->rootDir . 'totallyfakedir',
+        );
+        $this->config->addReadDirectories($dirs);
+    }
+
+    /**
+     * @expectedException MockMaker\Exception\MockMakerException
+     */
+    public function test_addReadDirectories_throwsExceptionIfArgumentIsBadDirectory()
+    {
+        $dir = $this->rootDir . 'totallyfakedir';
+        $this->config->addReadDirectories($dir);
+    }
+
+
     // Cannot test setMockWriteDirectory for thrown exceptions on bad directories, since it makes them
     public function test_setMockWriteDirectory_trimsCorrectly()
     {
-        $root = dirname(dirname(__FILE__));
-        $this->config->setMockWriteDirectory(" {$root} ");
-        $this->assertEquals($root . "/", $this->config->getMockWriteDirectory());
+        $this->config->setMockWriteDirectory(" {$this->rootDir} ");
+        $this->assertEquals($this->rootDir, $this->config->getMockWriteDirectory());
     }
 
     public function test_setMockWriteDirectory_addsTrailingSlashIfNonePresent()
     {
-        $root = dirname(dirname(__FILE__));
-        $this->config->setMockWriteDirectory($root);
-        $this->assertEquals($root . "/", $this->config->getMockWriteDirectory());
+        $this->config->setMockWriteDirectory($this->rootDir);
+        $this->assertEquals($this->rootDir, $this->config->getMockWriteDirectory());
     }
 
     public function test_setProjectRootPath_TrimsCorrectly()
     {
-        $root = dirname(dirname(__FILE__));
-        $this->config->setProjectRootPath(" {$root} ");
-        $this->assertEquals($root . "/", $this->config->getProjectRootPath());
+        $this->config->setProjectRootPath(" {$this->rootDir} ");
+        $this->assertEquals($this->rootDir, $this->config->getProjectRootPath());
     }
 
     public function test_setProjectRootPath_addsTrailingSlashIfNotPresent()
     {
-        $root = dirname(dirname(__FILE__));
-        $this->config->setProjectRootPath($root);
-        $expected = $root . "/";
+        $this->config->setProjectRootPath($this->rootDir);
+        $expected = $this->rootDir;
         $this->assertEquals($expected, $this->config->getProjectRootPath());
     }
+
+    /**
+     * @expectedException MockMaker\Exception\MockMakerException
+     */
+    public function test_setProjectRootPath_throwsExceptionForInvalidRootPath()
+    {
+        $this->config->setProjectRootPath($this->rootDir.'notarealfolder');
+    }
+
 
     /**
      * @expectedException MockMaker\Exception\MockMakerException

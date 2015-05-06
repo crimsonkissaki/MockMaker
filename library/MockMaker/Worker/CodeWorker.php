@@ -21,7 +21,7 @@ use MockMaker\Worker\AbstractCodeWorker;
 use MockMaker\Worker\DirectoryWorker;
 use MockMaker\Exception\MockMakerErrors;
 use MockMaker\Exception\MockMakerException;
-use MockMaker\Helper\TestHelper;
+use MockMaker\Helper\Debugger;
 
 class CodeWorker extends AbstractCodeWorker
 {
@@ -50,8 +50,9 @@ class CodeWorker extends AbstractCodeWorker
      */
     public function getMockTemplate()
     {
+        $defaultTemplate = dirname(dirname(__FILE__)) . '/FileTemplates/DefaultMockTemplateStrings.php';
         if (!$this->mockTemplate) {
-            return dirname(dirname(__FILE__)) . '/FileTemplates/DefaultMockTemplateStrings.php';
+            $this->setMockTemplate($defaultTemplate);
         }
 
         return $this->mockTemplate;
@@ -116,9 +117,8 @@ class CodeWorker extends AbstractCodeWorker
             );
         }
         foreach ($mockMakerFileDataObjects as $mmFileData) {
-            $code = '';
-            //$code = $this->generateMockCodeFromMockMakerFileDataObject($mmFileData);
-            $code .= $this->generateMockUnitTestCodeFromMockMakerFileDataObject($mmFileData);
+            $code = $this->generateMockCodeFromMockMakerFileDataObject($mmFileData);
+            //$code .= $this->generateMockUnitTestCodeFromMockMakerFileDataObject($mmFileData);
             $this->addMockCode($code);
             $this->createMockFileIfRequested($mmFileData, $code);
         }
@@ -172,7 +172,7 @@ class CodeWorker extends AbstractCodeWorker
     {
         $unitTestCode = '';
 
-        TestHelper::dbug($mmFileData, __METHOD__, true);
+        Debugger::dbug($mmFileData, __METHOD__, true);
 
         return $unitTestCode;
     }

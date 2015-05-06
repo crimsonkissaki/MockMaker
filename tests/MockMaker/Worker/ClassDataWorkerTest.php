@@ -14,7 +14,7 @@ use MockMaker\Worker\ClassDataWorker;
 use MockMaker\Worker\MockMakerFileDataWorker;
 use MockMaker\Model\MockMakerFileData;
 use MockMaker\Model\ConfigData;
-use MockMaker\Helper\TestHelper;
+use MockMaker\TestHelper\TestHelper;
 use MockMaker\Entities;
 
 class ClassDataWorkerTest extends \PHPUnit_Framework_TestCase

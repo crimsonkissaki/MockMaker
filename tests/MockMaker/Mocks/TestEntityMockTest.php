@@ -11,7 +11,7 @@ namespace MockMaker\Mocks;
 
 use MockMaker\Mocks\TestEntityMock;
 use MockMaker\Entities\TestEntity;
-use MockMaker\Helper\TestHelper;
+use MockMaker\TestHelper\TestHelper;
 
 class TestEntityMockTest extends \PHPUnit_Framework_TestCase
 {

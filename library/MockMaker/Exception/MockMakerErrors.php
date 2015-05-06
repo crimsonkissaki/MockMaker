@@ -18,6 +18,12 @@ use MockMaker\Worker\StringFormatterWorker;
 class MockMakerErrors
 {
 
+    // Generic
+    const INVALID_DIR = "INVALID_DIR_MSG";
+    const INVALID_DIR_MSG = "ERROR: Directory '{%dir%}' does not seem to be valid.";
+    // Config
+    const INVALID_PROJECT_ROOT_PATH = 'INVALID_PROJECT_ROOT_PATH_MSG';
+    const INVALID_PROJECT_ROOT_PATH_MSG = 'ERROR: Provided project root path \'{%%}\' appears invalid.';
     // MockMaker
     const WRITE_DIR_NOT_EXIST = "WRITE_DIR_NOT_EXIST_MSG";
     const WRITE_DIR_NOT_EXIST_MSG = "Write directory (%dir%) does not exist.";
@@ -51,16 +57,15 @@ class MockMakerErrors
      * Generates a formatted message string
      *  
      *
-     * @param    string $locationId Location id
-     * @param    string $code       Message code to use
-     * @param    array  $params     Optional params to insert into message text
-     * @return    string
-     * @throws    InvalidArgumentException
+     * @param    string $code   Message code to use
+     * @param    array  $params Optional params to insert into message text
+     * @return   string
+     * @throws   InvalidArgumentException
      */
     public static function generateMessage($code, $params = [])
     {
         $class = __CLASS__;
-        if (is_null(constant("$class::$code"))) {
+        if (!defined("$class::$code")) {
             throw new \InvalidArgumentException("{$code} is not a valid error code.");
         }
 

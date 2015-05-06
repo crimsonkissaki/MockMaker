@@ -11,7 +11,7 @@
 namespace MockMaker\Worker;
 
 use MockMaker\Worker\ArgumentDataWorker;
-use MockMaker\Helper\TestHelper;
+use MockMaker\TestHelper\TestHelper;
 use MockMaker\Entities\TestEntity;
 use MockMaker\Entities\MethodWorkerEntity;
 

@@ -47,6 +47,23 @@ class DirectoryWorker
     }
 
     /**
+     * Verifies that a directory is valid
+     *
+     * @param   string      $dir            Directory to validate
+     * @param   string      $errorMsg       Error to display if invalid
+     * @throws  MockMakerException
+     */
+    public static function checkIsValidDirectory($dir, $errorMsg = MockMakerErrors::INVALID_DIR)
+    {
+        if (!is_dir($dir)) {
+            throw new MockMakerException(
+                MockMakerErrors::generateMessage($errorMsg, array('dir' => "'{$dir}'"))
+            );
+        }
+
+    }
+
+    /**
      * Validates the specified write directory
      *
      * This will attempt to create the write directory

@@ -83,7 +83,7 @@ $mocks->mockTheseFiles($files);
 Have MockMaker parse directories and find `.php` files for you.
 ```php
 // @param   string|array   $dirs    Fully qualified directory paths
-$mocks->getFilesFrom($dirs);
+$mocks->mockFilesIn($dirs);
 ```
 
 Tell MockMaker to recursively check through the read directories for files.
@@ -132,7 +132,7 @@ Define a regex pattern used to _exclude_ files from being processed. (default al
 
 _This will override any files included through `includeFilesWithFormat()`._
 
-_This will be applied to any files obtained through `mockTheseFiles()` or `getFilesFrom()`._
+_This will be applied to any files obtained through `mockTheseFiles()` or `mockFilesIn()`._
 ```php
 // @param   string  $regex   Regex pattern
 $mocks->excludeFilesWithFormat($regex);
@@ -140,7 +140,7 @@ $mocks->excludeFilesWithFormat($regex);
 
 Define a regex pattern used to _include_ files from being processed. (default deny)
 
-_This will be applied to any files obtained through `mockTheseFiles()` or `getFilesFrom()`._
+_This will be applied to any files obtained through `mockTheseFiles()` or `mockFilesIn()`._
 ```php
 // @param   string  $regex   Regex pattern
 $mocks->includeFilesWithFormat($regex);

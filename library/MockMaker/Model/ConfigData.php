@@ -13,6 +13,7 @@
 
 namespace MockMaker\Model;
 
+use MockMaker\Exception\MockMakerErrors;
 use MockMaker\Worker\StringFormatterWorker as Formatter;
 use MockMaker\Worker\AbstractCodeWorker;
 use MockMaker\Worker\CodeWorker;
@@ -260,7 +261,11 @@ class ConfigData
      */
     public function getCodeWorker()
     {
-        return ($this->codeWorker) ? $this->codeWorker : new CodeWorker();
+        if(!$this->codeWorker) {
+            $this->setCodeWorker(new CodeWorker());
+        }
+
+        return $this->codeWorker;
     }
 
     /**
@@ -306,12 +311,10 @@ class ConfigData
      */
     public function addReadDirectories($readDirectories)
     {
-        if (is_array($readDirectories)) {
-            $merged = array_merge($this->readDirectories, $readDirectories);
-            $this->setReadDirectories(Formatter::formatDirectoryPaths($merged));
-        } else {
-            array_push($this->readDirectories, Formatter::formatDirectoryPath($readDirectories));
-        }
+        $dirs = (is_array($readDirectories)) ? $readDirectories : array($readDirectories);
+        $formattedDirs = Formatter::formatDirectoryPaths($dirs);
+        DirectoryWorker::validateReadDirs($formattedDirs);
+        $this->setReadDirectories($formattedDirs);
     }
 
     /**
@@ -416,12 +419,16 @@ class ConfigData
     /**
      * Sets the project's root directory path
      *
+     * Validates path before setting it.
+     *
      * @param    $projectRootPath    string    Path to your project's root directory
      * @return  void
      */
     public function setProjectRootPath($projectRootPath)
     {
-        $this->projectRootPath = Formatter::formatDirectoryPath($projectRootPath);
+        $path = Formatter::formatDirectoryPath($projectRootPath);
+        DirectoryWorker::checkIsValidDirectory($path, MockMakerErrors::INVALID_PROJECT_ROOT_PATH);
+        $this->projectRootPath = $path;
     }
 
     /**

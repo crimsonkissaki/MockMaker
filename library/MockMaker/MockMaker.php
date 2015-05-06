@@ -19,6 +19,7 @@ use MockMaker\Model\ConfigData;
 use MockMaker\Worker\DirectoryWorker;
 use MockMaker\Worker\FileWorker;
 use MockMaker\Worker\FileProcessorWorker;
+use MockMaker\Worker\AbstractCodeWorker;
 use MockMaker\Helper\TestHelper;
 use MockMaker\Exception\MockMakerFatalException;
 
@@ -85,7 +86,7 @@ class MockMaker
      * Adds file(s) to the mocking list
      *
      * Files specified here will be merged with files found in the
-     * read directory specified in the getFilesFrom() method
+     * read directory specified in the mockFilesIn() method
      *
      * @param    string|array $files File names to parse
      * @return   MockMaker
@@ -106,7 +107,7 @@ class MockMaker
      * @param    string|array $readDirectory Directories to scan
      * @return   MockMaker
      */
-    public function getFilesFrom($readDirectory)
+    public function mockFilesIn($readDirectory)
     {
         $this->config->addReadDirectories($readDirectory);
 

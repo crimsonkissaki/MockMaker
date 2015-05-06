@@ -3,7 +3,7 @@
 /**
  * FileProcessorWorker
  *
- * Processes each file found by MockMaker
+ * Primary processor class for files queued for mocking.
  *
  * @package       MockMaker
  * @author        Evan Johnson
@@ -115,7 +115,7 @@ class FileProcessorWorker
     /**
      * Process the files into usable objects
      *
-     * Returns array of MockMakerFileData objects for use in the CodeWorker.
+     * Returns an array of MockMakerFileData objects for use in the CodeWorker.
      *
      * @return  array
      */

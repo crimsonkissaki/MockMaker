@@ -12,7 +12,7 @@ namespace MockMaker\Worker;
 
 use MockMaker\Worker\MockMakerFileDataWorker;
 use MockMaker\Model\ConfigData;
-use MockMaker\Helper\TestHelper;
+use MockMaker\TestHelper\TestHelper;
 
 class MockMakerFileDataWorkerTest extends \PHPUnit_Framework_TestCase
 {
