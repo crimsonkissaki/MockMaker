@@ -52,6 +52,8 @@ class MockMakerErrors
     // CodeWorker
     const CODE_WORKER_NO_FILE_DATA = 'CODE_WORKER_NO_FILE_DATA_MSG';
     const CODE_WORKER_NO_FILE_DATA_MSG = "Error: No data for CodeWorker to process for file '%file%'.";
+    const CODE_WORKER_WRITE_ERROR = 'CODE_WORKER_WRITE_ERROR_MSG';
+    const CODE_WORKER_WRITE_ERROR_MSG = 'ERROR: Unexpected error writing to \'%path%\'';
 
     /**
      * Generates a formatted message string

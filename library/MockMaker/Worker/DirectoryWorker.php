@@ -75,9 +75,6 @@ class DirectoryWorker
      */
     public static function validateWriteDir($dir)
     {
-        if (!$dir) {
-            return false;
-        }
         if (!is_dir($dir)) {
             if (!mkdir($dir, 0777, true)) {
                 throw new MockMakerException(

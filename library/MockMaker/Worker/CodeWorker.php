@@ -401,7 +401,7 @@ class CodeWorker extends AbstractCodeWorker
      * @param   MockMakerFileData $mmFileData
      * @param   string            $code
      * @return  bool
-     * @throws  \Exception
+     * @throws  MockMakerException
      */
     protected function createMockFileIfRequested(MockMakerFileData $mmFileData, $code)
     {
@@ -412,13 +412,17 @@ class CodeWorker extends AbstractCodeWorker
                 return false;
             }
 
+            // TODO: this should be in the 'target file' data class
+            // TODO: move this substr to a 'stringworker' class or something
             // ensure that the directory we're attempting to write to exists
-            $writeDir = substr($filePath, 0, strrpos($filePath, '/'));
-            DirectoryWorker::validateWriteDir($writeDir);
+            // important for recursive writes!
+            DirectoryWorker::validateWriteDir(substr($filePath, 0, strrpos($filePath, '/')));
 
-            $writeResults = file_put_contents($filePath, $code);
-            if (!$writeResults) {
-                throw new \Exception("error writing code to file");
+            if (!$writeResults = file_put_contents($filePath, $code)) {
+                throw new MockMakerException(
+                    MockMakerErrors::generateMessage(MockMakerErrors::CODE_WORKER_WRITE_ERROR,
+                        array('file' => $filePath))
+                );
             }
 
             return true;
