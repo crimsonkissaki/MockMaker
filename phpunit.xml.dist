@@ -13,6 +13,7 @@
             <directory suffix=".php">./library/MockMaker</directory>
             <exclude>
                 <directory suffix=".php">./library/MockMaker/FileTemplates</directory>
+                <directory suffix=".php">./library/MockMaker/Helper</directory>
             </exclude>
         </whitelist>
     </filter>
