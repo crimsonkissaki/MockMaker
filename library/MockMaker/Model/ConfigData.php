@@ -406,7 +406,7 @@ class ConfigData
     }
 
     /**
-     * Sets whether to mimick read directory file structure in write directory
+     * Sets whether to mimic read directory file structure in write directory
      *
      * @param    $preserveDirectoryStructure    bool    Mirror read directory structure in write directory
      * @return  void

@@ -52,8 +52,8 @@ class ComposerWorker
     /**
      * Parses through an array of composer namespace data to find a matching namespace for a file.
      *
-     * @param   string $fileName
-     * @param   string $psrNamespaceMaps
+     * @param   string  $fileName
+     * @param   array   $psrNamespaceMaps
      * @return  array|bool
      */
     private function checkForNamespace($fileName, $psrNamespaceMaps)

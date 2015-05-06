@@ -12,8 +12,6 @@
 
 namespace MockMaker\Worker;
 
-use MockMaker\MockMaker;
-use MockMaker\Model\MethodData;
 use MockMaker\Model\MockMakerFileData;
 use MockMaker\Model\PropertyData;
 use MockMaker\Worker\StringFormatterWorker;

@@ -13,7 +13,6 @@
 
 namespace MockMaker\Worker;
 
-use MockMaker\Model\ConfigData as Config;
 use MockMaker\Exception\MockMakerException;
 use MockMaker\Exception\MockMakerErrors;
 
