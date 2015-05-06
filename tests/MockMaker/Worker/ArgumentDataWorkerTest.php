@@ -11,7 +11,7 @@
 namespace MockMaker\Worker;
 
 use MockMaker\Worker\ArgumentDataWorker;
-use MockMaker\Helper\TestHelper;
+use MockMaker\TestHelper\TestHelper;
 use MockMaker\Entities\TestEntity;
 use MockMaker\Entities\MethodWorkerEntity;
 
@@ -100,7 +100,7 @@ class ArgumentDataWorkerTest extends \PHPUnit_Framework_TestCase
         $method = TestHelper::getAccessibleNonPublicMethod($this->worker, 'getDefaultValueClassData');
         $actual = $method->invoke($this->worker, $string);
         $expected = array(
-            'className' => '\DateTime',
+            'className' => 'DateTime',
             'classNamespace' => ''
         );
         $this->assertEquals($expected, $actual);

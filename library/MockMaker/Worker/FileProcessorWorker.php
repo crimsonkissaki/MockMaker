@@ -3,7 +3,7 @@
 /**
  * FileProcessorWorker
  *
- * Processes each file found by MockMaker
+ * Primary processor class for files queued for mocking.
  *
  * @package       MockMaker
  * @author        Evan Johnson
@@ -16,9 +16,6 @@ namespace MockMaker\Worker;
 use MockMaker\Exception\MockMakerErrors;
 use MockMaker\Exception\MockMakerException;
 use MockMaker\Model\ConfigData;
-use MockMaker\Model\MockMakerFileData;
-use MockMaker\Worker\MockMakerFileDataWorker;
-use MockMaker\Worker\ClassDataWorker;
 use MockMaker\Helper\TestHelper;
 
 class FileProcessorWorker
@@ -53,16 +50,6 @@ class FileProcessorWorker
     public function getConfig()
     {
         return $this->config;
-    }
-
-    /**
-     * Gets the MockMakerFileDataWorker object
-     *
-     * @return  MockMakerFileDataWorker
-     */
-    public function getFileDataWorker()
-    {
-        return $this->fileDataWorker;
     }
 
     /**
@@ -115,7 +102,7 @@ class FileProcessorWorker
     /**
      * Process the files into usable objects
      *
-     * Returns array of MockMakerFileData objects for use in the CodeWorker.
+     * Returns an array of MockMakerFileData objects for use in the CodeWorker.
      *
      * @return  array
      */

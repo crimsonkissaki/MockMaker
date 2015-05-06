@@ -8,7 +8,7 @@
  * 	@version	1.0
  */
 
-namespace MockMaker\Helper;
+namespace MockMaker\TestHelper;
 
 class TestHelper
 {

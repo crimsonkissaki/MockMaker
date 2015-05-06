@@ -13,10 +13,13 @@
 
 namespace MockMaker;
 
+require dirname(dirname(dirname(__FILE__))) . '/vendor/autoload.php';
+
 use MockMaker\Model\ConfigData;
 use MockMaker\Worker\DirectoryWorker;
 use MockMaker\Worker\FileWorker;
 use MockMaker\Worker\FileProcessorWorker;
+use MockMaker\Worker\AbstractCodeWorker;
 use MockMaker\Helper\TestHelper;
 use MockMaker\Exception\MockMakerFatalException;
 
@@ -83,7 +86,7 @@ class MockMaker
      * Adds file(s) to the mocking list
      *
      * Files specified here will be merged with files found in the
-     * read directory specified in the getFilesFrom() method
+     * read directory specified in the mockFilesIn() method
      *
      * @param    string|array $files File names to parse
      * @return   MockMaker
@@ -104,7 +107,7 @@ class MockMaker
      * @param    string|array $readDirectory Directories to scan
      * @return   MockMaker
      */
-    public function getFilesFrom($readDirectory)
+    public function mockFilesIn($readDirectory)
     {
         $this->config->addReadDirectories($readDirectory);
 
@@ -277,25 +280,6 @@ class MockMaker
     /**
      * NOT YET IMPLEMENTED
      *
-     * Tells MockMaker to generate basic unit tests for the mock files
-     *
-     * Generated unit test files will only verify that the mock is returning
-     * a valid instance of the mocked class.
-     *
-     * Default MockMaker setting is FALSE
-     *
-     * @return    MockMaker
-    public function generateMockUnitTests()
-     * {
-     * $this->config->setGenerateMockUnitTests(true);
-     *
-     * return $this;
-     * }
-     */
-
-    /**
-     * NOT YET IMPLEMENTED
-     *
      * Sets the directory where unit test files will be saved
      *
      * If no directory has been specified the unit test code will be returned
@@ -303,13 +287,13 @@ class MockMaker
      *
      * @param   string $unitTestDirectory Directory to save unit test files in
      * @return  MockMaker
-    public function saveUnitTestsTo($unitTestDirectory)
-     *                                    {
-     *                                    $this->config->setMockUnitTestWriteDirectory($unitTestDirectory);
-     *
-     * return $this;
-     * }
      */
+    public function saveUnitTestsTo($unitTestDirectory)
+    {
+        $this->config->setMockUnitTestWriteDirectory($unitTestDirectory);
+
+        return $this;
+    }
 
     /**
      * Returns the MockMaker config settings
@@ -363,8 +347,8 @@ class MockMaker
             $this->performFinalSetup();
             /* @var $fileProcessorWorker FileProcessorWorker */
             $fileProcessorWorker = new FileProcessorWorker($this->config);
-            $mockMakerFileDataArray = $fileProcessorWorker->processFiles();
-            $mockCode = $this->config->getCodeWorker()->generateCodeFromMockMakerFileDataObjects($mockMakerFileDataArray);
+            $mmfdArr = $fileProcessorWorker->processFiles();
+            $mockCode = $this->config->getCodeWorker()->generateCodeFromMockMakerFileDataObjects($mmfdArr);
 
             return $mockCode;
         } catch (MockMakerFatalException $e) {
@@ -376,6 +360,8 @@ class MockMaker
 
     /**
      * Performs final set up required before processing
+     *
+     * Needs to be separate so the verifySettings() method will work.
      *
      * @return  bool
      */
@@ -392,6 +378,8 @@ class MockMaker
 
     /**
      * Combines all files from the read directories with the user specified ones
+     *
+     * Splitting out so testRegexPatterns() will be able to work.
      *
      * @return  array
      */

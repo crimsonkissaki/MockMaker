@@ -20,7 +20,7 @@ class MockMakerException extends \Exception
      * Constructs a new MockMakerException
      *
      * @param    string     $message  Exception string
-     * @param    int        $code     Code nunber
+     * @param    int        $code     Code number
      * @param    \Exception $previous Previous \Exception
      * @return  MockMakerException
      */

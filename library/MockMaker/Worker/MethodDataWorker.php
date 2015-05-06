@@ -12,7 +12,6 @@
 namespace MockMaker\Worker;
 
 use MockMaker\Model\MethodData;
-use MockMaker\Worker\ArgumentDataWorker;
 
 class MethodDataWorker
 {

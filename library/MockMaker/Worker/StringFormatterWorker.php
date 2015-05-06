@@ -27,9 +27,9 @@ class StringFormatterWorker
      * @param    string $char Delimiter character
      * @return    string
      */
-    public static function vsprintf2($str = false, $vars = [], $char = '%')
+    public static function vsprintf2($str = '', $vars = [], $char = '%')
     {
-        if (!$str) {
+        if (empty($str)) {
             return '';
         }
         if (count($vars) > 0) {

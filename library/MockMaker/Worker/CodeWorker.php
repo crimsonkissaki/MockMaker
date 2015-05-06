@@ -12,16 +12,10 @@
 
 namespace MockMaker\Worker;
 
-use MockMaker\MockMaker;
-use MockMaker\Model\MethodData;
 use MockMaker\Model\MockMakerFileData;
-use MockMaker\Model\PropertyData;
-use MockMaker\Worker\StringFormatterWorker;
-use MockMaker\Worker\AbstractCodeWorker;
-use MockMaker\Worker\DirectoryWorker;
 use MockMaker\Exception\MockMakerErrors;
 use MockMaker\Exception\MockMakerException;
-use MockMaker\Helper\TestHelper;
+use MockMaker\Helper\Debugger;
 
 class CodeWorker extends AbstractCodeWorker
 {
@@ -50,8 +44,9 @@ class CodeWorker extends AbstractCodeWorker
      */
     public function getMockTemplate()
     {
+        $defaultTemplate = dirname(dirname(__FILE__)) . '/FileTemplates/DefaultMockTemplateStrings.php';
         if (!$this->mockTemplate) {
-            return dirname(dirname(__FILE__)) . '/FileTemplates/DefaultMockTemplate.php';
+            $this->setMockTemplate($defaultTemplate);
         }
 
         return $this->mockTemplate;
@@ -117,6 +112,7 @@ class CodeWorker extends AbstractCodeWorker
         }
         foreach ($mockMakerFileDataObjects as $mmFileData) {
             $code = $this->generateMockCodeFromMockMakerFileDataObject($mmFileData);
+            //$code .= $this->generateMockUnitTestCodeFromMockMakerFileDataObject($mmFileData);
             $this->addMockCode($code);
             $this->createMockFileIfRequested($mmFileData, $code);
         }
@@ -126,6 +122,8 @@ class CodeWorker extends AbstractCodeWorker
 
     /**
      * Generates mock code from a MockMakerFileData object
+     *
+     * TODO: I need to create a "MockFile" model to put in the FileData
      *
      * @param   MockMakerFileData $mmFileData
      * @return  string
@@ -147,10 +145,30 @@ class CodeWorker extends AbstractCodeWorker
             'MockVisibilityArrays' => $this->generateMockVisibilityArrays($mmFileData),
         );
 
-        // this works too
-        $code = include($this->getMockTemplate());
+        // throwing PHPUnit errors due to undefined variable: dataPoints
+        //$code = include($this->getMockTemplate());
+
+        $templateCode = include($this->getMockTemplate());
+        $code = StringFormatterWorker::vsprintf2($templateCode, $dataPoints);
 
         return $code;
+    }
+
+    /**
+     * Generates basic unit test code from a MockMakerFileData object
+     *
+     * TODO: before doing this I need to create a "UnitTestFile" model to put in the FileData
+     *
+     * @param   MockMakerFileData $mmFileData
+     * @return  string
+     */
+    protected function generateMockUnitTestCodeFromMockMakerFileDataObject(MockMakerFileData $mmFileData)
+    {
+        $unitTestCode = '';
+
+        Debugger::dbug($mmFileData, __METHOD__, true);
+
+        return $unitTestCode;
     }
 
     /**
@@ -377,7 +395,7 @@ class CodeWorker extends AbstractCodeWorker
      * @param   MockMakerFileData $mmFileData
      * @param   string            $code
      * @return  bool
-     * @throws  \Exception
+     * @throws  MockMakerException
      */
     protected function createMockFileIfRequested(MockMakerFileData $mmFileData, $code)
     {
@@ -388,13 +406,17 @@ class CodeWorker extends AbstractCodeWorker
                 return false;
             }
 
+            // TODO: this should be in the 'target file' data class
+            // TODO: move this substr to a 'stringworker' class or something
             // ensure that the directory we're attempting to write to exists
-            $writeDir = substr($filePath, 0, strrpos($filePath, '/'));
-            DirectoryWorker::validateWriteDir($writeDir);
+            // important for recursive writes!
+            DirectoryWorker::validateWriteDir(substr($filePath, 0, strrpos($filePath, '/')));
 
-            $writeResults = file_put_contents($filePath, $code);
-            if (!$writeResults) {
-                throw new \Exception("error writing code to file");
+            if (!$writeResults = file_put_contents($filePath, $code)) {
+                throw new MockMakerException(
+                    MockMakerErrors::generateMessage(MockMakerErrors::CODE_WORKER_WRITE_ERROR,
+                        array('file' => $filePath))
+                );
             }
 
             return true;

@@ -11,7 +11,7 @@
 namespace MockMaker\Worker;
 
 use MockMaker\Worker\PropertyDataWorker;
-use MockMaker\Helper\TestHelper;
+use MockMaker\TestHelper\TestHelper;
 
 class PropertyDataWorkerTest extends \PHPUnit_Framework_TestCase
 {

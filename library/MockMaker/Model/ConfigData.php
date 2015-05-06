@@ -13,6 +13,7 @@
 
 namespace MockMaker\Model;
 
+use MockMaker\Exception\MockMakerErrors;
 use MockMaker\Worker\StringFormatterWorker as Formatter;
 use MockMaker\Worker\AbstractCodeWorker;
 use MockMaker\Worker\CodeWorker;
@@ -29,7 +30,7 @@ class ConfigData
      */
     private $projectRootPath;
 
-     /**
+    /**
      * Read the directory recursively or not
      *
      * @var    bool
@@ -44,7 +45,7 @@ class ConfigData
     private $overwriteExistingFiles = false;
 
     /**
-     * Mimick the read directory file tree in the write directory or not
+     * Mimic the read directory file tree in the write directory or not
      *
      * @var    bool
      */
@@ -91,13 +92,6 @@ class ConfigData
      * @var string
      */
     private $mockFileBaseNamespace;
-
-    /**
-     * Whether or not to create basic unit tests for mock files
-     *
-     * @var bool
-     */
-    private $generateMockUnitTests = false;
 
     /**
      * Directory to write generated mock unit test files
@@ -248,16 +242,6 @@ class ConfigData
     }
 
     /**
-     * Gets whether or not to generate basic unit tests for mocks
-     *
-     * @return boolean
-     */
-    public function getGenerateMockUnitTests()
-    {
-        return $this->generateMockUnitTests;
-    }
-
-    /**
      * Gets the directory to save mock unit tests in
      *
      * @return string
@@ -277,7 +261,11 @@ class ConfigData
      */
     public function getCodeWorker()
     {
-        return ($this->codeWorker) ? $this->codeWorker : new CodeWorker();
+        if(!$this->codeWorker) {
+            $this->setCodeWorker(new CodeWorker());
+        }
+
+        return $this->codeWorker;
     }
 
     /**
@@ -305,8 +293,9 @@ class ConfigData
     /**
      * Sets directories to scan for files to mock
      *
-     * @param    array $readDirectories Directories to scan
+     * @param   array $readDirectories Directories to scan
      * @return  void
+     * @throws  MockMakerException
      */
     public function setReadDirectories(array $readDirectories)
     {
@@ -322,19 +311,18 @@ class ConfigData
      */
     public function addReadDirectories($readDirectories)
     {
-        if (is_array($readDirectories)) {
-            $merged = array_merge($this->readDirectories, $readDirectories);
-            $this->setReadDirectories(Formatter::formatDirectoryPaths($merged));
-        } else {
-            array_push($this->readDirectories, Formatter::formatDirectoryPath($readDirectories));
-        }
+        $dirs = (is_array($readDirectories)) ? $readDirectories : array($readDirectories);
+        $formattedDirs = Formatter::formatDirectoryPaths($dirs);
+        DirectoryWorker::validateReadDirs($formattedDirs);
+        $this->setReadDirectories($formattedDirs);
     }
 
     /**
      * Sets directory name to save generated mock files in
      *
-     * @param    string $mockWriteDirectory Directory to save mock files in
+     * @param   string $mockWriteDirectory Directory to save mock files in
      * @return  void
+     * @throws  MockMakerException
      */
     public function setMockWriteDirectory($mockWriteDirectory)
     {
@@ -383,7 +371,7 @@ class ConfigData
     /**
      * Adds files to the list of files to be mocked
      *
-     * @param    string|array $files File(s) to add to list of files to be mocked
+     * @param   string|array $files File(s) to add to list of files to be mocked
      * @return  void
      */
     public function addFilesToMock($files)
@@ -418,7 +406,7 @@ class ConfigData
     }
 
     /**
-     * Sets whether to mimick read directory file structure in write directory
+     * Sets whether to mimic read directory file structure in write directory
      *
      * @param    $preserveDirectoryStructure    bool    Mirror read directory structure in write directory
      * @return  void
@@ -431,12 +419,16 @@ class ConfigData
     /**
      * Sets the project's root directory path
      *
+     * Validates path before setting it.
+     *
      * @param    $projectRootPath    string    Path to your project's root directory
      * @return  void
      */
     public function setProjectRootPath($projectRootPath)
     {
-        $this->projectRootPath = Formatter::formatDirectoryPath($projectRootPath);
+        $path = Formatter::formatDirectoryPath($projectRootPath);
+        DirectoryWorker::checkIsValidDirectory($path, MockMakerErrors::INVALID_PROJECT_ROOT_PATH);
+        $this->projectRootPath = $path;
     }
 
     /**
@@ -452,19 +444,10 @@ class ConfigData
     }
 
     /**
-     * Sets whether or not to generate basic unit tests for mocks
-     *
-     * @param   boolean $generateMockUnitTests
-     */
-    public function setGenerateMockUnitTests($generateMockUnitTests)
-    {
-        $this->generateMockUnitTests = $generateMockUnitTests;
-    }
-
-    /**
      * Sets the directory to save mock unit tests in
      *
-     * @param string $mockUnitTestWriteDirectory
+     * @param   string $mockUnitTestWriteDirectory
+     * @throws  MockMakerException
      */
     public function setMockUnitTestWriteDirectory($mockUnitTestWriteDirectory)
     {

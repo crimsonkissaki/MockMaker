@@ -14,8 +14,6 @@
 
 namespace MockMaker\Model;
 
-use MockMaker\Model\ClassData;
-
 class MockMakerFileData
 {
 
