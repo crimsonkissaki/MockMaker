@@ -123,10 +123,10 @@ class PropertyDataWorker
             // it causes problems down the line to have static
             // properties set in the other visibilities
             $prop = $this->getPropertyDetails($visibility, $key, $value);
-            if( $visibility !== 'static' && empty($prop->isStatic) ) {
+            if ($visibility !== 'static' && empty($prop->isStatic)) {
                 array_push($results, $prop);
             }
-            if( $visibility === 'static' ) {
+            if ($visibility === 'static') {
                 array_push($results, $prop);
             }
         }
@@ -199,9 +199,9 @@ class PropertyDataWorker
      * setter will be named after it, e.g. a property called "totalCount"
      * has a setter with the name "setTotalCount".
      *
-     * @param    string $name         Property name
+     * @param   string  $name         Property name
      * @param   array   $classMethods Array of MethodData objects
-     * @return    array
+     * @return  array
      */
     private function findPropertySetterIfExists($name, $classMethods)
     {

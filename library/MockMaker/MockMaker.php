@@ -347,8 +347,8 @@ class MockMaker
             $this->performFinalSetup();
             /* @var $fileProcessorWorker FileProcessorWorker */
             $fileProcessorWorker = new FileProcessorWorker($this->config);
-            $mockMakerFileDataArray = $fileProcessorWorker->processFiles();
-            $mockCode = $this->config->getCodeWorker()->generateCodeFromMockMakerFileDataObjects($mockMakerFileDataArray);
+            $mmfdArr = $fileProcessorWorker->processFiles();
+            $mockCode = $this->config->getCodeWorker()->generateCodeFromMockMakerFileDataObjects($mmfdArr);
 
             return $mockCode;
         } catch (MockMakerFatalException $e) {
@@ -360,6 +360,8 @@ class MockMaker
 
     /**
      * Performs final set up required before processing
+     *
+     * Needs to be separate so the verifySettings() method will work.
      *
      * @return  bool
      */
@@ -376,6 +378,8 @@ class MockMaker
 
     /**
      * Combines all files from the read directories with the user specified ones
+     *
+     * Splitting out so testRegexPatterns() will be able to work.
      *
      * @return  array
      */
