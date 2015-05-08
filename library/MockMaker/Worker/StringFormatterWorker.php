@@ -44,42 +44,4 @@ class StringFormatterWorker
 
         return $str;
     }
-
-    /**
-     * Formats directory paths
-     *
-     * trim()s whitespace and appends a forward slash.
-     *
-     * @param   string|array $paths Directory paths to format
-     * @return  string|array
-     */
-    public static function formatDirectoryPaths($paths)
-    {
-        if (is_array($paths)) {
-            $fixed = [];
-            foreach ($paths as $key => $path) {
-                $fixed[$key] = self::formatDirectoryPath($path);
-            }
-
-            return $fixed;
-        } else {
-            return self::formatDirectoryPath($paths);
-        }
-    }
-
-    /**
-     * Formats a directory path
-     *
-     * @param   string $path Directory path to format
-     * @return  string
-     */
-    public static function formatDirectoryPath($path)
-    {
-        $fixedPath = trim($path);
-        if (substr($fixedPath, -1) !== '/') {
-            $fixedPath .= '/';
-        }
-
-        return $fixedPath;
-    }
 }

@@ -62,7 +62,7 @@ class TokenWorker
     private function compileTokenIdsIntoString($tokens, $fileTokens)
     {
         $strings = [];
-        foreach ($tokens as $k => $token) {
+        foreach ($tokens as $token) {
             $offset = $token->startKey;
             $length = ($token->endKey - $token->startKey) + 1;
             $tokensToCompile = array_slice($fileTokens, $offset, $length);

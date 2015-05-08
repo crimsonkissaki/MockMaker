@@ -73,7 +73,7 @@ class FileNameWorkerTest extends \PHPUnit_Framework_TestCase
             $this->entitiesDir . 'SubEntities/SimpleSubEntity.php',
             $this->entitiesDir . 'SubEntities/SimpleSubEntityUnderscore.php',
         );
-        $this->config->addFilesToAllDetectedFiles($files);
+        $this->config->addToAllDetectedFiles($files);
         $regex = '/Entity$/';
         $this->config->setIncludeFileRegex($regex);
         $actual = $this->worker->filterFilesWithRegex($this->config);
@@ -142,7 +142,7 @@ class FileNameWorkerTest extends \PHPUnit_Framework_TestCase
      * {
      * $regex = '/Underscore$/';
      * $actual = $this->mockMaker
-     * ->mockFilesIn($this->entitiesDir . 'SubEntities/')
+     * ->mockEntitiesInDirectory($this->entitiesDir . 'SubEntities/')
      * ->excludeFilesWithFormat($regex)
      * ->testRegexPatterns();
      * $expected = array(
@@ -168,7 +168,7 @@ class FileNameWorkerTest extends \PHPUnit_Framework_TestCase
      * {
      * $regex = '/Entity$/';
      * $actual = $this->mockMaker
-     * ->mockFilesIn($this->entitiesDir . 'SubEntities/')
+     * ->mockEntitiesInDirectory($this->entitiesDir . 'SubEntities/')
      * ->includeFilesWithFormat($regex)
      * ->testRegexPatterns();
      * $expected = array(
@@ -192,7 +192,7 @@ class FileNameWorkerTest extends \PHPUnit_Framework_TestCase
      * $i_regex = '/Entity$/';
      * $e_regex = '/^Simple.*$/';
      * $actual = $this->mockMaker
-     * ->mockFilesIn($this->entitiesDir)
+     * ->mockEntitiesInDirectory($this->entitiesDir)
      * ->recursively()
      * ->includeFilesWithFormat($i_regex)
      * ->excludeFilesWithFormat($e_regex)

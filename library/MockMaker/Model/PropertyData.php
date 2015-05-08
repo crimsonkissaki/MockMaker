@@ -40,6 +40,13 @@ class PropertyData
     public $isStatic;
 
     /**
+     * Setter method if any
+     *
+     * @var string
+     */
+    public $setter;
+
+    /**
      * Default property value, if any
      *
      * @var mixed
@@ -66,5 +73,19 @@ class PropertyData
      * @var string
      */
     public $classNamespace;
+
+    /**
+     * Any comments that need to be displayed above the property in the mock
+     *
+     * @var string
+     */
+    public $comments;
+
+    /**
+     * ORM data obtained from Entity class
+     *
+     * @var OrmData
+     */
+    public $ormData;
 
 }

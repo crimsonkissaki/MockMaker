@@ -28,7 +28,7 @@ class DirectoryWorker
      */
     public static function validateReadDirs($dirs)
     {
-        foreach ($dirs as $k => $dir) {
+        foreach ($dirs as $dir) {
             if (!is_dir($dir)) {
                 throw new MockMakerException(
                     MockMakerErrors::generateMessage(MockMakerErrors::READ_DIR_NOT_EXIST, array('dir' => "'{$dir}'"))
@@ -48,18 +48,17 @@ class DirectoryWorker
     /**
      * Verifies that a directory is valid
      *
-     * @param   string      $dir            Directory to validate
-     * @param   string      $errorMsg       Error to display if invalid
+     * @param   string $dir      Directory to validate
+     * @param   string $errorMsg Error to display if invalid
      * @throws  MockMakerException
      */
     public static function checkIsValidDirectory($dir, $errorMsg = MockMakerErrors::INVALID_DIR)
     {
         if (!is_dir($dir)) {
             throw new MockMakerException(
-                MockMakerErrors::generateMessage($errorMsg, array('dir' => "'{$dir}'"))
+                MockMakerErrors::generateMessage($errorMsg, array('dir' => $dir))
             );
         }
-
     }
 
     /**
@@ -100,7 +99,7 @@ class DirectoryWorker
      *
      * @return  string
      */
-    public function guessProjectRootPath()
+    public static function guessProjectRootPath()
     {
         $vendorPos = strpos(__FILE__, 'vendor');
         if ($vendorPos !== false) {
@@ -117,7 +116,7 @@ class DirectoryWorker
      * @param   bool  $recurse     bool    Recursively scan directories or not
      * @return  array
      */
-    public function getAllFilesFromReadDirectories($allReadDirs, $recurse = false)
+    public static function getFilesFromReadDirs($allReadDirs, $recurse = false)
     {
         if (empty($allReadDirs)) {
             return [];
@@ -127,7 +126,7 @@ class DirectoryWorker
         foreach ($allReadDirs as $dir) {
             $dirs[] = (!$recurse) ? new \DirectoryIterator($dir) : new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir));
         }
-        foreach ($dirs as $k => $dir) {
+        foreach ($dirs as $dir) {
             foreach ($dir as $file) {
                 if (!$file->isDir() && $file->getExtension() === 'php') {
                     $files[] = $file->getPathname();

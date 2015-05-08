@@ -11,7 +11,7 @@
 namespace MockMaker\Worker;
 
 use MockMaker\Worker\FileProcessorWorker;
-use MockMaker\Model\MockMakerFileData;
+use MockMaker\Model\DataContainer;
 use MockMaker\Model\ConfigData;
 use MockMaker\Exception\MockMakerException;
 use MockMaker\TestHelper\TestHelper;
@@ -34,7 +34,7 @@ class FileProcessorWorkerTest extends \PHPUnit_Framework_TestCase
 
     public function test_addFileData_addsSingleElementToArray()
     {
-        $fd = new MockMakerFileData();
+        $fd = new DataContainer();
         $this->worker->addFileData($fd);
         $this->assertEquals(1, count($this->worker->getFileData()));
     }
@@ -42,9 +42,9 @@ class FileProcessorWorkerTest extends \PHPUnit_Framework_TestCase
     public function test_addFileData_addsArrayOfElements()
     {
         $args = array(
-            new MockMakerFileData(),
-            new MockMakerFileData(),
-            new MockMakerFileData(),
+            new DataContainer(),
+            new DataContainer(),
+            new DataContainer(),
         );
         $this->worker->addFileData($args);
         $this->assertEquals(3, count($this->worker->getFileData()));

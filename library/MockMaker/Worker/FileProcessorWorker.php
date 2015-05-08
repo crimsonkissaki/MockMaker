@@ -3,7 +3,7 @@
 /**
  * FileProcessorWorker
  *
- * Primary processor class for files queued for mocking.
+ * Primary processor class for queued target files.
  *
  * @package       MockMaker
  * @author        Evan Johnson
@@ -13,10 +13,9 @@
 
 namespace MockMaker\Worker;
 
-use MockMaker\Exception\MockMakerErrors;
 use MockMaker\Exception\MockMakerException;
 use MockMaker\Model\ConfigData;
-use MockMaker\Helper\TestHelper;
+use MockMaker\Model\DataContainer;
 
 class FileProcessorWorker
 {
@@ -29,62 +28,71 @@ class FileProcessorWorker
     private $config;
 
     /**
-     * Class that handles processing for the MockMakerFileData models
+     * Class that handles processing for the DataContainer models
      *
-     * @var MockMakerFileDataWorker
+     * @var DataContainerWorker
      */
-    private $fileDataWorker;
+    private $dataContainerWorker;
 
     /**
-     * Array of MockMakerFileData classes
+     * Array of DataPointWorkers that need to be executed
+     *
+     * @var array
+     */
+    private $dataPointWorkers = [];
+
+    /**
+     * Array of DataContainer classes
      *
      * @var array
      */
     private $fileData = [];
 
     /**
-     * Get the config file
+     * Array of mock code
      *
-     * @return ConfigData
+     * @var array
      */
-    public function getConfig()
-    {
-        return $this->config;
-    }
+    private $mockCode = [];
 
     /**
-     * Gets the MockMakerFileData objects
+     * Sets the array of DataContainer objects
      *
-     * @return  array
-     */
-    public function getFileData()
-    {
-        return $this->fileData;
-    }
-
-    /**
-     * Sets the array of MockMakerFileData objects
-     *
-     * @param   array $fileData MockMakerFileData objects
+     * @param   array $fileData DataContainer objects
      * @return  void
      */
-    public function setFileData(array $fileData)
+    private function setFileData(array $fileData)
     {
         $this->fileData = $fileData;
     }
 
     /**
-     * Adds (single|array of) MockMakerFileData objects to fileData
+     * Adds (single|array of) DataContainer objects to fileData
      *
-     * @param   object|array $fileData MockMakerFileData objects
+     * @param   object|array $fileData DataContainer objects
      * @return  void
      */
-    public function addFileData($fileData)
+    private function addFileData($fileData)
     {
         if (is_array($fileData)) {
             $this->setFileData(array_merge($this->fileData, $fileData));
         } else {
             array_push($this->fileData, $fileData);
+        }
+    }
+
+    /**
+     * Adds (single|array of) mock code strings to mockCode
+     *
+     * @param   string|array $mockCode Mock code generated from DataContainer object
+     * @return  void
+     */
+    private function addMockCode($mockCode)
+    {
+        if (is_array($mockCode)) {
+            $this->setFileData(array_merge($this->mockCode, $mockCode));
+        } else {
+            array_push($this->mockCode, $mockCode);
         }
     }
 
@@ -96,13 +104,14 @@ class FileProcessorWorker
     public function __construct(ConfigData $configData)
     {
         $this->config = $configData;
-        $this->fileDataWorker = new MockMakerFileDataWorker();
+        $this->dataContainerWorker = new DataContainerWorker();
+        $this->dataPointWorkers = $configData->getDataPointWorkers();
     }
 
     /**
-     * Process the files into usable objects
+     * Process the file queue into usable objects
      *
-     * Returns an array of MockMakerFileData objects for use in the CodeWorker.
+     * Returns an array of DataContainer objects for use in the CodeWorker.
      *
      * @return  array
      */
@@ -110,53 +119,46 @@ class FileProcessorWorker
     {
         foreach ($this->config->getFilesToMock() as $file) {
             try {
-                $this->processFile($file, $this->config);
+                $fileData = $this->processFile($file, $this->config);
+                $this->processDataWithWorkers($fileData);
             } catch (MockMakerException $e) {
                 echo "\nMockMakerException: {$e->getMessage()}\n";
                 continue;
             }
         }
 
-        return $this->getFileData();
+        return implode(PHP_EOL . str_repeat("-", 50) . PHP_EOL, $this->mockCode);
     }
 
     /**
-     * Processes a single file for mocking
+     * Processes a single target file for mocking
      *
      * @param   string     $file   File name to mock
      * @param   ConfigData $config ConfigData object
-     * @return  MockMakerFileData
-     * @throws  MockMakerException
+     * @return  DataContainer
      */
     private function processFile($file, ConfigData $config)
     {
-        $fileData = $this->generateFileDataObject($file, $config);
-        if (in_array($fileData->getClassData()->getClassType(), array('abstract', 'interface'))) {
-            $args = array('class' => $fileData->getClassData()->getClassName());
-            throw new MockMakerException(
-                MockMakerErrors::generateMessage(MockMakerErrors::INVALID_CLASS_TYPE, $args)
-            );
-        }
+        $fileData = $this->dataContainerWorker->generateDataContainerObject($file, $config);
         $this->addFileData($fileData);
 
         return $fileData;
     }
 
     /**
-     * Creates a new MockMakerFileData object
+     * Generates required code from a DataContainer object
      *
-     * @param   string     $file   File name to mock
-     * @param   ConfigData $config ConfigData object
-     * @return  MockMakerFileData
+     * @param   DataContainer $dataContainer
+     * @return  string
      */
-    private function generateFileDataObject($file, $config)
+    private function processDataWithWorkers(DataContainer $dataContainer)
     {
-        $fileData = $this->fileDataWorker->generateNewObject($file, $config);
-        // we need a new ClassWorker for each file
-        $classWorker = new ClassDataWorker();
-        $fileData->setClassData($classWorker->generateNewObject($fileData));
+        $templateWorker = new TemplateWorker();
+        foreach ($this->dataPointWorkers as $worker) {
+            $mockCode = $templateWorker->processWithWorker($worker, $dataContainer);
+            $this->addMockCode($mockCode);
+        }
 
-        return $fileData;
+        return $mockCode;
     }
 }
-

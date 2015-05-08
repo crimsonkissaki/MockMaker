@@ -53,3 +53,5 @@ BUGS:
 
     no good error checking when files return empty code strings
     - why did a mock fail?
+
+    change testentitycode.txt to a php file with correct date

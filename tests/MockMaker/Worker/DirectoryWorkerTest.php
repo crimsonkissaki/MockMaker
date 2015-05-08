@@ -31,27 +31,27 @@ class DirectoryWorkerTest extends \PHPUnit_Framework_TestCase
         $this->entitiesDir = $this->rootDir . '/tests/MockMaker/Entities/';
     }
 
-        public function test_getAllFilesFromReadDirectories()
+        public function test_getFilesFromReadDirs()
     {
-        $actual = $this->worker->getAllFilesFromReadDirectories(array( $this->entitiesDir ));
+        $actual = DirectoryWorker::getFilesFromReadDirs(array( $this->entitiesDir ));
 
         $this->assertEquals(7, count($actual));
     }
 
-    public function test_getAllFilesFromReadDirectories_recursively()
+    public function test_getFilesFromReadDirs_recursively()
     {
-        $actual = $this->worker->getAllFilesFromReadDirectories(array( $this->entitiesDir ), true);
+        $actual = DirectoryWorker::getFilesFromReadDirs(array( $this->entitiesDir ), true);
 
         $this->assertEquals(9, count($actual));
     }
 
-    public function test_getAllFilesFromReadDirectories_withMultipleDirectories()
+    public function test_getFilesFromReadDirs_withMultipleDirectories()
     {
         $dirsArr = array(
             $this->entitiesDir,
             $this->entitiesDir . 'SubEntities',
         );
-        $actual = $this->worker->getAllFilesFromReadDirectories($dirsArr);
+        $actual = DirectoryWorker::getFilesFromReadDirs($dirsArr);
 
         $this->assertEquals(9, count($actual));
     }

@@ -36,6 +36,8 @@ class TestEntity
     public $publicORMEntityThatExtendsProperty;
     public $publicProperty1 = 'publicProperty1 value';
     public $publicProperty2 = 'publicProperty2 value';
+    public $publicProperty3 = 1;
+    public $publicProperty4 = true;
     public $publicPropertyDefaultValueAssignedByConstructor;
     public $publicPropertyDefaultValueAssignedByConstructorTopLevelClass;
     public static $publicStaticProperty1 = 'publicStaticProperty1 value';
@@ -43,6 +45,8 @@ class TestEntity
     // only this class
     private $privateProperty1 = 'privateProperty1 value';
     private $privateProperty2 = 'privateProperty2 value';
+    private $privateProperty3 = 10.01;
+    private $privateProperty4 = array( 'property1' => 'value1' );
     private $privatePropertyDefaultValueAssignedByConstructor;
     private $privatePropertyDefaultValueAssignedByConstructorTopLevelClass;
     private static $privateStaticProperty1 = 'privateStaticProperty1 value';

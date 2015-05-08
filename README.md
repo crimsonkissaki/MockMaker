@@ -77,13 +77,13 @@ $mocks = new MockMaker();
 Define files you want mocked.
 ```php
 // @param   string|array    $files  Fully qualified file paths
-$mocks->mockTheseFiles($files);
+$mocks->mockTheseEntities($files);
 ```
 
 Have MockMaker parse directories and find `.php` files for you.
 ```php
 // @param   string|array   $dirs    Fully qualified directory paths
-$mocks->mockFilesIn($dirs);
+$mocks->mockEntitiesInDirectory($dirs);
 ```
 
 Tell MockMaker to recursively check through the read directories for files.
@@ -101,13 +101,31 @@ _MockMaker tries to auto-detect this, so you only have to set it if that's faili
 $mocks->setProjectRootPath($path);
 ```
 
-Have MockMaker to create/save the mock files for you.
+Have MockMaker create & save the mock files for you.
 
 _If there is no directory specified here, the mock code will be returned
 as a string you can copy/paste/stdout from wherever you dump it._
 ```php
 // @param   string  $dir    Fully qualified directory path
 $mocks->saveMockFilesIn($dir);
+```
+
+Have MockMaker create unit tests for the mock files.
+
+_Unit tests are very basic and only make sure the mocks return
+valid instances of the entity class_
+```php
+// @param   string  $dir    Fully qualified directory path
+$mocks->createUnitTests();
+```
+
+Have MockMaker save the mock files for you.
+
+_If there is no directory specified here, the mock code will be returned
+as a string you can copy/paste/stdout from wherever you dump it._
+```php
+// @param   string  $dir    Fully qualified directory path
+$mocks->saveUnitTestsIn($dir);
 ```
 
 By default, MockMaker will replicate the directory structure of the read directories you specify
@@ -125,14 +143,24 @@ been customized with defaults and losing your work.)
 _By using this option you avow you're a responsible developer and understand what 'overwrite' means
 and what its consequences are._
 ```php
-$mocks->overwriteExistingFiles();
+$mocks->overwriteMockFiles();
+```
+
+By default MockMaker will not overwrite existing unit tests if you've told it to re-mock something
+that's already been done. (This is to prevent accidentally overwriting files that have already
+been customized and losing your work.)
+
+_By using this option you avow you're a responsible developer and understand what 'overwrite' means
+and what its consequences are._
+```php
+$mocks->overwriteUnitTestFiles();
 ```
 
 Define a regex pattern used to _exclude_ files from being processed. (default allow)
 
 _This will override any files included through `includeFilesWithFormat()`._
 
-_This will be applied to any files obtained through `mockTheseFiles()` or `mockFilesIn()`._
+_This will be applied to any files obtained through `mockTheseEntities()` or `mockEntitiesInDirectory()`._
 ```php
 // @param   string  $regex   Regex pattern
 $mocks->excludeFilesWithFormat($regex);
@@ -140,33 +168,10 @@ $mocks->excludeFilesWithFormat($regex);
 
 Define a regex pattern used to _include_ files from being processed. (default deny)
 
-_This will be applied to any files obtained through `mockTheseFiles()` or `mockFilesIn()`._
+_This will be applied to any files obtained through `mockTheseEntities()` or `mockEntitiesInDirectory()`._
 ```php
 // @param   string  $regex   Regex pattern
 $mocks->includeFilesWithFormat($regex);
-```
-
-**Warning!** Not yet working!
-
-MockMaker has a default mock template I created that has worked well in a majority of my testing.
-
-_If you have a special flavour you would like to use instead, place it here. Please refer to
-the README in the `Template` directory for instructions._
-```php
-// @param   string  $template   Fully qualified path to template file
-$mocks->useThisMockTemplate($template);
-```
-
-**Warning!** Not yet working!
-
-MockMaker has a default `CodeWorker` class that processes various things to generate the data
-that is inserted into the `DefaultMockTemplate` file.
-
-_If you want/need special setup or customized code inserted, you can refer to the README in the
-`Generator` directory for instructions._
-```php
-// @param   object  $codeWorker     Instance of AbstractCodeWorker
-$mocks->useThisCodeWorker($codeWorker);
 ```
 
 If you don't want the default mock name format of {FileName}Mock, then you can
@@ -214,6 +219,32 @@ Generate the mock file code, and either return it or write it to files.
 ```php
 // @return  string
 $mocks->createMocks();
+```
+
+
+Future options?
+
+**Warning!** Not yet working!
+
+MockMaker has a default mock template I created that has worked well in a majority of my testing.
+
+_If you have a special flavour you would like to use instead, place it here. Please refer to
+the README in the `Template` directory for instructions._
+```php
+// @param   string  $template   Fully qualified path to template file
+$mocks->useThisMockTemplate($template);
+```
+
+**Warning!** Not yet working!
+
+MockMaker has a default `CodeWorker` class that processes various things to generate the data
+that is inserted into the `DefaultMockTemplate` file.
+
+_If you want/need special setup or customized code inserted, you can refer to the README in the
+`Generator` directory for instructions._
+```php
+// @param   object  $mockDataPointWorker     Instance of AbstractCodeWorker
+$mocks->useCustomDataPointWorker($mockDataPointWorker);
 ```
 
 
@@ -312,7 +343,6 @@ When the mock is returned, any properties defined in the `$ignore` array will be
 
 ## Future Improvements:
 
- * Adding in automatic generation of basic UnitTests for mocks, so you know when you have it set up properly.
  * Automatic creation of a 'MockManager' file that allows you to pull in mocks through a single class.
  * ORM awareness:
    * Ability to parse ORM specific annotations for data type hints and class relationships.

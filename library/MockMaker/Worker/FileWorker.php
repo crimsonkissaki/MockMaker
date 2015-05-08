@@ -16,12 +16,11 @@ namespace MockMaker\Worker;
 use MockMaker\Model\ConfigData;
 use MockMaker\Exception\MockMakerException;
 use MockMaker\Exception\MockMakerErrors;
-use MockMaker\Helper\TestHelper;
 
 class FileWorker
 {
 
-   /**
+    /**
      * Validates all manually provided files
      *
      * @param   array $files Files to mock
@@ -145,7 +144,7 @@ class FileWorker
             if (substr($file, -4) !== '.php') {
                 continue;
             }
-            $fileName =  str_replace('.php', '', join('', array_slice(explode('/', $file), -1)));
+            $fileName = str_replace('.php', '', join('', array_slice(explode('/', $file), -1)));
             if (preg_match($regex, $fileName) === 1) {
                 $matches[] = $file;
             }
