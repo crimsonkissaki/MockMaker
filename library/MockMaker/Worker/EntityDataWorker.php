@@ -98,18 +98,57 @@ class EntityDataWorker
     public function generateEntityDataObject($file, ConfigData $config)
     {
         $obj = $this->getBasicEntityInformation($file, $config);
+        $this->canWeContinueProcessing($obj);
+        $obj = $this->getClassDetails($obj);
 
+        return $obj;
+    }
+
+    /**
+     * Checks for entity types that cannot be instantiated for analysis and mocking
+     *
+     * @param   EntityData  $entity
+     * @return  bool
+     * @throws  MockMakerException
+     */
+    private function canWeContinueProcessing(EntityData $entity)
+    {
         // We cannot mock abstract or interface classes
-        if (in_array($obj->getClassType(), array('abstract', 'interface'))) {
-            $args = array('class' => $obj->getClassName());
+        $args = array('class' => $entity->getClassName());
+        if (in_array($entity->getClassType(), array('abstract', 'interface'))) {
             throw new MockMakerException(
                 MockMakerErrors::generateMessage(MockMakerErrors::INVALID_CLASS_TYPE, $args)
             );
         }
+        // constructors with arguments are bad news bears
+        if (!$this->isEntityInstantiable($entity)) {
+            throw new MockMakerException(
+                MockMakerErrors::generateMessage(MockMakerErrors::CLASS_HAS_CONSTRUCTOR, $args)
+            );
+        }
 
-        $obj = $this->getClassDetails($obj);
+        return true;
+    }
 
-        return $obj;
+    /**
+     * Determines if a target entity class can be instantiated into a \ReflectionClass object
+     *
+     * Classes with constructors pose a big problem to reflection analysis. Eventually I might
+     * do something with Mockery here to fake the constructor arguments, but so far this is
+     * only a problem when encountering Repository type classes for Doctrine. Since those
+     * are not really entities that need to be mocked, I'm choosing to flat out ignore them.
+     *
+     * @param   EntityData $entity
+     * @return  bool
+     */
+    private function isEntityInstantiable(EntityData $entity)
+    {
+        $constructor = $entity->getReflectionClass()->getConstructor();
+        if(is_null($constructor)) {
+            return true;
+        }
+
+        return (empty($constructor->getParameters())) ? true : false;
     }
 
     /**

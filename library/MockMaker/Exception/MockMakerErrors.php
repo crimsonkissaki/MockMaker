@@ -45,12 +45,14 @@ class MockMakerErrors
     // PropertyWorker
     const PW_INVALID_CLASS_INSTANCE = "PW_INVALID_CLASS_INSTANCE_MSG";
     const PW_INVALID_CLASS_INSTANCE_MSG = "PropertyWorker requires a valid instance of class '%class%' to mock.";
+    // EntityDataWorker
+    const CLASS_HAS_CONSTRUCTOR = 'CLASS_HAS_CONSTRUCTOR_MSG';
+    const CLASS_HAS_CONSTRUCTOR_MSG = "Class '%class%' has a constructor with mandatory arguments and cannot be mocked.";
+    const INVALID_CLASS_TYPE = 'INVALID_CLASS_TYPE_MSG';
+    const INVALID_CLASS_TYPE_MSG = "Class '%class%' is either abstract or an interface and cannot be mocked.";
     // File Generator
     const INVALID_SOURCE_FILE = "INVALID_SOURCE_FILE_MSG";
     const INVALID_SOURCE_FILE_MSG = "Unable to read file '%file%'.";
-    // FileProcessorWorker
-    const INVALID_CLASS_TYPE = 'INVALID_CLASS_TYPE_MSG';
-    const INVALID_CLASS_TYPE_MSG = "Class '%class%' is either abstract or an interface and cannot be mocked.";
     // DataPointWorker
     const INVALID_TEMPLATE_FILE = 'INVALID_TEMPLATE_FILE_MSG';
     const INVALID_TEMPLATE_FILE_MSG = 'ERROR: Defined template \'%file%\' is not a valid file.';

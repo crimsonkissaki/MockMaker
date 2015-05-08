@@ -13,7 +13,7 @@
 
 namespace MockMaker;
 
-require dirname(dirname(dirname(__FILE__))) . '/vendor/autoload.php';
+//require dirname(dirname(dirname(__FILE__))) . '/vendor/autoload.php';
 
 use MockMaker\Model\ConfigData;
 use MockMaker\Exception\MockMakerFatalException;
@@ -392,7 +392,7 @@ class MockMaker
         } catch (MockMakerFatalException $e) {
             echo "\n\nFatal MockMakerException: {$e->getMessage()}\n\n";
         } catch (\Exception $e) {
-            echo "\n\nUncaught \\Exception: {$e->getTraceAsString()}\n\n";
+            echo "\n\nMockMaker Uncaught \\Exception:\n\n{$e->getTraceAsString()}\n\n";
         }
     }
 
