@@ -221,32 +221,44 @@ Generate the mock file code, and either return it or write it to files.
 $mocks->createMocks();
 ```
 
+## Use Case Examples:
 
-Future options?
+MockMaker is set up in such a way that options can be added in any order, so don't worry about
+where in the stack it ends up.
 
-**Warning!** Not yet working!
+### Mock single file and return code as string:
 
-MockMaker has a default mock template I created that has worked well in a majority of my testing.
-
-_If you have a special flavour you would like to use instead, place it here. Please refer to
-the README in the `Template` directory for instructions._
 ```php
-// @param   string  $template   Fully qualified path to template file
-$mocks->useThisMockTemplate($template);
+use MockMaker\MockMaker;
+
+$rootDir = '/Applications/XAMPP/xamppfiles/htdocs/yourproject/src/';
+$projectDir = $rootDir . 'Project/Bundle/MyAwesomeBundle/';
+
+$mm = new MockMaker();
+$code = $mm->mockTheseEntities($projectDir . 'Entity/TestEntity.php')
+    ->createMocks();
+    
+echo $code;
 ```
 
-**Warning!** Not yet working!
+### Mock everything you have, but exclude Doctrine "{EntityName}Repository" classes:
 
-MockMaker has a default `CodeWorker` class that processes various things to generate the data
-that is inserted into the `DefaultMockTemplate` file.
-
-_If you want/need special setup or customized code inserted, you can refer to the README in the
-`Generator` directory for instructions._
 ```php
-// @param   object  $mockDataPointWorker     Instance of AbstractCodeWorker
-$mocks->useCustomDataPointWorker($mockDataPointWorker);
-```
+use MockMaker\MockMaker;
 
+$rootDir = '/Applications/XAMPP/xamppfiles/htdocs/yourproject/src/';
+$projectDir = $rootDir . 'Project/Bundle/MyAwesomeBundle/';
+
+$mm = new MockMaker();
+$mm->mockEntitiesInDirectory($projectDir . 'Entity')
+    ->recursively()
+    ->exclude('/Repository$/')
+    ->saveMockFilesIn($projectDir . 'Tests/Mocks/Entity')
+    ->saveUnitTestsIn($projectDir . 'Tests/Mocks/EntityTests')
+    ->overwriteMockFiles()
+    ->overwriteUnitTestFiles()
+    ->createMocks();
+ 
 
 ## Mock File Usage:
 
@@ -343,6 +355,7 @@ When the mock is returned, any properties defined in the `$ignore` array will be
 
 ## Future Improvements:
 
+ * Custom mock/unit test templates and datapoint workers
  * Automatic creation of a 'MockManager' file that allows you to pull in mocks through a single class.
  * ORM awareness:
    * Ability to parse ORM specific annotations for data type hints and class relationships.

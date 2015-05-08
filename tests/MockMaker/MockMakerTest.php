@@ -63,7 +63,7 @@ class MockMakerTest extends \PHPUnit_Framework_TestCase
         $expected = file_get_contents($this->testResourcesDir . 'TestEntityCode.txt');
         $actual = $this->mockMaker
             ->mockTheseEntities($this->entitiesDir . 'TestEntity.php')
-            ->saveMockFilesIn($this->rootDir . '/tests/MockMaker/Mocks/Entities')
+            //->saveMockFilesIn($this->rootDir . '/tests/MockMaker/Mocks/Entities')
             ->createMocks();
         $this->assertEquals($expected, $actual);
     }
