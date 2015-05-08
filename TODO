@@ -1,32 +1,22 @@
 MockMaker:
 
-    how to handle classes with __constructors when they're passing in a string?
-    - might have to sacrifice some relection abilities since we can't mock it
-    - use mockery to create mocks of __construct arguments
-    - they could always pass in mocks for the class?
-        - allow for automatic scanning of an existing "Mocks" folder
-        and then automagically include the basic mocks if they're present?
-        - if processing an entire directory, would it be a good idea to create
-        a "generation path" based on "who needs whom" requirements?
-            - no dependencies or external references, make them first so they
-            can be included in other mocks
-        - could look for use statements and combine that with type hints
-
-    create unit tests for mocks?
-    - have UT include tests for related classes as mocks?
-
     allow for multiple (in|ex)clude regex strings?
 
     use setters of properties to check for additional typehints to set property default values
 
     add custom use statements that will be included in mock files
     - e.g. a custom debugger/mock manager
-
+    - covered if/when custom templates work...
+    
+    finish custom file templates & datapoint worker functionality
+    
+    
 FileGenerator:
 
     Is it possible to automatically include mock calls for known classes?
     - this might require analyzing the ORM annotations ...
     - have to include auto-detect + override ... or custom implementation?
+
 
 ArgumentWorker:
 
@@ -41,17 +31,24 @@ ArgumentWorker:
         php >= 5.6
             isVariadic()	-> function sum(...$numbers) {} -> elipsis indicated method overloading
 
+
 BUGS:
 
-    add a check for setter methods that don't have an associated property
-    - put them in, but comment them out
-    - might need to change the method worker to ensure it DOES have a property
-    
-    mkdir() operations that fail return NO good error messages
-    
     test to be sure that 'ignoreDirectoryStructure()' works as intended
 
     no good error checking when files return empty code strings
     - why did a mock fail?
 
     change testentitycode.txt to a php file with correct date
+
+
+Investigation:
+
+    set up MM to use a "Batch" system
+    - batches get similar parameters to the current workflow, but it allows separation between mocks/ut/whatever else I decide to put in here
+    - hinges on the current datapoint/template worker interaction to function
+    
+    ORM aware property analysis
+    - will probably have to have this customizable/extendable as well
+    
+    
