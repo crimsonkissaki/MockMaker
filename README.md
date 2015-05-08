@@ -349,7 +349,6 @@ When the mock is returned, any properties defined in the `$ignore` array will be
 
 ## Known Bugs & Issues
 
- * Classes with `__construct()` arguments will probably cause MockMaker to barf. I'm working on a fix using Mockery.
  * Custom CodeWorkers and MockFileTemplates haven't been fully tested.
  * Currently not working on packagist, as I haven't uploaded it to them yet. Still testing phase for now.
 
