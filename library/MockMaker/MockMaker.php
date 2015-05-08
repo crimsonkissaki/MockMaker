@@ -13,8 +13,6 @@
 
 namespace MockMaker;
 
-//require dirname(dirname(dirname(__FILE__))) . '/vendor/autoload.php';
-
 use MockMaker\Model\ConfigData;
 use MockMaker\Exception\MockMakerFatalException;
 use MockMaker\Worker\AbstractDataPointWorker;
