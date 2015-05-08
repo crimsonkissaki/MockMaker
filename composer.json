@@ -24,10 +24,5 @@
         "psr-4": {
             "MockMaker\\": "library/MockMaker"
         }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "0.1.x-dev"
-        }
     }
 }
