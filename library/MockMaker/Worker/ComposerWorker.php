@@ -12,8 +12,6 @@
 
 namespace MockMaker\Worker;
 
-use MockMaker\Helper\TestHelper;
-
 class ComposerWorker
 {
 
@@ -52,15 +50,15 @@ class ComposerWorker
     /**
      * Parses through an array of composer namespace data to find a matching namespace for a file.
      *
-     * @param   string  $fileName
-     * @param   array   $psrNamespaceMaps
+     * @param   string $fileName
+     * @param   array  $psrNamespaceMaps
      * @return  array|bool
      */
     private function checkForNamespace($fileName, $psrNamespaceMaps)
     {
         $composerData = false;
         foreach ($psrNamespaceMaps as $namespace => $directory) {
-            foreach ($directory as $k => $dir) {
+            foreach ($directory as $dir) {
                 if (strstr($fileName, $dir) !== false) {
                     $composerData = array(
                         'namespace' => $namespace,

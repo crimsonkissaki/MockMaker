@@ -51,7 +51,7 @@ class ConfigDataTest extends \PHPUnit_Framework_TestCase
     public function test_addFilesToAllDetectedFiles_addsSingleFileToList()
     {
         $file = $this->pathToEntities . 'SimpleEntity.php';
-        $this->config->addFilesToAllDetectedFiles($file);
+        $this->config->addToAllDetectedFiles($file);
         $this->assertEquals(1, count($this->config->getAllDetectedFiles()));
     }
 
@@ -63,7 +63,7 @@ class ConfigDataTest extends \PHPUnit_Framework_TestCase
             $this->pathToEntities . 'PropertyWorkerEntity.php',
             $this->pathToEntities . 'TestEntity.php',
         );
-        $this->config->addFilesToAllDetectedFiles($files);
+        $this->config->addToAllDetectedFiles($files);
         $this->assertEquals(4, count($this->config->getAllDetectedFiles()));
     }
 
@@ -131,17 +131,17 @@ class ConfigDataTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    // Cannot test setMockWriteDirectory for thrown exceptions on bad directories, since it makes them
+    // Cannot test setMockWriteDir for thrown exceptions on bad directories, since it makes them
     public function test_setMockWriteDirectory_trimsCorrectly()
     {
-        $this->config->setMockWriteDirectory(" {$this->rootDir} ");
-        $this->assertEquals($this->rootDir, $this->config->getMockWriteDirectory());
+        $this->config->setMockWriteDir(" {$this->rootDir} ");
+        $this->assertEquals($this->rootDir, $this->config->getMockWriteDir());
     }
 
     public function test_setMockWriteDirectory_addsTrailingSlashIfNonePresent()
     {
-        $this->config->setMockWriteDirectory($this->rootDir);
-        $this->assertEquals($this->rootDir, $this->config->getMockWriteDirectory());
+        $this->config->setMockWriteDir($this->rootDir);
+        $this->assertEquals($this->rootDir, $this->config->getMockWriteDir());
     }
 
     public function test_setProjectRootPath_TrimsCorrectly()
@@ -179,7 +179,7 @@ class ConfigDataTest extends \PHPUnit_Framework_TestCase
     {
         $badDir = dirname(dirname(dirname(__FILE__))) . '/CreatedWriteDirectory';
         $this->assertFalse(is_dir($badDir));
-        $this->config->setMockWriteDirectory($badDir);
+        $this->config->setMockWriteDir($badDir);
         $this->assertTrue(is_dir($badDir));
         rmdir($badDir);
     }
@@ -188,7 +188,7 @@ class ConfigDataTest extends \PHPUnit_Framework_TestCase
     {
         $badDir = dirname(dirname(dirname(__FILE__))) . '/CreatedUnitTestWriteDirectory';
         $this->assertFalse(is_dir($badDir));
-        $this->config->setMockWriteDirectory($badDir);
+        $this->config->setMockWriteDir($badDir);
         $this->assertTrue(is_dir($badDir));
         rmdir($badDir);
     }

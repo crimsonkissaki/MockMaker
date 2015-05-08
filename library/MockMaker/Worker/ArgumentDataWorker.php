@@ -12,7 +12,6 @@
 namespace MockMaker\Worker;
 
 use MockMaker\Model\ArgumentData;
-use MockMaker\Helper\TestHelper;
 
 class ArgumentDataWorker
 {
@@ -32,7 +31,7 @@ class ArgumentDataWorker
             return $details;
         }
 
-        foreach ($arguments as $k => $arg) {
+        foreach ($arguments as $arg) {
             array_push($details, $this->getArgumentDetails($arg));
         }
 

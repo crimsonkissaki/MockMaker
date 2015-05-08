@@ -3,7 +3,7 @@
  * MockMakerFatalException
  *
  * @package:    MockMaker
- * @author:     Evan Johnson
+ * @author :     Evan Johnson
  * @created:    5/5/15
  */
 
@@ -25,5 +25,4 @@ class MockMakerFatalException extends \Exception
     {
         parent::__construct($message, $code, $previous);
     }
-
 }

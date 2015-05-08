@@ -5,6 +5,8 @@
  *
  * MockMaker configuration data class
  *
+ * This class ONLY holds data that the user has supplied through MockMaker options.
+ *
  * @package       MockMaker
  * @author        Evan Johnson
  * @created       Apr 22, 2015
@@ -14,9 +16,12 @@
 namespace MockMaker\Model;
 
 use MockMaker\Exception\MockMakerErrors;
-use MockMaker\Worker\StringFormatterWorker as Formatter;
-use MockMaker\Worker\AbstractCodeWorker;
-use MockMaker\Worker\CodeWorker;
+use MockMaker\Exception\MockMakerException;
+use MockMaker\Exception\MockMakerFatalException;
+use MockMaker\Worker\AbstractDataPointWorker;
+use MockMaker\Worker\DefaultMockDataPointWorker;
+use MockMaker\Worker\DefaultUnitTestDataPointWorker;
+use MockMaker\Worker\PathWorker as Formatter;
 use MockMaker\Worker\DirectoryWorker;
 use MockMaker\Worker\FileWorker;
 
@@ -38,18 +43,25 @@ class ConfigData
     private $recursiveRead = false;
 
     /**
-     * Overwrite existing files or not
+     * Overwrite existing mock files or not
      *
      * @var    bool
      */
-    private $overwriteExistingFiles = false;
+    private $overwriteMockFiles = false;
+
+    /**
+     * Overwrite existing unit test files or not
+     *
+     * @var    bool
+     */
+    private $overwriteUnitTestFiles = false;
 
     /**
      * Mimic the read directory file tree in the write directory or not
      *
      * @var    bool
      */
-    private $preserveDirectoryStructure = true;
+    private $preserveDirStructure = true;
 
     /**
      * Directories to scan for files to mock
@@ -77,7 +89,14 @@ class ConfigData
      *
      * @var    string
      */
-    private $mockWriteDirectory;
+    private $mockWriteDir;
+
+    /**
+     * Directory to write generated mock unit test files
+     *
+     * @var    string
+     */
+    private $unitTestWriteDir;
 
     /**
      * Template for mock file names
@@ -92,13 +111,6 @@ class ConfigData
      * @var string
      */
     private $mockFileBaseNamespace;
-
-    /**
-     * Directory to write generated mock unit test files
-     *
-     * @var    string
-     */
-    private $mockUnitTestWriteDirectory;
 
     /**
      * All files indicated by user or in read directories
@@ -117,9 +129,23 @@ class ConfigData
     /**
      * Class that transforms DataFile objects into mock code
      *
-     * @var AbstractCodeWorker
+     * @var AbstractDataPointWorker
      */
-    private $codeWorker;
+    private $mockDataPointWorker;
+
+    /**
+     * Class that transforms DataFile objects into mock unit test code
+     *
+     * @var AbstractDataPointWorker
+     */
+    private $utDataPointWorker;
+
+    /**
+     * Array of DataPointWorkers that need to process
+     *
+     * @var array
+     */
+    private $dataPointWorkers = [];
 
     /**
      * Gets if the read directory should be recursively scanned
@@ -132,13 +158,23 @@ class ConfigData
     }
 
     /**
-     * Gets if files are to be overwritten
+     * Gets if mock files are to be overwritten
      *
      * @return    bool
      */
-    public function getOverwriteExistingFiles()
+    public function getOverwriteMockFiles()
     {
-        return $this->overwriteExistingFiles;
+        return $this->overwriteMockFiles;
+    }
+
+    /**
+     * Gets if unit test files are to be overwritten
+     *
+     * @return    bool
+     */
+    public function getOverwriteUnitTestFiles()
+    {
+        return $this->overwriteUnitTestFiles;
     }
 
     /**
@@ -156,9 +192,9 @@ class ConfigData
      *
      * @return    string
      */
-    public function getMockWriteDirectory()
+    public function getMockWriteDir()
     {
-        return $this->mockWriteDirectory;
+        return $this->mockWriteDir;
     }
 
     /**
@@ -206,9 +242,9 @@ class ConfigData
      *
      * @return    bool
      */
-    public function getPreserveDirectoryStructure()
+    public function getPreserveDirStructure()
     {
-        return $this->preserveDirectoryStructure;
+        return $this->preserveDirStructure;
     }
 
     /**
@@ -246,33 +282,63 @@ class ConfigData
      *
      * @return string
      */
-    public function getMockUnitTestWriteDirectory()
+    public function getUnitTestWriteDir()
     {
-        return $this->mockUnitTestWriteDirectory;
+        return $this->unitTestWriteDir;
     }
 
     /**
-     * Get the code working class
+     * Get the mock file DataPointWorker class
      *
      * If no custom class has been defined, the default class
-     * will be the CodeWorker class.
+     * will be the DefaultMockDataPointWorker class.
      *
-     * @return AbstractCodeWorker
+     * @return AbstractDataPointWorker
      */
-    public function getCodeWorker()
+    public function getMockDataPointWorker()
     {
-        if(!$this->codeWorker) {
-            $this->setCodeWorker(new CodeWorker());
+        if (!$this->mockDataPointWorker) {
+            $this->setMockDataPointWorker(new DefaultMockDataPointWorker());
         }
 
-        return $this->codeWorker;
+        return $this->mockDataPointWorker;
+    }
+
+    /**
+     * Gets the unit test DataPointWorker class
+     *
+     * @return AbstractDataPointWorker
+     */
+    public function getUtDataPointWorker()
+    {
+        if (!$this->utDataPointWorker) {
+            $this->setUtDataPointWorker(new DefaultUnitTestDataPointWorker());
+        }
+
+        return $this->utDataPointWorker;
+    }
+
+    /**
+     * Gets the DataPointWorkers that need to be executed
+     *
+     * TODO: allow overriding/registering of custom workers
+     *
+     * @return array
+     */
+    public function getDataPointWorkers()
+    {
+        $dpw = array(
+            new DefaultMockDataPointWorker(),
+            new DefaultUnitTestDataPointWorker(),
+        );
+
+        return $dpw;
     }
 
     /**
      * Sets if read directory is to be scanned recursively
      *
      * @param    bool $recursiveRead Parse read directory recursively
-     * @return  void
      */
     public function setRecursiveRead($recursiveRead)
     {
@@ -282,20 +348,27 @@ class ConfigData
     /**
      * Sets if existing files are to be overwritten
      *
-     * @param    bool $overwriteExistingFiles Overwrite existing files
-     * @return  void
+     * @param    bool $overwriteMockFiles Overwrite existing mock files
      */
-    public function setOverwriteExistingFiles($overwriteExistingFiles)
+    public function setOverwriteMockFiles($overwriteMockFiles)
     {
-        $this->overwriteExistingFiles = $overwriteExistingFiles;
+        $this->overwriteMockFiles = $overwriteMockFiles;
+    }
+
+    /**
+     * Sets if existing files are to be overwritten
+     *
+     * @param    bool $overwriteUnitTestFiles Overwrite existing unit test files
+     */
+    public function setOverwriteUnitTestFiles($overwriteUnitTestFiles)
+    {
+        $this->overwriteUnitTestFiles = $overwriteUnitTestFiles;
     }
 
     /**
      * Sets directories to scan for files to mock
      *
      * @param   array $readDirectories Directories to scan
-     * @return  void
-     * @throws  MockMakerException
      */
     public function setReadDirectories(array $readDirectories)
     {
@@ -307,34 +380,30 @@ class ConfigData
      * Adds (single|array of) directories to parse for files
      *
      * @param    string|array $readDirectories Directories to scan for files to mock
-     * @return  void
      */
     public function addReadDirectories($readDirectories)
     {
         $dirs = (is_array($readDirectories)) ? $readDirectories : array($readDirectories);
         $formattedDirs = Formatter::formatDirectoryPaths($dirs);
         DirectoryWorker::validateReadDirs($formattedDirs);
-        $this->setReadDirectories($formattedDirs);
+        $this->setReadDirectories(array_merge($this->readDirectories, $formattedDirs));
     }
 
     /**
      * Sets directory name to save generated mock files in
      *
-     * @param   string $mockWriteDirectory Directory to save mock files in
-     * @return  void
-     * @throws  MockMakerException
+     * @param   string $mockWriteDir Directory to save mock files in
      */
-    public function setMockWriteDirectory($mockWriteDirectory)
+    public function setMockWriteDir($mockWriteDir)
     {
-        DirectoryWorker::validateWriteDir($mockWriteDirectory);
-        $this->mockWriteDirectory = Formatter::formatDirectoryPath($mockWriteDirectory);
+        DirectoryWorker::validateWriteDir($mockWriteDir);
+        $this->mockWriteDir = Formatter::formatDirectoryPath($mockWriteDir);
     }
 
     /**
      * Sets files indicated by user or in read directories
      *
      * @param   array $allDetectedFiles File(s) detected as possible mocking candidates
-     * @return  void
      */
     public function setAllDetectedFiles(array $allDetectedFiles)
     {
@@ -345,9 +414,8 @@ class ConfigData
      * Adds files to to the detected file list
      *
      * @param    string|array $files File(s) to add to allDetectedFiles
-     * @return  void
      */
-    public function addFilesToAllDetectedFiles($files)
+    public function addToAllDetectedFiles($files)
     {
         if (is_array($files)) {
             $this->setAllDetectedFiles(array_merge($this->allDetectedFiles, $files));
@@ -360,7 +428,6 @@ class ConfigData
      * Sets the files to generate mocks for
      *
      * @param    string|array $filesToMock Files to be mocked
-     * @return  void
      */
     public function setFilesToMock(array $filesToMock)
     {
@@ -372,7 +439,6 @@ class ConfigData
      * Adds files to the list of files to be mocked
      *
      * @param   string|array $files File(s) to add to list of files to be mocked
-     * @return  void
      */
     public function addFilesToMock($files)
     {
@@ -387,7 +453,6 @@ class ConfigData
      * Sets the ignore file filter regex string
      *
      * @param    $excludeFileRegex   string    Regex string used to exclude files
-     * @return  void
      */
     public function setExcludeFileRegex($excludeFileRegex)
     {
@@ -398,7 +463,6 @@ class ConfigData
      * Sets the include file regex string
      *
      * @param    $includeFileRegex    string    Regex string used to include files
-     * @return  void
      */
     public function setIncludeFileRegex($includeFileRegex)
     {
@@ -408,12 +472,11 @@ class ConfigData
     /**
      * Sets whether to mimic read directory file structure in write directory
      *
-     * @param    $preserveDirectoryStructure    bool    Mirror read directory structure in write directory
-     * @return  void
+     * @param    $preserveDirStructure    bool    Mirror read directory structure in write directory
      */
-    public function setPreserveDirectoryStructure($preserveDirectoryStructure)
+    public function setPreserveDirStructure($preserveDirStructure)
     {
-        $this->preserveDirectoryStructure = $preserveDirectoryStructure;
+        $this->preserveDirStructure = $preserveDirStructure;
     }
 
     /**
@@ -422,7 +485,6 @@ class ConfigData
      * Validates path before setting it.
      *
      * @param    $projectRootPath    string    Path to your project's root directory
-     * @return  void
      */
     public function setProjectRootPath($projectRootPath)
     {
@@ -446,13 +508,12 @@ class ConfigData
     /**
      * Sets the directory to save mock unit tests in
      *
-     * @param   string $mockUnitTestWriteDirectory
-     * @throws  MockMakerException
+     * @param   string $unitTestWriteDir
      */
-    public function setMockUnitTestWriteDirectory($mockUnitTestWriteDirectory)
+    public function setUnitTestWriteDir($unitTestWriteDir)
     {
-        DirectoryWorker::validateWriteDir($mockUnitTestWriteDirectory);
-        $this->mockUnitTestWriteDirectory = $mockUnitTestWriteDirectory;
+        DirectoryWorker::validateWriteDir($unitTestWriteDir);
+        $this->unitTestWriteDir = $unitTestWriteDir;
     }
 
     /**
@@ -468,10 +529,30 @@ class ConfigData
     /**
      * Set a custom class to process the mock code.
      *
-     * @param AbstractCodeWorker $codeWorker
+     * @param   AbstractDataPointWorker $mockDataPointWorker
      */
-    public function setCodeWorker(AbstractCodeWorker $codeWorker)
+    public function setMockDataPointWorker(AbstractDataPointWorker $mockDataPointWorker)
     {
-        $this->codeWorker = $codeWorker;
+        $this->mockDataPointWorker = $mockDataPointWorker;
+    }
+
+    /**
+     * Sets the unit test DataPointWorker class
+     *
+     * @param AbstractDataPointWorker $utDataPointWorker
+     */
+    public function setUtDataPointWorker($utDataPointWorker)
+    {
+        $this->utDataPointWorker = $utDataPointWorker;
+    }
+
+    /**
+     * Adds a new DataPointWorker to the worker queue
+     *
+     * @param AbstractDataPointWorker $dataPointWorker
+     */
+    public function registerDataPointWorker(AbstractDataPointWorker $dataPointWorker)
+    {
+        array_push($this->dataPointWorkers, $dataPointWorker);
     }
 }

@@ -34,7 +34,7 @@ class ArgumentData
      * If the argument allows null value
      * (Either by default value or no typehint restrictions)
      *
-     * @var type
+     * @var bool
      */
     public $allowsNull = false;
 
@@ -58,13 +58,6 @@ class ArgumentData
      * @var string
      */
     public $dataType;
-
-    /**
-     * Argument typehint, if any
-     *
-     * @var type
-     */
-    public $typeHint;
 
     /**
      * Class name of object argument types

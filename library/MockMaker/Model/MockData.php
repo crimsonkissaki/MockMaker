@@ -1,48 +1,54 @@
 <?php
-
 /**
- * ClassData
+ * MockData
  *
- * Class model that holds all class-specific information.
+ * Holds all data required for generating mock files.
  *
- * @package       MockMaker
- * @author        Evan Johnson
- * @created       Apr 28, 2015
- * @version       1.0
+ * @package        MockMaker
+ * @author         Evan Johnson
+ * @created        5/6/15
+ * @version        1.0
  */
 
 namespace MockMaker\Model;
 
-class ClassData
+class MockData
 {
 
     /**
-     * Mocked class name
+     * FileData object for mock
+     *
+     * @var FileData
+     */
+    private $fileData;
+
+    /**
+     * FileData object for mock unit tests
+     *
+     * @var FileData
+     */
+    private $utFileData;
+
+    /**
+     * File name of mock file
      *
      * @var string
      */
     private $className;
 
     /**
-     * Mocked class namespace
+     * Namespace of the mock file
      *
      * @var string
      */
     private $classNamespace;
 
     /**
-     * Mocked class \ReflectionClass instance.
-     *
-     * @var \ReflectionClass
-     */
-    private $reflectionClass;
-
-    /**
-     * Is mocked class concrete/abstract/interface/final
+     * Namespace of the mock file unit test file
      *
      * @var string
      */
-    private $classType = 'concrete';
+    private $utClassNamespace;
 
     /**
      * Mocked class use statements
@@ -100,9 +106,29 @@ class ClassData
     private $properties = [];
 
     /**
-     * Gets the mocked class's name
+     * Gets the FileData object
      *
-     * @return  string
+     * @return FileData
+     */
+    public function getFileData()
+    {
+        return $this->fileData;
+    }
+
+    /**
+     * Gets the unit test file data object
+     *
+     * @return FileData
+     */
+    public function getUtFileData()
+    {
+        return $this->utFileData;
+    }
+
+    /**
+     * Gets the mock's file name
+     *
+     * @return string
      */
     public function getClassName()
     {
@@ -110,9 +136,9 @@ class ClassData
     }
 
     /**
-     * Gets the mocked class's namespace
+     * Gets the mock file's namespace
      *
-     * @return  string
+     * @return string
      */
     public function getClassNamespace()
     {
@@ -120,23 +146,13 @@ class ClassData
     }
 
     /**
-     * Get the mocked class's ReflectionClass instance
+     * Gets the mock file unit test's namespace
      *
-     * @return  \ReflectionClass
+     * @return string
      */
-    public function getReflectionClass()
+    public function getUtClassNamespace()
     {
-        return $this->reflectionClass;
-    }
-
-    /**
-     * Gets the mocked class's type
-     *
-     * @return  string
-     */
-    public function getClassType()
-    {
-        return $this->classType;
+        return $this->utClassNamespace;
     }
 
     /**
@@ -200,10 +216,36 @@ class ClassData
     }
 
     /**
-     * Sets the mocked class's name
+     * Sets the FileData object
      *
-     * @param   string $className Target class's name
-     * @return  ClassData
+     * @param   FileData $fileData
+     * @return  MockData
+     */
+    public function setFileData($fileData)
+    {
+        $this->fileData = $fileData;
+
+        return $this;
+    }
+
+    /**
+     * Sets the unit test file data object
+     *
+     * @param   FileData $utFileData
+     * @return  MockData
+     */
+    public function setUtFileData($utFileData)
+    {
+        $this->utFileData = $utFileData;
+
+        return $this;
+    }
+
+    /**
+     * Sets the mock's file name
+     *
+     * @param   string $className
+     * @return  MockData
      */
     public function setClassName($className)
     {
@@ -213,10 +255,10 @@ class ClassData
     }
 
     /**
-     * Sets the mocked class's name space
+     * Sets the mock file's namespace
      *
-     * @param   string $classNamespace Target class's namespace
-     * @return  ClassData
+     * @param   string $classNamespace
+     * @return  MockData
      */
     public function setClassNamespace($classNamespace)
     {
@@ -226,38 +268,29 @@ class ClassData
     }
 
     /**
-     * Sets the mocked class's ReflectionClass instance
+     * Sets the mock file unit test's namespace
      *
-     * @param   \ReflectionClass $reflectionClass Reflection class
-     * @return  ClassData
+     * @param   string $utClassNamespace
+     * @return  MockData
      */
-    public function setReflectionClass(\ReflectionClass $reflectionClass)
+    public function setUtClassNamespace($utClassNamespace)
     {
-        $this->reflectionClass = $reflectionClass;
+        $this->utClassNamespace = $utClassNamespace;
 
         return $this;
     }
 
-    /**
-     * Sets the mocked class's type
-     *
-     * Valid values are concrete, abstract, interface, final.
-     *
-     * @param   string $classType Class type
-     * @return  ClassData
-     */
-    public function setClassType($classType)
+    public function __construct()
     {
-        $this->classType = $classType;
-
-        return $this;
+        $this->fileData = new FileData();
+        $this->utFileData = new FileData();
     }
 
     /**
      * Sets  the mocked class's use statements
      *
      * @param   array $useStatements Array of use statements in target class file
-     * @return  ClassData
+     * @return  EntityData
      */
     public function setUseStatements($useStatements)
     {
@@ -270,7 +303,7 @@ class ClassData
      * Adds (single|array of) use statements to useStatements
      *
      * @param   mixed $useStatements Use statements
-     * @return  ClassData
+     * @return  EntityData
      */
     public function addUseStatements($useStatements)
     {
@@ -287,7 +320,7 @@ class ClassData
      * Sets the array of classes the class implements
      *
      * @param   array $implements Classes the target class implements
-     * @return  ClassData
+     * @return  EntityData
      */
     public function setImplements($implements)
     {
@@ -300,7 +333,7 @@ class ClassData
      * Adds (single|array of) classes the class implements
      *
      * @param   string|array $implements Classes the target class implements
-     * @return  ClassData
+     * @return  EntityData
      */
     public function addImplements($implements)
     {
@@ -317,7 +350,7 @@ class ClassData
      * Sets the class the mocked class extends
      *
      * @param   string $extends Class the target class extends
-     * @return  ClassData
+     * @return  EntityData
      */
     public function setExtends($extends)
     {
@@ -330,7 +363,7 @@ class ClassData
      * Sets if the class has a constructor
      *
      * @param   bool $hasConstructor Does the class have a constructor
-     * @return  ClassData
+     * @return  EntityData
      */
     public function setHasConstructor($hasConstructor)
     {
@@ -343,7 +376,7 @@ class ClassData
      * Sets the array of MethodData objects
      *
      * @param   object|array $methods MethodData objects
-     * @return  ClassData
+     * @return  EntityData
      */
     public function setMethods($methods)
     {
@@ -357,7 +390,7 @@ class ClassData
      * Adds (single|array of) MethodData objects to methods array
      *
      * @param   object|array $methods MethodData objects
-     * @return  ClassData
+     * @return  EntityData
      */
     public function addMethods($methods)
     {
@@ -374,7 +407,7 @@ class ClassData
      * Sets the array of PropertyData objects
      *
      * @param   object|array $properties PropertyData objects
-     * @return  ClassData
+     * @return  EntityData
      */
     public function setProperties($properties)
     {
@@ -388,7 +421,7 @@ class ClassData
      * Add (single|array of) PropertyData objects to properties array
      *
      * @param   object|array $properties PropertyData objects
-     * @return  ClassData
+     * @return  EntityData
      */
     public function addProperties($properties)
     {

@@ -5,9 +5,9 @@
  *
  * This only tests to ensure the options set the proper class properties.
  *
- * @author		Evan Johnson
- * @created     Apr 26, 2015
- * @version     1.0
+ * @author        Evan Johnson
+ * @created       Apr 26, 2015
+ * @version       1.0
  */
 
 namespace MockMaker;
@@ -20,8 +20,8 @@ use MockMaker\TestHelper\TestHelper;
 
 class MockMakerTest extends \PHPUnit_Framework_TestCase
 {
-    /* @var $mockMaker MockMaker */
 
+    /* @var $mockMaker MockMaker */
     public $mockMaker;
     public $rootDir;
     public $entitiesDir;
@@ -43,17 +43,17 @@ class MockMakerTest extends \PHPUnit_Framework_TestCase
     public function _test_workflow()
     {
         $actual = $this->mockMaker
-            ->mockTheseFiles($this->entitiesDir . 'TestEntity.php')
-            //->mockFilesIn($this->entitiesDir)
+            ->mockTheseEntities($this->entitiesDir . 'TestEntity.php')
+            //->mockEntitiesInDirectory($this->entitiesDir)
             //->recursively()
-            ->saveMockFilesIn($this->rootDir.'/tests/MockMaker/Mocks/Entities')
+            ->saveMockFilesIn($this->rootDir . '/tests/MockMaker/Mocks/Entities')
             //->excludeFilesWithFormat('/^Method/')
             //->saveMocksWithFileNameFormat('Mock_%FileName%')
-            //->overwriteExistingFiles()
+            //->overwriteMockFiles()
             //->useBaseNamespaceForMocks('MockMaker\Mocks\Entities')
-            ->saveUnitTestsTo($this->unitTestsWriteDir)
+            ->saveUnitTestsIn($this->unitTestsWriteDir)
             ->createMocks();
-            //->verifySettings();
+        //->verifySettings();
 
         TestHelper::dbug($actual, __METHOD__, true);
     }
@@ -62,8 +62,8 @@ class MockMakerTest extends \PHPUnit_Framework_TestCase
     {
         $expected = file_get_contents($this->testResourcesDir . 'TestEntityCode.txt');
         $actual = $this->mockMaker
-            ->mockTheseFiles($this->entitiesDir . 'TestEntity.php')
-            ->saveMockFilesIn($this->rootDir.'/tests/MockMaker/Mocks/Entities')
+            ->mockTheseEntities($this->entitiesDir . 'TestEntity.php')
+            ->saveMockFilesIn($this->rootDir . '/tests/MockMaker/Mocks/Entities')
             ->createMocks();
         $this->assertEquals($expected, $actual);
     }
@@ -72,6 +72,7 @@ class MockMakerTest extends \PHPUnit_Framework_TestCase
      * These tests verify that MockMaker interfaces with the
      * ConfigData class properly.
      */
+
     public function test_setProjectRootPath()
     {
         $this->mockMaker->setProjectRootPath($this->rootDir);
@@ -80,7 +81,7 @@ class MockMakerTest extends \PHPUnit_Framework_TestCase
 
     public function test_mockTheseFiles_addsSingleFile()
     {
-        $this->mockMaker->mockTheseFiles($this->entitiesDir . 'SimpleEntity.php');
+        $this->mockMaker->mockTheseEntities($this->entitiesDir . 'SimpleEntity.php');
         $this->assertEquals(1, count($this->mockMaker->getConfig()->getAllDetectedFiles()));
     }
 
@@ -90,19 +91,19 @@ class MockMakerTest extends \PHPUnit_Framework_TestCase
             $this->entitiesDir . 'TestEntity.php',
             $this->entitiesDir . 'SimpleEntity.php',
         );
-        $this->mockMaker->mockTheseFiles($files);
+        $this->mockMaker->mockTheseEntities($files);
         $this->assertEquals(2, count($this->mockMaker->getConfig()->getAllDetectedFiles()));
     }
 
     public function test_mockFilesIn()
     {
-        $this->mockMaker->mockFilesIn($this->entitiesDir);
+        $this->mockMaker->mockEntitiesInDirectory($this->entitiesDir);
         $actual = $this->mockMaker->getConfig()->getReadDirectories();
         $this->assertEquals(1, count($actual));
         $this->assertEquals($this->entitiesDir, $actual[0]);
     }
 
-   public function test_recursively()
+    public function test_recursively()
     {
         $this->assertFalse($this->mockMaker->getConfig()->getRecursiveRead());
         $this->mockMaker->recursively();
@@ -112,21 +113,21 @@ class MockMakerTest extends \PHPUnit_Framework_TestCase
     public function test_saveMockFilesIn()
     {
         $this->mockMaker->saveMockFilesIn($this->entitiesDir);
-        $this->assertEquals($this->entitiesDir, $this->mockMaker->getConfig()->getMockWriteDirectory());
+        $this->assertEquals($this->entitiesDir, $this->mockMaker->getConfig()->getMockWriteDir());
     }
 
     public function test_ignoreDirectoryStructure()
     {
-        $this->assertTrue($this->mockMaker->getConfig()->getPreserveDirectoryStructure());
+        $this->assertTrue($this->mockMaker->getConfig()->getPreserveDirStructure());
         $this->mockMaker->ignoreDirectoryStructure();
-        $this->assertFalse($this->mockMaker->getConfig()->getPreserveDirectoryStructure());
+        $this->assertFalse($this->mockMaker->getConfig()->getPreserveDirStructure());
     }
 
     public function test_overwriteExistingFiles()
     {
-        $this->assertFalse($this->mockMaker->getConfig()->getOverwriteExistingFiles());
-        $this->mockMaker->overwriteExistingFiles();
-        $this->assertTrue($this->mockMaker->getConfig()->getOverwriteExistingFiles());
+        $this->assertFalse($this->mockMaker->getConfig()->getOverwriteMockFiles());
+        $this->mockMaker->overwriteExistingMockFiles();
+        $this->assertTrue($this->mockMaker->getConfig()->getOverwriteMockFiles());
     }
 
     public function test_excludeFilesWithFormat()
@@ -147,7 +148,7 @@ class MockMakerTest extends \PHPUnit_Framework_TestCase
     {
         $expected = 'CustomTemplate.php';
         $this->mockMaker->useThisMockTemplate($expected);
-        $this->assertEquals($expected, $this->mockMaker->getConfig()->getCodeWorker()->getMockTemplate());
+        $this->assertEquals($expected, $this->mockMaker->getConfig()->getMockDataPointWorker()->getMockTemplate());
     }
 
     public function test_useThisCodeWorker()
@@ -155,8 +156,8 @@ class MockMakerTest extends \PHPUnit_Framework_TestCase
         $expected = new CodeWorker();
         $customTemplate = 'CustomTemplate.php';
         $expected->setMockTemplate($customTemplate);
-        $this->mockMaker->useThisCodeWorker($expected);
-        $this->assertEquals($expected, $this->mockMaker->getConfig()->getCodeWorker());
+        $this->mockMaker->useCustomDataPointWorker($expected);
+        $this->assertEquals($expected, $this->mockMaker->getConfig()->getMockDataPointWorker());
     }
 
     public function test_saveMocksWithFileNameFormat()
@@ -175,8 +176,8 @@ class MockMakerTest extends \PHPUnit_Framework_TestCase
 
     public function  test_saveUnitTestsTo()
     {
-        $this->mockMaker->saveUnitTestsTo($this->unitTestsWriteDir);
-        $this->assertEquals($this->unitTestsWriteDir, $this->mockMaker->getConfig()->getMockUnitTestWriteDirectory());
+        $this->mockMaker->saveUnitTestsIn($this->unitTestsWriteDir);
+        $this->assertEquals($this->unitTestsWriteDir, $this->mockMaker->getConfig()->getUnitTestWriteDir());
     }
 
     public function test_verifySettings()
@@ -189,7 +190,7 @@ class MockMakerTest extends \PHPUnit_Framework_TestCase
     {
         $regex = '/Underscore$/';
         $actual = $this->mockMaker
-            ->mockFilesIn($this->entitiesDir . 'SubEntities/')
+            ->mockEntitiesInDirectory($this->entitiesDir . 'SubEntities/')
             ->excludeFilesWithFormat($regex)
             ->testRegexPatterns();
         $this->assertArrayHasKey('include', $actual);

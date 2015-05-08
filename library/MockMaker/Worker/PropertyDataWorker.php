@@ -12,7 +12,6 @@
 namespace MockMaker\Worker;
 
 use MockMaker\Model\PropertyData;
-use MockMaker\Helper\TestHelper;
 
 class PropertyDataWorker
 {
@@ -25,13 +24,6 @@ class PropertyDataWorker
     private $classInstance;
 
     /**
-     * \ReflectionClass instance of the mocked class
-     *
-     * @var \ReflectionClass
-     */
-    private $reflectionClass;
-
-    /**
      * Array of the class's methods in MethodData form
      *
      * @var array
@@ -39,44 +31,28 @@ class PropertyDataWorker
     private $methods = [];
 
     /**
-     * Associative array of PropertyData objects
-     *
-     * Format is 'visibility' => array()
-     * array(
-     *   'public' => array( ... ),
-     *   'private' => array( ... ),
-     * )
-     *
-     * @var array
-     */
-    private $classPropertyObjects = [];
-
-    /**
      * Generates an array of PropertyData objects for a class
      *
-     * @param   \ReflectionClass $class   ReflectionClass instance of the class to be mocked
-     * @param   array            $methods Array of MethodData objects.
+     * @param   string $className       Name of target class
+     * @param   array  $classProperties Array of \ReflectionProperty objects
+     * @param   array  $methods         Array of MethodData objects.
      * @return  array
      */
-    public function generatePropertyObjects(\ReflectionClass $class, $methods)
+    public function generatePropertyObjects($className, array $classProperties, array $methods)
     {
-        $this->reflectionClass = $class;
-        $className = $class->getName();
         $this->classInstance = new $className();
         $this->methods = $methods;
-        $classProperties = $this->getClassPropertiesByVisibility($class);
-        $this->classPropertyObjects = $this->getClassPropertiesDetails($classProperties);
 
-        return $this->classPropertyObjects;
+        return $this->getClassPropertiesDetails($classProperties);
     }
 
     /**
-     * Gets class properties by visibility
+     * Gets an array of class properties through a reflection class instance
      *
-     * @param   \ReflectionClass $class ReflectionClass instance of class to be mocked
+     * @param   \ReflectionClass $class
      * @return  array
      */
-    private function getClassPropertiesByVisibility(\ReflectionClass $class)
+    public function getClassProperties(\ReflectionClass $class)
     {
         $classProperties = [];
         $classProperties['constant'] = $class->getConstants();
@@ -199,15 +175,15 @@ class PropertyDataWorker
      * setter will be named after it, e.g. a property called "totalCount"
      * has a setter with the name "setTotalCount".
      *
-     * @param   string  $name         Property name
-     * @param   array   $classMethods Array of MethodData objects
+     * @param   string $name         Property name
+     * @param   array  $classMethods Array of MethodData objects
      * @return  array
      */
     private function findPropertySetterIfExists($name, $classMethods)
     {
-        foreach ($classMethods as $visibility => $methods) {
+        foreach ($classMethods as $methods) {
             if (!empty($methods)) {
-                foreach ($methods as $k => $method) {
+                foreach ($methods as $method) {
                     if (stripos($method->name, "set{$name}") !== false) {
                         return $method->name;
                     }
