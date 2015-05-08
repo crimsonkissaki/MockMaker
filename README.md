@@ -46,14 +46,6 @@ Through Composer:
     composer require-dev crimsonkissaki/mockmaker:dev-master
 ```
 
-*NOTE* You will have to update your composer.json file with a repository entry for this github repo as I have not yet uploaded the repo to packagist. I will do so when I'm happy that it will work on most use-cases.
-
-```json
-        {
-            "type": "vcs",
-            "url": "https://github.com/crimsonkissaki/MockMaker.git"
-        }
-```
 
 ## MockMaker Configuration & Usage:
 
