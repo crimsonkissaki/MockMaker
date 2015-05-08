@@ -241,7 +241,7 @@ $code = $mm->mockTheseEntities($projectDir . 'Entity/TestEntity.php')
 echo $code;
 ```
 
-### Mock everything you have, but exclude Doctrine "{EntityName}Repository" classes:
+### Mock everything excluding Doctrine's "{EntityName}Repository" classes:
 
 ```php
 use MockMaker\MockMaker;
@@ -258,7 +258,7 @@ $mm->mockEntitiesInDirectory($projectDir . 'Entity')
     ->overwriteMockFiles()
     ->overwriteUnitTestFiles()
     ->createMocks();
- 
+```
 
 ## Mock File Usage:
 
