@@ -235,58 +235,6 @@ class MockMaker
     }
 
     /**
-     * Sets a custom template for the mock files
-     *
-     * @param   string $template
-     * @return  MockMaker
-    public function useThisMockTemplate($template)
-     * {
-     * $this->config->getMockDataPointWorker()->setTemplate($template);
-     *
-     * return $this;
-     * }
-     */
-
-    /**
-     * Sets a custom code worker class to generate mocks
-     *
-     * @param   AbstractDataPointWorker $dataPointWorker
-     * @return  MockMaker
-    public function useCustomMockDataPointWorker(AbstractDataPointWorker $dataPointWorker)
-     * {
-     * $this->config->registerDataPointWorker($dataPointWorker);
-     *
-     * return $this;
-     * }
-     */
-
-    /**
-     * Sets a custom template for the mock unit test files
-     *
-     * @param   string $template
-     * @return  MockMaker
-    public function useThisMockUnitTestTemplate($template)
-     * {
-     * $this->config->getUtDataPointWorker()->setTemplate($template);
-     *
-     * return $this;
-     * }
-     */
-
-    /**
-     * Sets a custom code worker class to generate mocks
-     *
-     * @param   AbstractDataPointWorker $dataPointWorker
-     * @return  MockMaker
-    public function useCustomMockUnitTestDataPointWorker(AbstractDataPointWorker $dataPointWorker)
-     * {
-     * $this->config->registerDataPointWorker($dataPointWorker);
-     *
-     * return $this;
-     * }
-     */
-
-    /**
      * Sets a format for mock file names to be saved with
      *
      * Use %FileName% somewhere in a string to denote where you want the
