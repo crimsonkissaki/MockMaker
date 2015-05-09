@@ -43,7 +43,7 @@ but I needed to get this up and available for testing with pulling into Composer
 Through Composer:
 
 ```bin
-    composer require-dev crimsonkissaki/mockmaker:dev-master
+    composer require crimsonkissaki/mockmaker:1.0.x-dev
 ```
 
 
