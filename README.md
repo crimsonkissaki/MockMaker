@@ -42,6 +42,15 @@ but I needed to get this up and available for testing with pulling into Composer
 
 Through Composer:
 
+Current stable implementation:
+
+```bin
+    composer require crimsonkissaki/mockmaker:1.0.0
+```
+
+
+If you want the latest version of the 1.0 version:
+
 ```bin
     composer require crimsonkissaki/mockmaker:1.0.x-dev
 ```
