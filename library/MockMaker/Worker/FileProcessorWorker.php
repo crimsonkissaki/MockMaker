@@ -111,9 +111,9 @@ class FileProcessorWorker
     /**
      * Process the file queue into usable objects
      *
-     * Returns an array of DataContainer objects for use in the CodeWorker.
+     * Returns a string of all generated mock code.
      *
-     * @return  array
+     * @return  string
      */
     public function processFiles()
     {

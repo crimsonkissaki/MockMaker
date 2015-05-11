@@ -140,6 +140,22 @@ class TestHelper
     }
 
     /**
+     * This uses reflection to get the value of a private/protected parameter
+     *
+     * @param	$objToReflect		mixed	Object to use as a base for inspecting the property.
+     * @param	$property			string	Name of the property you want to change.
+     * @return  mixed
+     */
+     public static function getNonPublicValue($objToReflect, $property)
+    {
+        $class = get_class($objToReflect);
+        $refClass = new \ReflectionClass($class);
+        $refProp = $refClass->getProperty($property);
+        $refProp->setAccessible(true);
+        return $refProp->getValue($objToReflect);
+    }
+
+    /**
      * Make non-public methods accessible.
      *
      * $actual = $method->invoke( <class>, <param1>, [<param2>...] );

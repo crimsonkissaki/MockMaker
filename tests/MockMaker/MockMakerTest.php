@@ -58,7 +58,7 @@ class MockMakerTest extends \PHPUnit_Framework_TestCase
         TestHelper::dbug($actual, __METHOD__, true);
     }
 
-    public function test_endToEndMockCreation()
+    public function _test_endToEndMockCreation()
     {
         $expected = file_get_contents($this->testResourcesDir . 'TestEntityCode.txt');
         $actual = $this->mockMaker
@@ -123,10 +123,10 @@ class MockMakerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->mockMaker->getConfig()->getPreserveDirStructure());
     }
 
-    public function test_overwriteExistingFiles()
+    public function test_overwriteMockFiles()
     {
         $this->assertFalse($this->mockMaker->getConfig()->getOverwriteMockFiles());
-        $this->mockMaker->overwriteExistingMockFiles();
+        $this->mockMaker->overwriteMockFiles();
         $this->assertTrue($this->mockMaker->getConfig()->getOverwriteMockFiles());
     }
 
@@ -144,14 +144,14 @@ class MockMakerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $this->mockMaker->getConfig()->getIncludeFileRegex());
     }
 
-    public function test_useThisMockTemplate()
+    public function _test_useThisMockTemplate()
     {
         $expected = 'CustomTemplate.php';
         $this->mockMaker->useThisMockTemplate($expected);
         $this->assertEquals($expected, $this->mockMaker->getConfig()->getMockDataPointWorker()->getMockTemplate());
     }
 
-    public function test_useThisCodeWorker()
+    public function _test_useThisCodeWorker()
     {
         $expected = new CodeWorker();
         $customTemplate = 'CustomTemplate.php';

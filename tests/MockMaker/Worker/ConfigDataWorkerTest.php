@@ -10,6 +10,7 @@
 namespace MockMaker\Worker;
 
 use MockMaker\Model\ConfigData;
+use MockMaker\TestHelper\TestHelper;
 
 class ConfigDataWorkerTest extends \PHPUnit_Framework_TestCase
 {

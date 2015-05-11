@@ -34,9 +34,11 @@ class FileProcessorWorkerTest extends \PHPUnit_Framework_TestCase
 
     public function test_addFileData_addsSingleElementToArray()
     {
-        $fd = new DataContainer();
-        $this->worker->addFileData($fd);
-        $this->assertEquals(1, count($this->worker->getFileData()));
+        $dc = new DataContainer();
+        $method = TestHelper::getAccessibleNonPublicMethod($this->worker, 'addFileData');
+        $method->invoke($this->worker, $dc);
+        $actual = TestHelper::getNonPublicValue($this->worker, 'fileData');
+        $this->assertEquals(1, count($actual));
     }
 
     public function test_addFileData_addsArrayOfElements()
@@ -46,55 +48,28 @@ class FileProcessorWorkerTest extends \PHPUnit_Framework_TestCase
             new DataContainer(),
             new DataContainer(),
         );
-        $this->worker->addFileData($args);
-        $this->assertEquals(3, count($this->worker->getFileData()));
+        $method = TestHelper::getAccessibleNonPublicMethod($this->worker, 'addFileData');
+        $method->invoke($this->worker, $args);
+        $actual = TestHelper::getNonPublicValue($this->worker, 'fileData');
+        $this->assertEquals(3, count($actual));
     }
 
-    public function test_processFiles_returnsArrayOfMockMakerFileDataObject()
+    public function test_processFiles_returnsString()
     {
         $file = $this->rootDir . 'tests/MockMaker/Entities/TestEntity.php';
-        $this->worker->getConfig()->addFilesToMock($file);
+        $config = TestHelper::getNonPublicValue($this->worker, 'config');
+        $config->addFilesToMock($file);
         $actual = $this->worker->processFiles();
-        $this->assertTrue(is_array($actual));
-        $this->assertInstanceOf('MockMaker\Model\MockMakerFileData', $actual[0]);
+        $this->assertTrue(is_string($actual));
     }
 
-    public function test_processFile_returnsSingleMockMakerFileDataObject()
+    public function test_processFile_returnsDataContainerObject()
     {
-        $file = $this->rootDir . 'tests/MockMaker/Entities/TestEntity.php';
-        $this->worker->getConfig()->addFilesToMock($file);
+        $file = $this->rootDir . 'tests/MockMaker/Entities/SimpleEntity.php';
+        $config = TestHelper::getNonPublicValue($this->worker, 'config');
         $method = TestHelper::getAccessibleNonPublicMethod($this->worker, 'processFile');
-        $actual = $method->invoke($this->worker, $file, $this->worker->getConfig());
-        $this->assertInstanceOf('MockMaker\Model\MockMakerFileData', $actual);
+        $actual = $method->invoke($this->worker, $file, $config);
+        $this->assertInstanceOf('MockMaker\Model\DataContainer', $actual);
     }
-
-    public function processFileExceptionProvider()
-    {
-        return array(
-            array( $this->rootDir . 'tests/MockMaker/Entities/AbstractEntity.php' ),
-            array( $this->rootDir . 'tests/MockMaker/Entities/EntityInterface.php' ),
-        );
-    }
-
-    /**
-     * @dataProvider processFileExceptionProvider
-     */
-    public function test_processFile_throwsExceptionIfAbstractClass($file)
-    {
-        $this->setExpectedException('MockMaker\Exception\MockMakerException');
-        $this->worker->getConfig()->addFilesToMock($file);
-        $method = TestHelper::getAccessibleNonPublicMethod($this->worker, 'processFile');
-        $actual = $method->invoke($this->worker, $file, $this->worker->getConfig());
-    }
-
-    public function test_generateFileDataObject_returnsSingleMockMakerFileDataObject()
-    {
-        $file = $this->rootDir . 'tests/MockMaker/Entities/TestEntity.php';
-        $this->worker->getConfig()->addFilesToMock($file);
-        $method = TestHelper::getAccessibleNonPublicMethod($this->worker, 'generateFileDataObject');
-        $actual = $method->invoke($this->worker, $file, $this->worker->getConfig());
-        $this->assertInstanceOf('MockMaker\Model\MockMakerFileData', $actual);
-    }
-
 
 }
